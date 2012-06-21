@@ -15,3 +15,4 @@ from convert_opl import *
 from avgopac import *
 from constants import *
 from interp import *
+import filter 
