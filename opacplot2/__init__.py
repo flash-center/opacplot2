@@ -17,3 +17,4 @@ from avgopac import *
 from constants import *
 from interp import *
 import adapt
+import presets

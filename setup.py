@@ -5,7 +5,9 @@ import sys
 import json
 import subprocess 
 
-from distutils.core import setup
+#from distutils.core import setup
+from setuptools import setup
+
 
 if __name__ == "__main__":
     setup(name="opacplot2",
@@ -14,5 +16,8 @@ if __name__ == "__main__":
           author='Milad',
           author_email='milad@flash.uchicago.edu',
           url='http://flash.uchicago.edu/',
-          packages=['opacplot2']
+          packages=['opacplot2', 'opacplot2.presets'],
+          entry_points = {
+                    'console_scripts': ['opacplot2 = opacplot2.scripts:main']
+                        }
           )

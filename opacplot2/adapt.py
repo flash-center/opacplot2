@@ -3,15 +3,15 @@
 import numpy as np
 
 class EosMergeGrids(dict):
-    """This class provides filtering capabilities for the EoS temperature and
-    density grids. For instance SESAME tables may have some additionnal points 
-    in the ion EoS table, compared to the elecron EoS table, and as FLASH requires
-    the same density and temperature grid for all species, the simplest solution is
-    to remove those additionnal points."""
-
     def __init__(self, eos_data, filter_dens=lambda x: x>=0.,
                  filter_temps=lambda x: x>=0., intersect=['ele', 'ion']):
-        """Parameters
+        """This class provides filtering capabilities for the EoS temperature and
+        density grids. For instance SESAME tables may have some additionnal points 
+        in the ion EoS table, compared to the elecron EoS table, and as FLASH requires
+        the same density and temperature grid for all species, the simplest solution is
+        to remove those additionnal points.
+
+        Parameters
         ----------
         - eos_data: [dict] dictionary contraining the EoS data.
         - intersect: [list] the resulting temperature [eV] and density [g/cm⁻³]
@@ -19,7 +19,7 @@ class EosMergeGrids(dict):
                 species given in this list. Default: ['ele', 'ion']
         - filter_dens, filter_temps: [function] a function that takes a grid
                 and returns a mask of points we don't wont to keep.
-                Defaut: (lamdba x: x<0.) i.e. don't remove anything.
+                Defaut: (lamdba x: x>0.) i.e. don't remove anything.
         Returns
         -------
         - out: [dict] a dictionary with the same keys a eos_data.
@@ -30,7 +30,7 @@ class EosMergeGrids(dict):
         >> eos_data  = eos_sesame.data[3720]  # Aluminum
         >> eos_data_filtered = EosFilterGrids(eos_data,
                 intersect=['ele', 'ion'],   # merge ele and ion grids
-                filter_temps=lamda x: xr>1.) # remove temperatures below 1eV
+                filter_temps=lamda x: x>1.) # remove temperatures below 1eV
         """
         user_filter = dict(temps=filter_temps, dens=filter_dens)
         self.origin = eos_data
@@ -55,6 +55,7 @@ class EosMergeGrids(dict):
         for key in eos_data:
             self[key] = None
         return
+
     def _get_mask(self, key):
         if '_dens' in key or '_temps' in key:
             return self.mask[key]
@@ -64,7 +65,7 @@ class EosMergeGrids(dict):
                         np.nonzero(self.mask[species+'_dens'])[0],\
                         np.nonzero(self.mask[species + '_temps'])[0])
             return indexes[0].T, indexes[1].T
- 
+
     def __getitem__(self, key):
         if key in self.origin:
             if '_dens' in key or '_temps' in key:

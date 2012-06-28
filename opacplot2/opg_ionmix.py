@@ -350,12 +350,13 @@ class OpacIonmix:
         self.ntemp += 1
 
 
-def writeIonmixFile(fn, zvals, fracs, ndens, ntemps, numDens, temps, 
+def writeIonmixFile(fn, zvals, fracs, numDens, temps,
                     zbar=None,  dzdt=None, pion=None, pele=None,
                     dpidt=None, dpedt=None, eion=None, eele=None,
                     cvion=None, cvele=None, deidn=None, deedn=None,
                     ngroups=None, opac_bounds=None,
                     rosseland=None, planck_absorb=None, planck_emiss=None):
+    ndens, ntemps = len(numDens), len(temps)
 
     if  zbar == None:  zbar = np.zeros((ndens,ntemps))
     if  dzdt == None:  dzdt = np.zeros((ndens,ntemps))
@@ -388,12 +389,12 @@ def writeIonmixFile(fn, zvals, fracs, ndens, ntemps, numDens, temps,
     # Write temperature/density grid and number of groups:
     def convert(num):
         string_org = "%12.5E" % (num)
-        negative = (string_org[0] == "-")            
+        negative = (string_org[0] == "-")
         lead = "-." if negative else "0."
         string = lead + string_org[1] + string_org[3:8] + "E"
 
         # Deal with the exponent:
-        
+
         # Check for zero:
         if int(string_org[1] + string_org[3:8]) == 0:
             return string + "+00"
@@ -413,7 +414,7 @@ def writeIonmixFile(fn, zvals, fracs, ndens, ntemps, numDens, temps,
             count += 1
 
             f.write("%s" % convert(var[n]))
-                
+
             if count == 4:
                 count = 0
                 f.write("\n")
@@ -428,20 +429,20 @@ def writeIonmixFile(fn, zvals, fracs, ndens, ntemps, numDens, temps,
                     count += 1
 
                     f.write("%s" % convert(var[jd,jt,g]))
-            
+
                     if count == 4:
                         count = 0
                         f.write("\n")
 
         if count != 0: f.write("\n")
-        
+
     f.write("%12i\n" % ngroups)
 
     write_block(temps)
     write_block(numDens)
 
     write_block(zbar.flatten())
-    
+
     write_block(dzdt.flatten())
     write_block(pion.flatten()*ERG_TO_JOULE)
     write_block(pele.flatten()*ERG_TO_JOULE)

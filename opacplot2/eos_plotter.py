@@ -43,11 +43,11 @@ def plot_eos_grid(tdata, var):
     linthreshx = 1.0
     keys_list = sorted([el for el in tdata.keys() if '_'+var in el])
     for key in keys_list:
+       if len(tdata[key])>1:
+           linthreshx = min(linthreshx, tdata[key][1])
        plt.bar(tdata[key][:-1], np.ones(len(tdata[key])-1), width=np.diff(tdata[key]),
              bottom=bottom, color='w', alpha=0.5)
        bottom += 1
-       if len(tdata[key])>1:
-           linthreshx = min(linthreshx, tdata[key][1])
     ax = plt.gca()
     ax.set_yticks(np.arange(bottom)+0.5)
     ax.set_yticklabels([el.replace('_', '\_') for el in keys_list])
@@ -65,7 +65,7 @@ def plot_eos_field(eos_data, species, parameter, grad=None):
     rho, T = eos_data[species+'_dens'], eos_data[species+'_temps']
     rho_g, T_g = np.meshgrid(rho, T)
     Z = eos_data['_'.join([species, parameter])].T
-    species_label = dict(ele='Electron', ion='Ion')[species]
+    species_label = dict(ele='Electron', ion='Ion', ioncc='Ioncc')[species]
     clabel = dict(pres=r'$log(P)$ GPa', eint=r'u J.cm${^{-3}}$')[parameter]
     def idty(x):
         return x
