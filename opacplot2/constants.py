@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 # Convert Joules to Ergs:
 JOULE_TO_ERG = 1.0e+07
@@ -20,6 +21,13 @@ NA = 6.0221415e+23
 
 # Boltzmann constant [ergs/eV]
 KB = 1.60217653e-12
+
+# Electron mass [g]
+ME = 9.10938188e-28
+
+# Planck's Constants [erg*s]:
+PLANCK = 6.62606957e-27
+HBAR = PLANCK/(2*math.pi)
 
 # Radiation constant [ergs/cm^3/eV^4]
 RADCONST = 137.201730837
