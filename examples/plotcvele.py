@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 mpi = 4.002602 / opp.NA
-opimx = opp.OpacIonmix("examples/data/al-imx-002.cn4", mpi, twot=True, man=True, verbose=True)
+opimx = opp.OpacIonmix("data/al-imx-002.cn4", mpi, twot=True, man=True, verbose=True)
 
 t1 = 0.0
 t2 = 20.0

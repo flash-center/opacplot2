@@ -5,11 +5,11 @@ from matplotlib import pyplot as plt
 
 
 mpi = 4.002602 / opp.NA
-heimx = opp.OpacIonmix("../helium/ionmix-005/he-imx-005.cn4", mpi, twot=True, man=True, verbose=True)
+heimx = opp.OpacIonmix("data/he-imx-005.cn4", mpi, twot=True, man=True, verbose=True)
 
 
 mpi = 26.9815386 / opp.NA
-alimx = opp.OpacIonmix("../aluminum/ionmix-002/al-imx-002.cn4", mpi, twot=True, man=True, verbose=True)
+alimx = opp.OpacIonmix("data/al-imx-002.cn4", mpi, twot=True, man=True, verbose=True)
 
 def pion(opimx, rho, tion, log=False):
     return opp.interpDT(opimx.pion, opimx.dens, opimx.temps, 
