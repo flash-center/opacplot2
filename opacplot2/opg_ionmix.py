@@ -16,12 +16,13 @@ class OpacIonmix:
     joules_to_ergs = 1.0e+07
 
 
-    def __init__(self, fn, mpi, twot=False, man=False, verbose=False):
+    def __init__(self, fn, mpi, twot=False, man=False, hassele=False, verbose=False):
         
         self.fn = fn
         self.mpi = mpi
         self.twot = twot
         self.man  = man
+        self.hassele = hassele
         self.verb = verbose
         if verbose: print "Reading IONMIX file \"%s\"\n" % (fn)
 
@@ -115,6 +116,8 @@ class OpacIonmix:
             self.deidn = self.get_block(nd*nt).reshape(nd,nt) * self.joules_to_ergs
             self.deedn = self.get_block(nd*nt).reshape(nd,nt) * self.joules_to_ergs
 
+        if self.hassele:
+            self.sele  = self.get_block(nd*nt).reshape(nd,nt) * self.joules_to_ergs
 
     def read_opac(self):
         """
@@ -355,7 +358,8 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
                     dpidt=None, dpedt=None, eion=None, eele=None,
                     cvion=None, cvele=None, deidn=None, deedn=None,
                     ngroups=None, opac_bounds=None,
-                    rosseland=None, planck_absorb=None, planck_emiss=None):
+                    rosseland=None, planck_absorb=None, planck_emiss=None,
+                    sele=None):
     ndens, ntemps = len(numDens), len(temps)
 
     if  zbar == None:  zbar = np.zeros((ndens,ntemps))
@@ -454,6 +458,9 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
     write_block(cvele.flatten()*ERG_TO_JOULE)
     write_block(deidn.flatten()*ERG_TO_JOULE)
     write_block(deedn.flatten()*ERG_TO_JOULE)
+
+    # Check for electron entropy (if it is there):
+    if sele != None: write_block(sele.flatten()*ERG_TO_JOULE)
 
     write_block(opac_bounds)
     write_opac_block(rosseland)
