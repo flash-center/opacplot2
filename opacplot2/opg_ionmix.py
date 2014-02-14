@@ -381,6 +381,12 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
     if planck_absorb == None: planck_absorb = np.zeros((ndens,ntemps,ngroups))
     if planck_emiss  == None: planck_emiss = np.zeros((ndens,ntemps,ngroups))
 
+    for tab in ["zbar", "dzdt", "pion", "pele", "dpidt", "dpedt", "eion",
+            "eele", "cvion", "cvele", "deidn", "deedn"]:
+        if eval(tab).shape != (ndens, ntemps):
+            raise ValueError('Table {0} has shape {1}, expected {2}!'.format(
+                tab, str(eval(tab).shape), str((ndens, ntemps))))
+
     # Write the header:
     f = open(fn,'w')
     f.write("%10i%10i\n" % (ntemps,ndens))

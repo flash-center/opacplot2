@@ -4,6 +4,8 @@ import argparse
 import os, os.path
 
 import opacplot2 as opp
+import re
+import numpy as np
 
 def main():
 
@@ -79,6 +81,81 @@ def main():
         except:
             print '[failed]'
 
+def opacdump():
+
+    parser = argparse.ArgumentParser(description= """
+    This script is used to browse various EoS/Opacity tables formats
+    """)
+    parser.add_argument('-t','--ftype',
+            action="store", type=str,
+            choices=['multi', 'propaceos'],
+            default='multi',
+            help='Database type. Default: sesame.')
+    parser.add_argument('-f','--filename',
+            action="store", type=str,
+            help='Filename', required=True)
+    parser.add_argument('--Abar',
+            action="store", type=float,
+            help='Filename', required=True)
+    parser.add_argument('value',
+            action="store", type=str,
+            help='Parameters to print',
+            choices=['grid2prp', 'grid2file'],
+            default=None)
+    args = parser.parse_args()
+
+    if args.ftype == 'multi':
+        from ..opg_multi import MULTI_EXT_FMT, OpgMulti
+        FULL_PATH = os.path.abspath(args.filename)
+        BASE_PATH, fname = os.path.split(FULL_PATH)
+        patrn = re.compile(MULTI_EXT_FMT, re.IGNORECASE)
+        fname_base = re.sub(patrn, '', fname) # strip the extension
+        tab = OpgMulti.fromfile(BASE_PATH, fname_base)
+    from ..opg_propaceos import OpgPropaceosGrid
+    from scipy.constants import N_A
+    tele = tab['temp']
+    nele = tab['rho']*N_A/args.Abar
+
+    if args.value == 'grid2prp':
+        print tab.keys()
+        print "="*80
+        print OpgPropaceosGrid.format_grid1(nele, tele, tab['groups'])
+        print "="*80
+        print '+'*80
+        print '='*80
+        print OpgPropaceosGrid.format_grid2(nele, tele)
+    elif args.value == 'grid2file':
+        outname_base = os.path.join('./', fname_base)
+        np.savetxt(outname_base+'.nele-grid.txt', nele,
+                header='Electron density grid [1/cc]\nsource: {0}'.format(FULL_PATH))
+        np.savetxt(outname_base+'.temp-grid.txt', tele,
+                header='Plasma temperature grid [eV]\nsource: {0}'.format(FULL_PATH))
+        np.savetxt(outname_base+'.nu-grid.txt', tab['groups'],
+                header='Photon energy groups grid [eV]\nsource: {0}'.format(FULL_PATH))
 
 
+def opac_prp2file():
+    from ..opg_propaceos import OpgPropaceosAscii
 
+    parser = argparse.ArgumentParser(description= """
+    This script is used to browse various EoS/Opacity tables formats
+    """)
+    parser.add_argument('-t','--ftype',
+            action="store", type=str,
+            choices=['multi', 'ionmix'],
+            default='multi',
+            help='Database type. Default: sesame.')
+    parser.add_argument('-f','--filename',
+            action="store", type=str,
+            help='Filename', required=True)
+    args = parser.parse_args()
+    op = OpgPropaceosAscii(args.filename)
+    basedir, filename = os.path.split(os.path.abspath(args.filename))
+    basename, _ = os.path.splitext(filename)
+    if args.ftype == 'multi':
+        from ..opg_multi import OpgMulti
+
+        op_multi = OpgMulti(**op)
+        op_multi.set_id(3717)
+        print op_multi.keys()
+        op_multi.write(os.path.join(basedir, basename + '-prp'), floor=1e-7)

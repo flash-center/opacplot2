@@ -3,3 +3,5 @@ dist
 opacplot2.egg-info
 visualization/*.ipynb
 *.swp
+*pyc
+*cn4

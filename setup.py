@@ -18,6 +18,10 @@ if __name__ == "__main__":
           url='http://flash.uchicago.edu/',
           packages=['opacplot2', 'opacplot2.presets'],
           entry_points = {
-                    'console_scripts': ['opacplot2 = opacplot2.scripts:main']
+                    'console_scripts': ['opacplot2 = opacplot2.scripts:main',
+                                        'opac.prp_convert = opacplot2.scripts.main:opac_prp2file',
+                                        'opacdump = opacplot2.scripts.main:opacdump',
+                                        'opacdiff = opacplot2.scripts.opac_diff:opac_diff'
+                                        ],
                         }
           )
