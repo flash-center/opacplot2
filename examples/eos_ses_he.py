@@ -1,7 +1,7 @@
 #!/usr/python
 # -*- coding: utf-8 -*-
 
-# Very simple example to illistrate file convertion to IONMIX format.
+# A very simple example to illistrate file convertion to the IONMIX format.
 
 
 import opacplot2 as opp
@@ -11,14 +11,16 @@ import numpy as np
 # For OPAC file format the parser might be opacplot2/opg_tabop.py
 # otherwise it would have to be implemented.
 
-eos_data = opp.OpgSesame("./he-ses-5761.txt", opp.OpgSesame.SINGLE, verbose=False)[5761]
+print dir(opp.OpgSesame)
+eos_data = opp.OpgSesame("../../../eos/sesame/xsesame_ascii", opp.OpgSesame.SINGLE, verbose=False).data[5761]
 
 
 # Write EoS/Opacity data, see opg_ionmix.py for writeIonmixFile class
 # definion. When writing EoS file in 3T one has to provide eion, eele,
 # pion, pele, zbar arguments. For a IONMIX file containing opacity data, 
 # following arguments have to be provided: ngroups, opac_bounds, rosseland,
-# planck_absorb, planck_emiss
+# planck_absorb, planck_emiss. See FLASH4 manual for expected units in
+# the IONMIX format.
 fracs = (1.0,)
 filename = 'he-ses-5761.cn4'
 numDens = opp.NA * eos_data['ele_dens'] / eos_data["abar"] # convert from g.cm⁻³ to cm⁻³.
