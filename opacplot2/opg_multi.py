@@ -142,10 +142,16 @@ class OpgMulti(dict):
                 cline = [cline[:15], cline[15:30], cline[30:45], cline[45:60]]
                 if cline[0]:
                     # means it's not actually an empty line
-                    if not cline.count("\n"):
+                    # this whole thing is very awkward. Has to be
+                    # rewritten.
+                    if not cline.count("\n") and not cline.count("\r\n"):
                         tmp.extend(list(map(float, cline)))
                     else:
-                        tmp.extend(list(map(float, cline[:cline.index("\n")])))
+                        if clne.count("\n"):
+                            tmp.extend(list(map(float, cline[:cline.index("\n")])))
+                        elif cline.count("\r\n"):
+                            tmp.extend(list(map(float, cline[:cline.index("\r\n")])))
+
             out.append(tmp[r_len+T_len:])
             #if not len(rho) and not len(temp):
             rho = np.power(10, tmp[:r_len])

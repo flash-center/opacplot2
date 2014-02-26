@@ -113,7 +113,7 @@ def opacdump():
         tab = OpgMulti.fromfile(BASE_PATH, fname_base)
     from ..opg_propaceos import OpgPropaceosGrid
     from scipy.constants import N_A
-    tele = tab['temp']
+    tele = tab['temp']*1e3
     nele = tab['rho']*N_A/args.Abar
 
     if args.value == 'grid2prp':
