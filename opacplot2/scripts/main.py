@@ -6,6 +6,11 @@ import os, os.path
 import opacplot2 as opp
 import re
 import numpy as np
+from scipy.constants import N_A
+from scipy.constants import physical_constants
+          
+eV2K_cst = physical_constants['electron volt-kelvin relationship'][0]
+
 
 def main():
 
@@ -88,50 +93,90 @@ def opacdump():
     """)
     parser.add_argument('-t','--ftype',
             action="store", type=str,
-            choices=['multi', 'propaceos'],
+            choices=['multi', 'propaceos', 'grid_solid', 'grid_gas'],
             default='multi',
             help='Database type. Default: sesame.')
     parser.add_argument('-f','--filename',
             action="store", type=str,
-            help='Filename', required=True)
+            help='Filename')
     parser.add_argument('--Abar',
             action="store", type=float,
-            help='Filename', required=True)
+            help='Atomic mass of the element')
+    parser.add_argument('--rho0',
+            action="store", type=float,
+            help='Refernce density for a solid [g/cc]')
     parser.add_argument('value',
             action="store", type=str,
             help='Parameters to print',
-            choices=['grid2prp', 'grid2file'],
+            choices=['grid2prp', 'grid2file', 'grid2ascii'],
             default=None)
     args = parser.parse_args()
 
-    if args.ftype == 'multi':
-        from ..opg_multi import MULTI_EXT_FMT, OpgMulti
-        FULL_PATH = os.path.abspath(args.filename)
-        BASE_PATH, fname = os.path.split(FULL_PATH)
-        patrn = re.compile(MULTI_EXT_FMT, re.IGNORECASE)
-        fname_base = re.sub(patrn, '', fname) # strip the extension
-        tab = OpgMulti.fromfile(BASE_PATH, fname_base)
-    from ..opg_propaceos import OpgPropaceosGrid
-    from scipy.constants import N_A
-    tele = tab['temp']*1e3
-    nele = tab['rho']*N_A/args.Abar
+    if args.ftype in ['grid_solid', 'grid_gas']:
+        groups = np.array([])
+        if args.ftype == 'grid_solid' and args.rho0 is None:
+            raise ValueError('--rho0 argument should be provided with "grid_solid" type!')
+        from eospac.base import GridBase
+        kind = args.ftype.split('_')[1]
+        grid = GridBase(rho_ref=args.rho0, kind=kind)
+        rho = grid.rho_grid
+        temp = grid.temp_grid/eV2K_cst
+
+
+    else:
+        if args.Abar is None:
+            raise ValueError
+        if args.filename is None:
+            raise ValueError
+        if args.ftype == 'multi':
+            from ..opg_multi import MULTI_EXT_FMT, OpgMulti
+            FULL_PATH = os.path.abspath(args.filename)
+            BASE_PATH, fname = os.path.split(FULL_PATH)
+            patrn = re.compile(MULTI_EXT_FMT, re.IGNORECASE)
+            fname_base = re.sub(patrn, '', fname) # strip the extension
+            tab = OpgMulti.fromfile(BASE_PATH, fname_base)
+        temp = tab['temp']
+        rho = tab['rho']
+        groups = tab['groups']
+    if args.Abar is not None:
+        nele = rho*N_A/args.Abar
 
     if args.value == 'grid2prp':
-        print tab.keys()
+        #print tab.keys()
         print "="*80
-        print OpgPropaceosGrid.format_grid1(nele, tele, tab['groups'])
+        from ..opg_propaceos import OpgPropaceosGrid
+        temp = np.unique(np.fmax(0.01, temp))
+        nele = np.unique(np.fmax(1e6, nele))
+        nele = np.unique(np.fmin(1e26, nele))
+        print OpgPropaceosGrid.format_grid1(nele, temp, groups)
         print "="*80
         print '+'*80
         print '='*80
-        print OpgPropaceosGrid.format_grid2(nele, tele)
+        print OpgPropaceosGrid.format_grid2(nele, temp)
     elif args.value == 'grid2file':
         outname_base = os.path.join('./', fname_base)
         np.savetxt(outname_base+'.nele-grid.txt', nele,
                 header='Electron density grid [1/cc]\nsource: {0}'.format(FULL_PATH))
-        np.savetxt(outname_base+'.temp-grid.txt', tele,
+        np.savetxt(outname_base+'.temp-grid.txt', temp,
                 header='Plasma temperature grid [eV]\nsource: {0}'.format(FULL_PATH))
-        np.savetxt(outname_base+'.nu-grid.txt', tab['groups'],
+        np.savetxt(outname_base+'.nu-grid.txt', groups,
                 header='Photon energy groups grid [eV]\nsource: {0}'.format(FULL_PATH))
+    elif args.value == 'grid2ascii':
+        def repr_grid(arr, label):
+            out = []
+            out += ['='*80]
+            out += ['     {0}: {1} points'.format(label, len(arr))]
+            out += ['='*80]
+            out = '\n'.join(out)
+            return out + '\n'+ np.array2string(arr, precision=3, separator=',')
+        print repr_grid(rho, "Density grid [g/cc]")
+        print repr_grid(temp, 'Temperature grid [eV]')
+        if args.Abar is not None:
+            print repr_grid(nele, "Ionic density grid [1/cc]")
+        if len(groups):
+            print repr_grid(groups, "Photon energy groups [eV]")
+
+
 
 
 def opac_prp2file():

@@ -37,8 +37,8 @@ def intersection(A, B):
 # User defined parameters
 #===============================================================================
 composition_request = {'X': 0.9, 'Y': 0.02, 'dXc': 0.001}
-logT_bounds = [3.8,7]
-logRho_bounds = [-8, 1]
+logT_bounds = [3.8,8]
+logRho_bounds = [-11, -3]
 
 #===============================================================================
 # Loading OPAL table
@@ -71,13 +71,15 @@ rho_arr, temp_arr = np.meshgrid(rho, temp, indices='ij')
 #===============================================================================
 opr = np.ones((Nr,Nt))*np.nan
 for tidx in range(Nt):
-    # getting density boundaries for a given temperature
-    logRholim, logTlim = ionmix_grid_bounds(op, logTlim=[np.log10(temp[tidx])]*2)
-    rho_mask = (rho>10**logRholim[1])*(rho<10**logRholim[0])
-    rho_mask_len = len(np.nonzero(rho_mask)[0])
-
-    if rho_mask_len:
-        opr[rho_mask,tidx] =  op.kappa(rho=rho[rho_mask], T=temp[tidx]*np.ones(rho_mask_len))
+    opr[:,tidx] = op.lookup(logrho=np.log10(rho), logT=np.log10(temp[tidx])*np.ones(Nr))
+opr = 10**(opr)
+#    # getting density boundaries for a given temperature
+#    logRholim, logTlim = ionmix_grid_bounds(op, logTlim=[np.log10(temp[tidx])]*2)
+#    rho_mask = (rho>10**logRholim[1])*(rho<10**logRholim[0])
+#    rho_mask_len = len(np.nonzero(rho_mask)[0])
+#
+#    if rho_mask_len:
+#        opr[rho_mask,tidx] =  op.kappa(rho=rho[rho_mask], T=temp[tidx]*np.ones(rho_mask_len))
 
 
 
@@ -94,7 +96,7 @@ plt.colorbar(cs)
 ax.set_xscale('log')
 ax.set_yscale('log')
 ax.set_xlabel(r'$\rho$ [g.cm$^{-3}$]')
-ax.set_ylabel(r'$T_e$ [eV]')
+ax.set_ylabel(r'$T_e$ [K]')
 ax.set_title('Rosseland mean opacity OPAL: Y=0.080 X=0.700 Z=0.020 dXc=0.100 dXo=0.100')
 plt.savefig('opal_opr.png', bbox_inches='tight')
 

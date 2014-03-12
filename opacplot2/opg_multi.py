@@ -147,7 +147,7 @@ class OpgMulti(dict):
                     if not cline.count("\n") and not cline.count("\r\n"):
                         tmp.extend(list(map(float, cline)))
                     else:
-                        if clne.count("\n"):
+                        if cline.count("\n"):
                             tmp.extend(list(map(float, cline[:cline.index("\n")])))
                         elif cline.count("\r\n"):
                             tmp.extend(list(map(float, cline[:cline.index("\r\n")])))
@@ -164,7 +164,10 @@ class OpgMulti(dict):
                     "The temp grid is not the same for all op[prez] files"
             else:
                 self['rho'] = rho
-                self['temp'] = temp
+                if tabletype == 'opz':
+                    self['temp'] = temp*1e3  # opz is in keV
+                else: 
+                    self['temp'] = temp       # everything else is in eV
 
         if tabletype == 'opz':
             self["zbar"] = np.power(10, np.array(out).reshape(

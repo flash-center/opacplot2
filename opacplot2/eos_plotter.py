@@ -143,7 +143,7 @@ def plot_diff_mg_opac(fig, op_list, idx=None):
                         op_list[0]['rho'][idx[0]], op_list[0]['temp'][idx[1]]))
     for var_idx, var in enumerate(['opp_mg', 'opr_mg', 'eps_mg']):
         for op in op_list:
-            ax[var_idx].step(groups[:-1], op[var][idx[0], idx[1]],
+            ax[var_idx].step(groups[:-1], op[var][idx[0], idx[1]], where='post',
                        label=(var== 'opp_mg' and op['label'].replace('_', '\_')))
 
     def gnorm(a,b):
@@ -157,11 +157,11 @@ def plot_diff_mg_opac(fig, op_list, idx=None):
             return 'solid'
     for var_idx, var in enumerate(['opp_mg', 'opr_mg']):
         err = gnorm(op_list[1][var][idx[0], idx[1]],  op_list[0][var][idx[0], idx[1]])
-        ax[3].step(groups[:-1], err, label=var.replace('_', '\_'),
+        ax[3].step(groups[:-1], err, label=var.replace('_', '\_'), where='post',
                        ls=mls(var))
     ax3b = plt.twinx(ax[3])
     err = anorm(op_list[1]['eps_mg'][idx[0], idx[1]],  op_list[0]['eps_mg'][idx[0], idx[1]])
-    ax3b.step(groups[:-1], err, 'r-')
+    ax3b.step(groups[:-1], err, 'r-', where='post')
     ax3b.set_ylabel(r'eps\_mg', color='r')
     for tl in ax3b.get_yticklabels():
         tl.set_color('r')

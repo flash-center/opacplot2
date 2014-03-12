@@ -95,7 +95,6 @@ def opac_diff():
     fig = plt.figure(figsize=(12,4))
     plot_Zbar(fig, op)
     fig.savefig(os.path.join(args.out_dir, 'Zbar.png'), bbox_inches='tight')
-    return
 
 
 
