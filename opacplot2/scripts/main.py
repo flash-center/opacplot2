@@ -187,12 +187,12 @@ def opac_prp2file():
     """)
     parser.add_argument('-t','--ftype',
             action="store", type=str,
-            choices=['multi', 'ionmix'],
+            choices=['multi', 'ionmix', 'hdf5'],
             default='multi',
             help='Database type. Default: sesame.')
-    parser.add_argument('-f','--filename',
+    parser.add_argument('filename',
             action="store", type=str,
-            help='Filename', required=True)
+            help='Filename')
     args = parser.parse_args()
     op = OpgPropaceosAscii(args.filename)
     basedir, filename = os.path.split(os.path.abspath(args.filename))
@@ -204,3 +204,6 @@ def opac_prp2file():
         op_multi.set_id(3717)
         print op_multi.keys()
         op_multi.write(os.path.join(basedir, basename + '-prp'), floor=1e-7)
+    elif args.ftype == 'hdf5':
+        op.write2hdf(os.path.join(basedir,basename+'.h5'))
+
