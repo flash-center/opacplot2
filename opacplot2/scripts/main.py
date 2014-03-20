@@ -176,6 +176,3 @@ def opacdump():
         if len(groups):
             print repr_grid(groups, "Photon energy groups [eV]")
 
-
-
-
