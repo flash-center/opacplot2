@@ -179,28 +179,3 @@ def opacdump():
 
 
 
-def opac_prp2file():
-    from ..opg_propaceos import OpgPropaceosAscii
-
-    parser = argparse.ArgumentParser(description= """
-    This script is used to browse various EoS/Opacity tables formats
-    """)
-    parser.add_argument('-t','--ftype',
-            action="store", type=str,
-            choices=['multi', 'ionmix'],
-            default='multi',
-            help='Database type. Default: sesame.')
-    parser.add_argument('-f','--filename',
-            action="store", type=str,
-            help='Filename', required=True)
-    args = parser.parse_args()
-    op = OpgPropaceosAscii(args.filename)
-    basedir, filename = os.path.split(os.path.abspath(args.filename))
-    basename, _ = os.path.splitext(filename)
-    if args.ftype == 'multi':
-        from ..opg_multi import OpgMulti
-
-        op_multi = OpgMulti(**op)
-        op_multi.set_id(3717)
-        print op_multi.keys()
-        op_multi.write(os.path.join(basedir, basename + '-prp'), floor=1e-7)
