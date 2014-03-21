@@ -15,7 +15,7 @@ class OpgHdf5(dict):
         explicit_load: bool
                   load the whole file to memory
         """
-        self.f = f = tables.open_file(filename, 'r')
+        self.f = f = tables.openFile(filename, 'r')
         for el in f.root:
             self[el.name] = el
         for key in f.root._v_attrs._f_list():

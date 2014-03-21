@@ -12,7 +12,7 @@ from scipy.constants import physical_constants
           
 eV2K_cst = physical_constants['electron volt-kelvin relationship'][0]
 
-def opac_convert():
+def opac_hdf2table():
 
     parser = argparse.ArgumentParser(description= """
     This script is used to browse various EoS/Opacity tables formats

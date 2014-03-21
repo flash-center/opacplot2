@@ -249,7 +249,7 @@ class OpgPropaceosAscii(dict):
                 if res:
                     self[key] = func(re.sub(expr, '', line))
         self['Anum'] = np.array([periodictable.elements[Znum].mass for Znum in self['Znum']])
-        self['Zsymb'] = np.array([periodictable.elements[Znum].symbol for Znum in self['Znum']], dtype='|S1')
+        self['Zsymb'] = np.array([periodictable.elements[Znum].symbol for Znum in self['Znum']], dtype='|S2')
 
 
     def _get_lines(self, start, stop=None):

@@ -5,6 +5,8 @@ import os.path
 import numpy as np
 import re
 import gzip
+import periodictable as ptab
+from scipy.constants import N_A
 
 MULTI_EXT_FMT = r'.(?P<ext>[oe]p[ezprs])(?:\.gz)?'
 
@@ -157,13 +159,13 @@ class OpgMulti(dict):
             rho = np.power(10, tmp[:r_len])
             temp = np.power(10, tmp[r_len:r_len+T_len])
 
-            if 'rho' in self and "temp" in self:
-                assert len(rho) == len(self['rho']),\
+            if 'dens' in self and "temp" in self:
+                assert len(rho) == len(self['dens']),\
                 "The rho grid is not the same for all op[prez] files"
                 assert len(temp) == len(self['temp']),\
                     "The temp grid is not the same for all op[prez] files"
             else:
-                self['rho'] = rho
+                self['dens'] = rho
                 if tabletype == 'opz':
                     self['temp'] = temp*1e3  # opz is in keV
                 else: 
@@ -171,7 +173,7 @@ class OpgMulti(dict):
 
         if tabletype == 'opz':
             self["zbar"] = np.power(10, np.array(out).reshape(
-                                    (len(self['temp']), len(self['rho'])))).T
+                                    (len(self['temp']), len(self['dens'])))).T
         else:
             if 'groups' in self:
                 assert len(groups) == len(self['groups']),\
@@ -179,7 +181,7 @@ class OpgMulti(dict):
             else:
                 self['groups'] = np.array(groups)
             self[tabletype+'_mg'] = np.power(10, np.array(out).reshape(
-                                            (len(idx), len(self['temp']), len(self['rho'])))).T
+                                            (len(idx), len(self['temp']), len(self['dens'])))).T
         f.close()
 
     def write(self, prefix, floor=None):
@@ -197,7 +199,7 @@ class OpgMulti(dict):
                 HEADER_FMT1 = " {tname:14} 0.60000000E+01"
                 f.write((HEADER_FMT1 + HEADER_FMT2).format(tname=self.table_name[ext],
                                                     dim=ctable.shape, f=FMT))
-                X = self['rho']
+                X = self['dens']
                 X = np.append(X, self['temp']*1e-3)
                 X = np.append(X, ctable[:,:].T)
                 X = np.log10(X)
@@ -209,7 +211,7 @@ class OpgMulti(dict):
                             op_type=self._op_labels[ext]+'  ', dim = ctable.shape, f=FMT))
                     f.write("{:{f}}{:{f}}\n".format(self['groups'][n], self['groups'][n+1], f=FMT))
 
-                    X = self['rho']
+                    X = self['dens']
                     X = np.append(X, self['temp'])
                     if floor is None:
                         X = np.append(X, ctable[:,:,n].T)
@@ -219,6 +221,56 @@ class OpgMulti(dict):
                     self._write_vector(f, X)
                 f.close()
             f.close()
+    def write2hdf(self, filename, Znum, Anum=None, Xnum=None):
+        """ Convert to hdf5
+        Parameters
+        """
+        import tables
+        h5filters = tables.Filters(complib='blosc', complevel=7, shuffle=True)
+        f = tables.openFile(filename, 'w', filters=h5filters)
+
+        if type(Znum) is int:
+            Znum = [Znum]
+        self['Znum'] = np.array(Znum, dtype='int')
+        if Anum is None:
+            self['Anum'] = np.array([ptab.elements[el].mass for el in self['Znum']])
+        else:
+            self['Anum'] = np.array(Anum)
+        self['Zsymb'] = np.array([ptab.elements[el].symbol for el in self['Znum']], dtype='|S2')
+        if Xnum is None:
+            if len(Znum) == 1:
+                self['Xnum'] = np.array([1.0])
+            else:
+                raise ValueError('Xnum array should be provided')
+        else:
+            self['Xnum'] = np.array(Xnum)
+        self['Abar'] = np.sum(self['Xnum']*self['Anum'])
+        self['Zmax'] = np.sum(self['Xnum']*self['Znum'])
+        self['idens'] = self['dens']*N_A/self['Abar']
+        
+        self['emp_mg'] = self['opp_mg']*self['eps_mg']
+        print "Warning: computing eps = opp*eps. This is valid onlu when the number of groups is very large!"
+
+        names_dict = {'idens': 'idens',
+                      'temp': 'temp',
+                      'dens' : 'dens',
+                      'zbar': 'Zf_DT',
+                      'opp_mg': 'opp_mg',
+                      'opr_mg': 'opr_mg',
+                      'emp_mg': 'emp_mg',
+                      'Znum': 'Znum',
+                      'Anum': 'Anum',
+                      'Xnum': 'Xnum',
+                      'groups': 'groups',}
+        for prp_key, h5_key in sorted(names_dict.iteritems()):
+            atom = tables.Atom.from_dtype(self[prp_key].dtype)
+            ds = f.createCArray(f.root, h5_key, atom, self[prp_key].shape, filters=h5filters)
+            ds[:] = self[prp_key]
+        # writing attributes
+        for attr in ['Abar', 'Zmax']:
+            setattr(f.root._v_attrs,attr, self[attr])
+        f.close()
+
 
     @staticmethod
     def _write_vector(f, X):
