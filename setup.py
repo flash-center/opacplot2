@@ -22,7 +22,8 @@ if __name__ == "__main__":
                                         'opac_table2hdf = opacplot2.scripts.opac_table2hdf:opac_table2hdf',
                                         'opac_hdf2table = opacplot2.scripts.opac_hdf2table:opac_hdf2table',
                                         'opacdump = opacplot2.scripts.main:opacdump',
-                                        'opacdiff = opacplot2.scripts.opac_diff:opac_diff'
+                                        'opacdiff = opacplot2.scripts.opac_diff:opac_diff',
+                                        'opac_checkhdf = opacplot2.scripts.main:opac_checkhdf',
                                         ],
                         }
           )

@@ -176,3 +176,16 @@ def opacdump():
         if len(groups):
             print repr_grid(groups, "Photon energy groups [eV]")
 
+def opac_checkhdf():
+    parser = argparse.ArgumentParser(description= """
+    Check consistency of hdf5 opacity file
+    """)
+    parser.add_argument('input_file',
+            action="store", type=str,
+            help='Input hdf5 file ')
+    args = parser.parse_args()
+    from ..opg_hdf5 import OpgHdf5
+
+    op = OpgHdf5(args.input_file)
+    op.run_testsuite('short')
+

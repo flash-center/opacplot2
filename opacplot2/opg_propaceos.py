@@ -367,14 +367,19 @@ class OpgPropaceosAscii(dict):
                       'Anum_prp': 'Anum_prp',
                       'groups': 'groups',
                       'Zsymb': 'Zsymb'}
-        for key in self:
-            if 'ion_frac_' in key:
-                names_dict[key] = key
 
         for prp_key, h5_key in sorted(names_dict.iteritems()):
             atom = tables.Atom.from_dtype(self[prp_key].dtype)
             ds = f.createCArray(f.root, h5_key, atom, self[prp_key].shape, filters=h5filters)
             ds[:] = self[prp_key]
+        f.createGroup(where='/', name='ion_frac', filters=h5filters)
+        names_dict_ion = {}
+        for key in self:
+            if 'ion_frac_' in key:
+                atom = tables.Atom.from_dtype(self[key].dtype)
+                ds = f.createCArray(f.root.ion_frac, key.replace('ion_frac_', 'Z'), atom, self[key].shape)
+                ds[:] = self[key]
+
         # writing attributes
         for attr in ['BulkMod', 'ElemNum', 'Abar', 'Zmax']:
             setattr(f.root._v_attrs,attr, self[attr])
