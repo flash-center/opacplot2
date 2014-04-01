@@ -18,14 +18,13 @@ def opac_table2hdf():
     This script is used to browse various EoS/Opacity tables formats
     """)
     avalable_formats = ['multi', 'ionmix', 'hdf5', 'propaceos']
-    parser.add_argument('-i','--inftype',
+    parser.add_argument('-t','--ftype',
             action="store", type=str,
             choices=avalable_formats,
             default='multi',
             help='Input filetype. Default: multi')
     parser.add_argument('-o','--outname',
             action="store", type=str,
-            default='hdf5',
             help='Output file base name/path')
     parser.add_argument('--Znum',
             action="store", type=str,
@@ -39,11 +38,13 @@ def opac_table2hdf():
     args = parser.parse_args()
 
     basedir, filename = os.path.split(os.path.abspath(args.input_file))
-    basename_in, _ = os.path.splitext(filename)
+    basename_in = os.path.splitext(os.path.splitext(filename)[0])[0]
 
-    if args.outname is None:
-        filename_out, _ = os.path.splitext(os.path.abspath(args.outname))
+
+    if args.outname is not None:
+        filename_out = os.path.splitext(os.path.abspath(args.outname))[0]
     else:
+        print basedir, basename_in
         filename_out = os.path.join(basedir, basename_in)
     if args.Znum is not None:
         Znum = [int(el) for el in args.Znum.split(',')]
@@ -55,11 +56,11 @@ def opac_table2hdf():
         Xnum = None
 
     # ====================== Parsing input file ==========================
-    if args.inftype == 'propaceos':
+    if args.ftype == 'propaceos':
         from ..opg_propaceos import OpgPropaceosAscii
         op = OpgPropaceosAscii(args.input_file)
         op.write2hdf(filename_out+'.h5')
-    elif args.inftype == 'multi':
+    elif args.ftype == 'multi':
         if Znum is None:
             raise ValueError('Znum parameter should be provided!')
         if Xnum is None and len(Znum)>1:

@@ -60,7 +60,7 @@ class OpgMulti(dict):
 
     @classmethod
 
-    def fromfile(cls, folder, base_name):
+    def open_file(cls, folder, base_name):
         """
         Parse MULTI format from a file
         Parameters:
@@ -184,13 +184,21 @@ class OpgMulti(dict):
                                             (len(idx), len(self['temp']), len(self['dens'])))).T
         f.close()
 
-    def write(self, prefix, floor=None):
+    def write(self, prefix, fmin=None, fmax=None):
         """
         Write multigroup opacities to files specified by a prefix
         """
+        for key in ['eps_mg', 'temp', 'dens', 'opp_mg', 'opr_mg', 'emp_mg']:
+            if key in self:
+                self[key] = self[key][:]
         
         HEADER_FMT2 = "{dim[0]:{f}}{dim[1]:{f}}\n"
         extensions = {'opp_mg': 'opp','opr_mg':'opr','eps_mg': 'eps','zbar':'opz'}
+        if 'eps_mg' not in self and 'emp_mg' in self:
+            self['eps_mg'] = self['emp_mg']/self['opp_mg']
+        if 'zbar' not in self and 'Zf_DT' in self:
+            self['zbar'] = self['Zf_DT']
+
         for opt in filter(lambda k: k in ['opp_mg','opr_mg','eps_mg','zbar'], self):
             ctable =  self[opt]
             ext = extensions[opt]
@@ -201,7 +209,10 @@ class OpgMulti(dict):
                                                     dim=ctable.shape, f=FMT))
                 X = self['dens']
                 X = np.append(X, self['temp']*1e-3)
-                X = np.append(X, ctable[:,:].T)
+                val = ctable[:,:].T
+                if fmin is not None:
+                    val = np.fmax(val, fmin)
+                X = np.append(X, val)
                 X = np.log10(X)
                 self._write_vector(f, X)
             else:
@@ -213,15 +224,21 @@ class OpgMulti(dict):
 
                     X = self['dens']
                     X = np.append(X, self['temp'])
-                    if floor is None:
-                        X = np.append(X, ctable[:,:,n].T)
-                    else:
-                        X = np.append(X, np.fmax(ctable[:,:,n].T, floor))
+                    val = ctable[:,:,n].T
+                    val[np.isnan(val)] = (fmax is not None) and fmax or np.nanmax(val)
+                    if fmin is not None:
+                        val = np.fmax(val, fmin)
+                    if fmax is not None:
+                        val = np.fmin(val, fmax)
+
+                    X = np.append(X, val)
                     X = np.log10(X)
                     self._write_vector(f, X)
                 f.close()
             f.close()
-    def write2hdf(self, filename, Znum, Anum=None, Xnum=None):
+
+
+    def write2hdf(self, filename, Znum=None, Anum=None, Xnum=None):
         """ Convert to hdf5
         Parameters
         """
@@ -229,6 +246,11 @@ class OpgMulti(dict):
         h5filters = tables.Filters(complib='blosc', complevel=7, shuffle=True)
         f = tables.openFile(filename, 'w', filters=h5filters)
 
+        if Znum is None:
+            if "Znum" in self:
+                Znum = self['Znum']
+            else:
+                raise ValueError('Znum Varray should be providied!')
         if type(Znum) is int:
             Znum = [Znum]
         self['Znum'] = np.array(Znum, dtype='int')
@@ -249,7 +271,7 @@ class OpgMulti(dict):
         self['idens'] = self['dens']*N_A/self['Abar']
         
         self['emp_mg'] = self['opp_mg']*self['eps_mg']
-        print "Warning: computing eps = opp*eps. This is valid onlu when the number of groups is very large!"
+        #print "Warning: computing eps = opp*eps. This is valid onlu when the number of groups is very large!"
 
         names_dict = {'idens': 'idens',
                       'temp': 'temp',

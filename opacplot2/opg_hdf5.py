@@ -55,7 +55,8 @@ def testsuite(var, cond=None, mode='short'):
     return func_outerwrap
 
 class OpgHdf5(dict):
-    def __init__(self, filename, explicit_load=False):
+    @classmethod
+    def open_file(cls, filename, explicit_load=False):
         """
         Open an HDF5 file containing opacity data
 
@@ -66,6 +67,7 @@ class OpgHdf5(dict):
         explicit_load: bool
                   load the whole file to memory
         """
+        self = cls()
         self.f = f = tables.openFile(filename, 'r')
         for el in f.root:
             if isinstance(el, tables.group.Group):
@@ -82,6 +84,42 @@ class OpgHdf5(dict):
         if explicit_load: self.force_eval()
         self._compute_ionization()
         self._initialize_ionfrac_tests()
+        self.Nr =  self['dens'].shape[0]
+        self.Nt =  self['temp'].shape[0]
+        self.Ng =  self['groups'].shape[0] - 1
+        return self
+
+    def write2file(self, filename, **args):
+        import tables
+        h5filters = tables.Filters(complib='blosc', complevel=7, shuffle=True)
+        f = tables.openFile(filename, 'w', filters=h5filters)
+
+        ATTR_LIST = ['BulkMod', 'ElemNum', 'Abar', 'Zmax']
+
+        for key in sorted(self.keys()):
+            if key in ATTR_LIST or key in ["ion_frac"]: continue
+            if key in args:
+                val = args[key]
+            else:
+                if self[key] is None: continue
+                val = self[key][:]
+            atom = tables.Atom.from_dtype(val.dtype)
+            ds = f.createCArray(f.root, key, atom, val.shape, filters=h5filters)
+            ds[:] = val
+
+        f.createGroup(where='/', name='ion_frac', filters=h5filters)
+        if 'ion_frac' in self:
+            for  ion_frac_key,  ion_frac_val in self['ion_frac'].iteritems():
+                atom = tables.Atom.from_dtype(ion_frac_val.dtype)
+                ds = f.createCArray(f.root.ion_frac, ion_frac_key, atom, ion_frac_val.shape)
+                ds[:] = ion_frac_val[:]
+
+        # writing attributes
+        for attr in ['BulkMod', 'ElemNum', 'Abar', 'Zmax']:
+            if attr in self:
+                setattr(f.root._v_attrs,attr, self[attr])
+        f.close()
+
 
     def force_eval(self):
         """
@@ -103,12 +141,14 @@ class OpgHdf5(dict):
         if 'ion_frac' not in self:
             self['Zfo_DT'] = None
         else:
-            DT_shape = self['Zf_DT'][:].shape
+            DT_shape = self['Zf_DT'].shape
             self['Zfo_DT'] = np.zeros(DT_shape)
+            self['ion_frac_sum'] = np.zeros(DT_shape)
             for Zel, Zfrac  in self['ion_frac'].iteritems():
                 IonLvls = np.arange(int(Zel[1:])+1)
                 IonLvls_arr = np.tile(IonLvls, DT_shape).reshape(DT_shape +(-1,))
                 self['Zfo_DT'] += (Zfrac*IonLvls_arr).sum(axis=-1)
+                self['ion_frac_sum'] += np.sum(Zfrac, axis=-1)
 
     def run_testsuite(self, mode='short'):
         for attr in dir(self):
