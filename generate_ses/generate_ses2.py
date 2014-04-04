@@ -11,10 +11,12 @@ from hedp.eos import thomas_fermi_ionization
 
 #table_id = 7593
 #table_id = 3720
-table_id = 3336
+#table_id = 3336
+table_id = 2700
 #mat = 'polystyrene'
-mat = 'Cu'
-rho0 = 8.96
+mat = 'Au'
+#rho0 = 8.96
+rho0 = 19.3
 filename = '{0}-ses-{1:4d}-v2.cn4'.format(mat.lower(), int(table_id))
 
 mat_dict = hedp.matdb(mat)
@@ -32,15 +34,15 @@ eos_w = copy.deepcopy(eos_i)
 # merge Ion and Ele grids
 eos_o = opp.adapt.EosMergeGrids(eos_w,
                 filter_dens=lambda x: (x>0),
-                filter_temps=lambda x: (x>0.62), # remove everything bellow 0.62 eV to avoid negative values
+                filter_temps=lambda x: (x>1.), # remove everything bellow 0.62 eV to avoid negative values
                 thresh=[])
                 
 
 dens_arr, temp_arr = np.meshgrid(eos_o['ele_dens'], eos_o['ele_temps'] )
 
 zbar_tf = thomas_fermi_ionization(dens_arr, temp_arr, mat_dict.Z, mat_dict.A).T
-
-CheckEosConsistency(eos_o)
+#
+#CheckEosConsistency(eos_o)
 
 # Lookig what is happenning at room temperature and solid density
 rho0_idx = np.argmin(np.abs(eos_o['ele_dens']-0.92))
@@ -64,9 +66,9 @@ numDens = opp.NA * eos_o['ele_dens'] / eos_o['abar']
 #print mat_dict.snop.z, mat_dict.snop.fraction
 opp.writeIonmixFile(filename, mat_dict.snop.z, mat_dict.snop.fraction, 
                         numDens=numDens, temps=eos_o['ele_temps'],
-                        eion=eos_o["ioncc_eint"],
+                        eion=eos_o["ion_eint"], # changed ioncc to ion
                         eele=eos_o["ele_eint"],
-                        pion=eos_o["ioncc_pres"],
+                        pion=eos_o["ion_pres"], # changed ioncc to ion
                         pele=eos_o["ele_pres"],
                         zbar=zbar_tf)
 

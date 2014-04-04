@@ -18,7 +18,7 @@ def opac_hdf2table():
     parser = argparse.ArgumentParser(description= """
     This script is used to browse various EoS/Opacity tables formats
     """)
-    avalable_formats = ['multi', 'ionmix']
+    avalable_formats = ['multi', 'ionmix', 'ascii']
     parser.add_argument('-t','--ftype',
             action="store", type=str,
             choices=avalable_formats,
@@ -54,3 +54,24 @@ def opac_hdf2table():
         op = OpgMulti(**op)
         op.set_id(3717) # just a random number, shouldn't matter
         op.write(os.path.join(basedir, filename_out), floor=None)
+    elif args.ftype == 'ascii':
+        outfile = os.path.join(basedir, filename_out)+'.txt'
+        def repr_grid(arr, label):
+            out = []
+            out += ['='*80]
+            out += ['     {0}: {1} points'.format(label, len(arr))]
+            out += ['='*80]
+            out = '\n'.join(out)
+            return out + '\n'+ np.array2string(arr, precision=3, separator='')
+        print repr_grid(op['dens'][:], "Density grid [g/cc]")
+        print repr_grid(op['temp'][:], 'Temperature grid [eV]')
+        print repr_grid(op['idens'][:], "Ionic density grid [1/cc]")
+        #print repr_grid(op['groups'][:], "Photon energy groups [eV]")
+        nu = op['groups'][:]
+        nu = 0.5*(nu[1:]+nu[:-1])
+        out_op =  np.array([nu]+[op[key+'_mg'][0,0]*op['dens'][0] for key in ['opp', 'opr', 'emp']])
+        np.set_printoptions(threshold=1e9)
+        print repr_grid(out_op.T, 'Opacity: nu [eV], opp [1/cm], opr[1/cm], emp [??]')
+
+
+
