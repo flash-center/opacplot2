@@ -68,5 +68,5 @@ def opac_table2hdf():
         from ..opg_multi import OpgMulti, MULTI_EXT_FMT
         patrn = re.compile(MULTI_EXT_FMT, re.IGNORECASE)
         basename_in = re.sub(patrn, '', filename) # strip the extension
-        op = OpgMulti.fromfile(basedir, basename_in)
+        op = OpgMulti.open_file(basedir, basename_in)
         op.write2hdf(filename_out+'.h5', Znum=Znum, Xnum=Xnum)
