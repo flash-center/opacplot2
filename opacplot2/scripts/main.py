@@ -93,7 +93,7 @@ def opacdump():
     """)
     parser.add_argument('-t','--ftype',
             action="store", type=str,
-            choices=['multi', 'propaceos', 'grid_solid', 'grid_gas'],
+            choices=['multi', 'propaceos', 'grid_solid', 'grid_gas', 'grid_log'],
             default='multi',
             help='Database type. Default: sesame.')
     parser.add_argument('-f','--filename',
@@ -112,7 +112,7 @@ def opacdump():
             default=None)
     args = parser.parse_args()
 
-    if args.ftype in ['grid_solid', 'grid_gas']:
+    if args.ftype in ['grid_solid', 'grid_gas', 'grid_log']:
         groups = np.array([])
         if args.ftype == 'grid_solid' and args.rho0 is None:
             raise ValueError('--rho0 argument should be provided with "grid_solid" type!')
@@ -146,8 +146,8 @@ def opacdump():
         print "="*80
         from ..opg_propaceos import OpgPropaceosGrid
         temp = np.unique(np.fmax(0.01, temp))
-        nele = np.unique(np.fmax(1e6, nele))
-        nele = np.unique(np.fmin(1e26, nele))
+        nele = np.unique(np.fmax(1e10, nele))
+        nele = np.unique(np.fmin(5e25, nele))
         print OpgPropaceosGrid.format_grid1(nele, temp, groups)
         print "="*80
         print '+'*80

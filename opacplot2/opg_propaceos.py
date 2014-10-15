@@ -96,10 +96,40 @@ class OpgPropaceosGrid(object):
 
         return '\n'.join(out)
 
+def OpgPropaceosLog(path, Nr, Nt):
+    """
+    Parse PROPACEOS logs
+    """
+    lte_fallback = np.zeros((Nr, Nt), dtype=bool)
+    pop_sum = np.ones((Nr, Nt), dtype='float64')
+    eos_regexp = re.compile('\s*Now computing eos for T = .* IV1 =\s+(?P<tidx>\d+),  IV2 =\s+(?P<ridx>\d+).*')
+    pop_regexp = re.compile('\s*WARNING: Populations are not conserved. Sum pop =\s+(?P<pop>.*)\s+')
+    lte_regexp = re.compile('\s*WARNING: No convergence, switching to LTE\s*')
+    ridx, tidx = 0, 0
+
+    with open(path, 'r') as f:
+        for idx, line in enumerate(f):
+            m = re.match(eos_regexp, line)
+            if m:
+                ridx = int(m.group('ridx')) - 1
+                tidx = int(m.group('tidx')) - 1
+            else:
+                pop_match = re.match(pop_regexp, line)
+                if pop_match:
+                    pop_sum[ridx, tidx] = float(pop_match.group('pop'))
+                    continue
+                lte_match = re.match(lte_regexp, line)
+                if lte_match:
+                    lte_fallback[ridx, tidx] = True
+    return {'pop_sum': pop_sum, 'lte': lte_fallback}
+
+
+
+
 
 class OpgPropaceosAscii(dict):
     #@profile
-    def __init__(self, filename):
+    def __init__(self, filename, parse_log=False):
         """
         Parse PROPACEOS ascii file
 

@@ -270,8 +270,6 @@ class OpgMulti(dict):
         self['Zmax'] = np.sum(self['Xnum']*self['Znum'])
         self['idens'] = self['dens']*N_A/self['Abar']
         
-        self['emp_mg'] = self['opp_mg']*self['eps_mg']
-        #print "Warning: computing eps = opp*eps. This is valid onlu when the number of groups is very large!"
 
         names_dict = {'idens': 'idens',
                       'temp': 'temp',
@@ -279,11 +277,13 @@ class OpgMulti(dict):
                       'zbar': 'Zf_DT',
                       'opp_mg': 'opp_mg',
                       'opr_mg': 'opr_mg',
-                      'emp_mg': 'emp_mg',
                       'Znum': 'Znum',
                       'Anum': 'Anum',
                       'Xnum': 'Xnum',
                       'groups': 'groups',}
+        if 'eps_mg' in self:
+            self['emp_mg'] = self['opp_mg']*self['eps_mg']
+            names_dict['emp_mg'] = 'emp_mg'
         for prp_key, h5_key in sorted(names_dict.iteritems()):
             atom = tables.Atom.from_dtype(self[prp_key].dtype)
             ds = f.createCArray(f.root, h5_key, atom, self[prp_key].shape, filters=h5filters)
