@@ -270,6 +270,12 @@ class OpgMulti(dict):
         self['Zmax'] = np.sum(self['Xnum']*self['Znum'])
         self['idens'] = self['dens']*N_A/self['Abar']
         
+        if "eps_mg" in self:
+            self['emp_mg'] = self['opp_mg']*self['eps_mg']
+        else:
+            print 'Warning: looks like this is LTE opacity, no eps file found!'
+            print 'Setting planck emissivity to be the same as plack opacity...'
+            self['emp_mg'] = self['opp_mg'].copy()
 
         names_dict = {'idens': 'idens',
                       'temp': 'temp',

@@ -12,17 +12,17 @@ from hedp.eos import thomas_fermi_ionization
 #table_id = 7593
 #table_id = 3720
 #table_id = 3336
-table_id = 2700
+table_id = 2962
 #mat = 'polystyrene'
-mat = 'Au'
+mat = 'Ti'
 #rho0 = 8.96
-rho0 = 19.3
+rho0 = 4.42
 filename = '{0}-ses-{1:4d}-v2.cn4'.format(mat.lower(), int(table_id))
 
 mat_dict = hedp.matdb(mat)
 
 
-SESAME_DIR = '../../sesame/'
+SESAME_DIR = '/mnt/EoS_tables/sesame/'
 print 'Loading SESAME db...'
 eos_sesame = opp.OpgSesame(os.path.join(SESAME_DIR, "xsesame_ascii"), opp.OpgSesame.SINGLE, verbose=False)
 
@@ -34,7 +34,7 @@ eos_w = copy.deepcopy(eos_i)
 # merge Ion and Ele grids
 eos_o = opp.adapt.EosMergeGrids(eos_w,
                 filter_dens=lambda x: (x>0),
-                filter_temps=lambda x: (x>1.), # remove everything bellow 0.62 eV to avoid negative values
+                filter_temps=lambda x: (x>0.5), # remove everything bellow 0.62 eV to avoid negative values
                 thresh=[])
                 
 
@@ -77,13 +77,26 @@ opp.writeIonmixFile(filename, mat_dict.snop.z, mat_dict.snop.fraction,
 ionmix = opp.OpacIonmix(filename, eos_o['abar']/opp.NA, twot=True, man=True, verbose=False)
 
 test_dict = {'temps': 'ele_temps', 'dens': 'ele_dens',
-             'pele': 'ele_pres', 'pion': 'ioncc_pres',
-             'eele': 'ele_eint', 'eion': 'ioncc_eint'}
-print 'Checking: ',
+             'pele': 'ele_pres', 'pion': 'ion_pres',
+             'eele': 'ele_eint', 'eion': 'ion_eint'}
+print 'Checking that file was correctly written: ',
 for attr, key in test_dict.iteritems():
-     print attr,'...',
-     np.testing.assert_allclose(getattr(ionmix, attr), eos_o[key], atol=1e-5, rtol=1e-5)
+    print attr,'...',
+    try:
+        np.testing.assert_allclose(getattr(ionmix, attr), eos_o[key], atol=1e-5, rtol=1e-5)
+    except:
+        print 'failed'
 np.testing.assert_allclose(ionmix.zbar, zbar_tf, atol=1e-5, rtol=1e-5)
+print ''
+
+print 'Checking positivity:',
+for attr, key in test_dict.iteritems():
+    print attr,
+    try:
+        assert (getattr(ionmix, attr)>0).all()
+        print '...',
+    except:
+        print '[F:{0:.1e}]'.format(getattr(ionmix, attr).min()),'...',
 
 
 print '\nFile successfuly written!'

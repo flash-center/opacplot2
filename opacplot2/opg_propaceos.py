@@ -359,6 +359,7 @@ class OpgPropaceosAscii(dict):
 
     def remove_extra_qeos_pt(self):
         """ Remove extra point on the EoS grid added by QEOS"""
+        print self['nion_eos'], self['nion_opac']
         mask = np.in1d(self['nion_eos'], self['nion_opac'])
         self['nion'] = self['nion_opac']
         self['temp'] = self['temp_opac']

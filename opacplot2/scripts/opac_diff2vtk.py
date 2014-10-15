@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
 import argparse
 
 import os, os.path
@@ -12,26 +13,25 @@ from scipy.constants import physical_constants
 from ..opg_hdf5 import OpgHdf5
 
 eV2K_cst = physical_constants['electron volt-kelvin relationship'][0]
-avalable_formats = ['multi', 'ionmix', 'ascii', 'vtk']
 
-def opac_hdf2table():
+def opac_diff2vtk():
 
     parser = argparse.ArgumentParser(description= """
-    This script is used to browse various EoS/Opacity tables formats
+    This script is used to compare multiple hdf5 opacity tables of the same material.
+    All radiative grids are projected 
     """)
-    parser.add_argument('-t','--ftype',
+    parser.add_argument('-o', '--outdir',
             action="store", type=str,
-            choices=avalable_formats,
-            default='multi',
-            help='Output filetype. Default: multi')
-    parser.add_argument('-o', '--outfile',
-            action="store", type=str,
-            help='Output file base name/path')
-    parser.add_argument('input_file',
-            action="store", type=str,
-            help='Path to the input hdf5 file')
+            default='./',
+            help='Output directory')
+    parser.add_argument('opacity_files',
+            action="store", type=list,
+            help='List of opacity files. The radiative grid\
+of the first file is used for projection\
+when applicable.')
     args = parser.parse_args()
 
+    # for 
     basedir, filename = os.path.split(os.path.abspath(args.input_file))
     basename_in, _ = os.path.splitext(filename)
 
@@ -72,14 +72,6 @@ def opac_hdf2table():
         out_op =  np.array([nu]+[op[key+'_mg'][0,0]*op['dens'][0] for key in ['opp', 'opr', 'emp']])
         np.set_printoptions(threshold=1e9)
         print repr_grid(out_op.T, 'Opacity: nu [eV], opp [1/cm], opr[1/cm], emp [??]')
-    elif args.ftype == 'vtk':
-        outfile = os.path.join(basedir, filename_out)
-        from ..opg_vtk import opg_op2vtk
-
-        f = opg_op2vtk(op, outfile)
-    else:
-        print 'Error: {0} ftype not known!'.format(args.ftype)
-
 
 
 
