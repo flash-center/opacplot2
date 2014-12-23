@@ -243,7 +243,8 @@ class OpgMulti(dict):
         Parameters
         """
         import tables
-        h5filters = tables.Filters(complib='blosc', complevel=7, shuffle=True)
+        h5filters = tables.Filters(complib='blosc', complevel=7, shuffle=True,
+                least_significant_digit=6)
         f = tables.openFile(filename, 'w', filters=h5filters)
 
         if Znum is None:
