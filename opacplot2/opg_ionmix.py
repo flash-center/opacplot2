@@ -1,10 +1,13 @@
-from StringIO import StringIO
+from __future__ import absolute_import
+from __future__ import print_function
+
+from io import StringIO
 import numpy as np
 import re 
 import math
 
-from opl_grid import OplGrid
-from constants import ERG_TO_JOULE
+from .opl_grid import OplGrid
+from .constants import ERG_TO_JOULE
 
 class OpacIonmix:
     """
@@ -24,7 +27,7 @@ class OpacIonmix:
         self.man  = man
         self.hassele = hassele
         self.verb = verbose
-        if verbose: print "Reading IONMIX file \"%s\"\n" % (fn)
+        if verbose: print("Reading IONMIX file \"%s\"\n" % (fn))
 
         f = open(fn,'r')
 
@@ -71,13 +74,13 @@ class OpacIonmix:
         self.dens = self.numDens * self.mpi
             
         if self.verb: 
-            print "  Number of temperatures: %i" % self.ntemp
+            print("  Number of temperatures: %i" % self.ntemp)
             for i in range(0, self.ntemp):
-                print "%6i%27.16e" % (i, self.temps[i])
+                print("%6i%27.16e" % (i, self.temps[i]))
 
-            print "\n  Number of densities: %i" % self.ndens
+            print("\n  Number of densities: %i" % self.ndens)
             for i in range(0, self.ndens):
-                print "%6i%21.12e%27.16e" % (i, self.dens[i], self.numDens[i])
+                print("%6i%21.12e%27.16e" % (i, self.dens[i], self.numDens[i]))
 
         self.read_eos()
         self.read_opac()
@@ -135,9 +138,9 @@ class OpacIonmix:
         self.opac_bounds = self.get_block(ng+1)
 
         if self.verb: 
-            print "\n  Number of Energy Groups: %i" % self.ngroups
+            print("\n  Number of Energy Groups: %i" % self.ngroups)
             for i in range(0, self.ngroups+1):
-                print "%6i%15.6e" % (i, self.opac_bounds[i])
+                print("%6i%15.6e" % (i, self.opac_bounds[i]))
 
 
         self.rosseland     = np.empty((nd,nt,ng))

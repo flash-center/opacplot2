@@ -1,8 +1,8 @@
 import numpy as np
-from opl_grid import OplGrid
-from opl_list import OplList
-from opl_tempgrid import OplTempGrid
-from avgopac import avgopac
+from .opl_grid import OplGrid
+from .opl_list import OplList
+from .opl_tempgrid import OplTempGrid
+from .avgopac import avgopac
 
 def listToGrid(opllist, ndens, ntemps):
     

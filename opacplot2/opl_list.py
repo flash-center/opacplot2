@@ -1,5 +1,4 @@
-from histogram import histdata
-import opl_grid
+from .histogram import histdata
 
 class OplList:
 
@@ -27,7 +26,7 @@ class OplList:
                 en = self.getEnergies(n)
                 op = self.getOpacList(n)
 
-                if verbose: print "findExact: %13g  %13g  %13g  %13g" % (rho, rho_n, temp, temp_n)
+                if verbose: print("findExact: %13g  %13g  %13g  %13g" % (rho, rho_n, temp, temp_n))
 
                 if hist == True and len(en)-1 == len(op):
                     return histdata(en,op)
