@@ -1,4 +1,4 @@
-from opl_list import OplList
+from .opl_list import OplList
 import numpy as np
 
 class OplTempGrid(OplList):

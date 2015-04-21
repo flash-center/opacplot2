@@ -11,9 +11,9 @@ import hedp
 import pysnop
 from hedp.eos import thomas_fermi_ionization
 
-#table_id = 7593
+table_id = 7592
 #table_id = 3720
-table_id = 2140
+#table_id = 2140
 #mat = 'polystyrene'
 mat = 'Fe'
 filename = '{0}-ses-{1:4d}-v2-1.cn4'.format(mat.lower(), int(table_id))

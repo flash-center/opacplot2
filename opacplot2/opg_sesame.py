@@ -1,5 +1,5 @@
 import numpy as np
-from constants import KELVIN_TO_EV, GPA_TO_ERGCC, MJKG_TO_ERGCC
+from .constants import KELVIN_TO_EV, GPA_TO_ERGCC, MJKG_TO_ERGCC
 
 
 class OpgSesame:
@@ -63,7 +63,7 @@ class OpgSesame:
             if not matid in self.data: self.data[matid] = {}
 
             if self.verbose and (recid > 104):
-                print "Material = %8i  Record = %8i  Entries = %8i" % (matid, recid, nentries)
+                print("Material = %8i  Record = %8i  Entries = %8i" % (matid, recid, nentries))
 
             if not recid in self.fdict:
                 raise ValueError("No handling function for record %d" % recid)
@@ -84,7 +84,7 @@ class OpgSesame:
         self.data[matid]["bulkmod"] = words[3]
         self.data[matid]["excoef"] = words[4]
 
-        if self.verbose: print "  zbar = %g  abar = %g  rho0 = %g" % (words[0],words[1],words[2])
+        if self.verbose: print("  zbar = %g  abar = %g  rho0 = %g" % (words[0],words[1],words[2]))
 
         return self.data
 
@@ -116,9 +116,9 @@ class OpgSesame:
             dens = self.data[matid]["total_dens"]
             temps = self.data[matid]["total_temps"]
 
-            print "ndens   = %13i ntemp    = %13i" % (ndens, ntemp)
-            print "dens[0] = %13.6e  dens[-1] = %13.6e" % (dens[0], dens[-1])
-            print "temp[0] = %13.6e  temp[-1] = %13.6e" % (temps[0], temps[-1])
+            print("ndens   = %13i ntemp    = %13i" % (ndens, ntemp))
+            print("dens[0] = %13.6e  dens[-1] = %13.6e" % (dens[0], dens[-1]))
+            print("temp[0] = %13.6e  temp[-1] = %13.6e" % (temps[0], temps[-1]))
 
 
         # Read pressure array (in GPa and convert to ergs/cc):

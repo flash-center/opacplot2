@@ -1,5 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+#from __future__ import division
+from __future__ import print_function
+#from __future__ import unicode_literals
+
 import tables
 import numexpr as ne
 import numpy as np
@@ -43,8 +48,8 @@ def testsuite(var, cond=None, mode='short'):
                 mask =  ~func(self, mode=req_mode)
                 if len(np.nonzero(mask)[0]):
                     sys.stdout.write('F\n')
-                    print 
-                    print self._repr_arr_error(mask, var_expr(self), func.__doc__)
+                    print()
+                    print(self._repr_arr_error(mask, var_expr(self), func.__doc__))
                 else:
                     sys.stdout.write('.')
             else:
@@ -131,7 +136,7 @@ class OpgHdf5(dict):
                 self[key] = val[:]
             elif type(val) is dict:
                 for key_in, val_in in val.iteritems():
-                    print key, key_in
+                    print(key, key_in)
                     self[key][key_in] = val_in[:]
 
     def _compute_ionization(self):
@@ -154,7 +159,7 @@ class OpgHdf5(dict):
         for attr in dir(self):
             if 'check_' in attr:
                 getattr(self, attr)(mode)
-        print ''
+        print('')
 
     @testsuite(var='Zf_DT', mode='short')
     def check_Zf_gt_0(self, mode):

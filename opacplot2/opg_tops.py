@@ -1,10 +1,12 @@
 """
 This module contains classes used to read and process TOPS opacity files.
 """
+from __future__ import absolute_import
+from __future__ import print_function
 
 import numpy as np
-from opl_list import OplList
-from constants import NA
+from .opl_list import OplList
+from .constants import NA
 
 class OpacTopsSingle():
     def __init__(self, matid, tele, rho, nele, energies, opac1, opac2, opac3):
@@ -44,14 +46,14 @@ class OpacTops():
             if line.find("start") == -1: continue
             self.nopacs += 1
 
-        if(self.verbose): print "Total number of opacities =", self.nopacs
+        if(self.verbose): print("Total number of opacities =", self.nopacs)
 
         # Rewind the file:
         self.fhand = open(self.fn, "r")
 
         if(self.verbose):
-            print "%6s  %6s  %6s  %13s  %13s  %13s  %13s" % \
-                ("# num ", "npts", "matid", "tele (eV)", "rho (g/cc)", "nele (1/cc)", "zbar")
+            print("%6s  %6s  %6s  %13s  %13s  %13s  %13s" % \
+                ("# num ", "npts", "matid", "tele (eV)", "rho (g/cc)", "nele (1/cc)", "zbar"))
 
         self.opacs = []
         self.energies = []
@@ -69,16 +71,16 @@ class OpacTops():
                 # We've read in one complete opacity
                 if(self.verbose == True):
                     if zmax == None:
-                        print "%6i  %6i  %6i  %13.6e  %13.6e  %13.6e" % \
+                        print("%6i  %6i  %6i  %13.6e  %13.6e  %13.6e" % \
                             (len(self.opacs), 
                              len(self.energies),
-                             matid, tele, rho, nele)
+                             matid, tele, rho, nele))
                     else:
                         nion = NA * rho / abar
-                        print "%6i  %6i  %6i  %13.6e  %13.6e  %13.6e  %13g" % \
+                        print("%6i  %6i  %6i  %13.6e  %13.6e  %13.6e  %13g" % \
                             (len(self.opacs), 
                              len(self.energies),
-                             matid, tele, rho, nele, nele/nion )
+                             matid, tele, rho, nele, nele/nion ))
                         
                 
                 self.opacs.append(OpacTopsSingle(matid, tele, rho, nele, 
@@ -105,16 +107,16 @@ class OpacTops():
 
         if(self.verbose == True):
             if zmax == None:
-                print "%6i  %6i  %6i  %13.6e  %13.6e  %13.6e" % \
+                print("%6i  %6i  %6i  %13.6e  %13.6e  %13.6e" % \
                     (len(self.opacs), 
                      len(self.energies),
-                     matid, tele, rho, nele)
+                     matid, tele, rho, nele))
             else:
                 nion = NA * rho / abar
-                print "%6i  %6i  %6i  %13.6e  %13.6e  %13.6e  %13.6e" % \
+                print("%6i  %6i  %6i  %13.6e  %13.6e  %13.6e  %13.6e" % \
                     (len(self.opacs), 
                      len(self.energies),
-                     matid, tele, rho, nele, nele/nion)
+                     matid, tele, rho, nele, nele/nion))
 
         self.opacs.append(OpacTopsSingle(matid, tele, rho, nele, 
                                          np.array(self.energies), 

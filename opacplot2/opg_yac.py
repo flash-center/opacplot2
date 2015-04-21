@@ -1,6 +1,6 @@
-from constants import JOULE_TO_ERG
-from StringIO import StringIO
-from opl_grid import OplGrid
+from .constants import JOULE_TO_ERG
+from io import StringIO
+from .opl_grid import OplGrid
 
 import numpy as np
 # from util import readword
@@ -58,7 +58,7 @@ class OpacYac:
         self.mpi = mpi
         self.verb = verbose
 
-        if verbose: print "Reading UW EOS file \"%s\"\n" % (fn)
+        if verbose: print("Reading UW EOS file \"%s\"\n" % (fn))
 
         self.nheader = 24
         self.parse()
@@ -70,11 +70,11 @@ class OpacYac:
             n = int(readword(self.data))
         vals = np.zeros(n)
 
-        if verbose: print "  Number of %s = %i" % (block_contents, n)
+        if verbose: print("  Number of %s = %i" % (block_contents, n))
         for i in range(n):
             vals[i] = float(readword(self.data))
-            if verbose: print "  %15.6e" % (vals[i])
-        if verbose: print ""
+            if verbose: print("  %15.6e" % (vals[i]))
+        if verbose: print("")
         return vals        
 
 
