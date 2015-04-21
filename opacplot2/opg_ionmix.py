@@ -394,12 +394,12 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
 
     for tab in ["zbar", "dzdt", "pion", "pele", "dpidt", "dpedt", "eion",
             "eele", "cvion", "cvele", "deidn", "deedn"]:
-        ctab = globals()[tab]
+        ctab = locals()[tab]
         if ctab.shape != (ndens, ntemps):
             raise ValueError('Table {0} has shape {1}, expected {2}!'.format(
                 tab, str(ctab.shape), str((ndens, ntemps))))
     for tab in ['rosseland', 'planck_absorb', 'planck_emiss']: 
-        ctab = globals()[tab]
+        ctab = locals()[tab]
         if ctab.shape != (ndens, ntemps, ngroups):
             raise ValueError('Table {0} has shape {1}, expected {2}!'.format(
                 tab, str(ctab.shape), str((ndens, ntemps, ngroups))))
