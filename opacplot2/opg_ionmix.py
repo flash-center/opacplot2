@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 from io import StringIO
+import sys
 import numpy as np
 import re 
 import math
@@ -63,7 +64,14 @@ class OpacIonmix:
 
         # Read the rest of the file, remove all of the white space,
         # and store the string in self.data:
-        self.data = StringIO(re.sub(r'\s', '', f.read()))
+        txt  = re.sub(r'\s', '', f.read())
+        if sys.version < '3':
+            # converting to unicode if needed for python2
+            import codecs
+            def u(x):
+                return codecs.unicode_escape_decode(x)[0]
+            txt = u(txt)
+        self.data = StringIO()
                         
         if self.man == True:
             # For files where temperatures/densities are manually

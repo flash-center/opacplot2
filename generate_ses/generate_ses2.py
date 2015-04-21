@@ -9,13 +9,8 @@ import numpy as np
 import hedp
 from hedp.eos import thomas_fermi_ionization
 
-#table_id = 7593
-#table_id = 3720
-#table_id = 3336
 table_id = 2962
-#mat = 'polystyrene'
 mat = 'Ti'
-#rho0 = 8.96
 rho0 = 4.42
 filename = '{0}-ses-{1:4d}-v2.cn4'.format(mat.lower(), int(table_id))
 
@@ -66,9 +61,9 @@ numDens = opp.NA * eos_o['ele_dens'] / eos_o['abar']
 #print mat_dict.snop.z, mat_dict.snop.fraction
 opp.writeIonmixFile(filename, mat_dict.snop.z, mat_dict.snop.fraction, 
                         numDens=numDens, temps=eos_o['ele_temps'],
-                        eion=eos_o["ion_eint"], # changed ioncc to ion
+                        eion=eos_o["ioncc_eint"],
                         eele=eos_o["ele_eint"],
-                        pion=eos_o["ion_pres"], # changed ioncc to ion
+                        pion=eos_o["ioncc_pres"],
                         pele=eos_o["ele_pres"],
                         zbar=zbar_tf)
 
