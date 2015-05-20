@@ -71,7 +71,7 @@ class OpacIonmix:
             def u(x):
                 return codecs.unicode_escape_decode(x)[0]
             txt = u(txt)
-        self.data = StringIO()
+        self.data = StringIO(txt)
                         
         if self.man == True:
             # For files where temperatures/densities are manually
