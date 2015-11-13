@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 
 import os
-import sys
-import json
-import subprocess 
 
-#from distutils.core import setup
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 if __name__ == "__main__":
@@ -16,7 +12,10 @@ if __name__ == "__main__":
           author='Milad',
           author_email='milad@flash.uchicago.edu',
           url='http://flash.uchicago.edu/',
-          packages=['opacplot2', 'opacplot2.presets'],
+          packages=find_packages(),
+          package_data={'opacplot2': [os.path.join('tests','data', '*')]},
+          test_suite="opacplot2.tests.run",
+
           entry_points = {
                     'console_scripts': ['opacplot2 = opacplot2.scripts:main',
                                         'opac_table2hdf = opacplot2.scripts.opac_table2hdf:opac_table2hdf',
