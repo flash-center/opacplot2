@@ -1,0 +1,3 @@
+include README.md
+recursive-include opacplot2 *.py
+recursive-include opacplot2 *.h5
