@@ -5,3 +5,4 @@ visualization/*.ipynb
 *.swp
 *pyc
 *cn4
+.coverage

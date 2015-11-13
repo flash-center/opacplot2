@@ -181,11 +181,11 @@ class OpacIonmix:
                        lambda jd, jt: self.rosseland[jd,jt,:])
 
     def write(self, fn, zvals, fracs, twot=None, man=None):
-        if twot == None: twot = self.twot
+        if twot is None: twot = self.twot
         if twot == True and self.twot == False:
             raise ValueError("Error: Cannot write two-temperature data")
 
-        if man == None: man = self.man
+        if man is None: man = self.man
         if man == False and self.man == True:
             raise ValueError("Error: Cannot write manual temp/dens points")
 
@@ -373,24 +373,24 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
                     sele=None):
     ndens, ntemps = len(numDens), len(temps)
 
-    if  zbar == None:  zbar = np.zeros((ndens,ntemps))
-    if  dzdt == None:  dzdt = np.zeros((ndens,ntemps))
-    if  pion == None:  pion = np.zeros((ndens,ntemps))
-    if  pele == None:  pele = np.zeros((ndens,ntemps))
-    if dpidt == None: dpidt = np.zeros((ndens,ntemps))
-    if dpedt == None: dpedt = np.zeros((ndens,ntemps))
-    if  eion == None:  eion = np.zeros((ndens,ntemps))
-    if  eele == None:  eele = np.zeros((ndens,ntemps))
-    if cvion == None: cvion = np.zeros((ndens,ntemps))
-    if cvele == None: cvele = np.zeros((ndens,ntemps))
-    if deidn == None: deidn = np.zeros((ndens,ntemps))
-    if deedn == None: deedn = np.zeros((ndens,ntemps))
+    if  zbar is None:  zbar = np.zeros((ndens,ntemps))
+    if  dzdt is None:  dzdt = np.zeros((ndens,ntemps))
+    if  pion is None:  pion = np.zeros((ndens,ntemps))
+    if  pele is None:  pele = np.zeros((ndens,ntemps))
+    if dpidt is None: dpidt = np.zeros((ndens,ntemps))
+    if dpedt is None: dpedt = np.zeros((ndens,ntemps))
+    if  eion is None:  eion = np.zeros((ndens,ntemps))
+    if  eele is None:  eele = np.zeros((ndens,ntemps))
+    if cvion is None: cvion = np.zeros((ndens,ntemps))
+    if cvele is None: cvele = np.zeros((ndens,ntemps))
+    if deidn is None: deidn = np.zeros((ndens,ntemps))
+    if deedn is None: deedn = np.zeros((ndens,ntemps))
 
-    if ngroups       == None: ngroups = 1
-    if opac_bounds   == None: opac_bounds = (0.0,1.0)
-    if rosseland     == None: rosseland = np.zeros((ndens,ntemps,ngroups))
-    if planck_absorb == None: planck_absorb = np.zeros((ndens,ntemps,ngroups))
-    if planck_emiss  == None: planck_emiss = np.zeros((ndens,ntemps,ngroups))
+    if ngroups       is None: ngroups = 1
+    if opac_bounds   is None: opac_bounds = (0.0,1.0)
+    if rosseland     is None: rosseland = np.zeros((ndens,ntemps,ngroups))
+    if planck_absorb is None: planck_absorb = np.zeros((ndens,ntemps,ngroups))
+    if planck_emiss  is None: planck_emiss = np.zeros((ndens,ntemps,ngroups))
 
     for tab in ["zbar", "dzdt", "pion", "pele", "dpidt", "dpedt", "eion",
             "eele", "cvion", "cvele", "deidn", "deedn"]:
