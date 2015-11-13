@@ -193,9 +193,9 @@ class OpacYac:
         self.rosseland = np.empty((ndopac, ntopac, self.ngroups))
 
         i = 0
-        for g in xrange(self.ngroups):
-            for d in xrange(ndopac):
-                for t in xrange(ntopac):
+        for g in range(self.ngroups):
+            for d in range(ndopac):
+                for t in range(ntopac):
                     # Read opacity and convert to units of 1/cm:
                     self.rosseland[d,t,g] = data[i]
                     i += 1
@@ -208,9 +208,9 @@ class OpacYac:
         self.planck_emiss = np.empty((ndopac, ntopac, self.ngroups))
 
         i = 0
-        for g in xrange(self.ngroups):
-            for d in xrange(ndopac):
-                for t in xrange(ntopac):
+        for g in range(self.ngroups):
+            for d in range(ndopac):
+                for t in range(ntopac):
                     # Read opacity and convert to units of 1/cm:
                     self.planck_emiss[d,t,g] = data[i]
                     i += 1
@@ -224,9 +224,9 @@ class OpacYac:
         self.planck_absorb = np.empty((ndopac, ntopac, self.ngroups))
 
         i = 0
-        for g in xrange(self.ngroups):
-            for d in xrange(ndopac):
-                for t in xrange(ntopac):
+        for g in range(self.ngroups):
+            for d in range(ndopac):
+                for t in range(ntopac):
                     # Read opacity and convert to units of 1/cm:
                     self.planck_absorb[d,t,g] = data[i]
                     i += 1

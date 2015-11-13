@@ -42,8 +42,8 @@ class OpgQeos:
     def getblock(self):
         data = np.empty((self.ndens, self.ntemps))
         
-        for jt in xrange(self.ntemps):
-            for jd in xrange(self.ndens):
+        for jt in range(self.ntemps):
+            for jd in range(self.ndens):
                 data[jd,jt] = float(self.getnext())
 
         return data
@@ -66,7 +66,7 @@ class OpgQeos:
         self.denss = np.empty(self.ndens)
         if self.verbose: 
             print("%i Densities [g/cc]:" % self.ndens)
-        for i in xrange(self.ndens):
+        for i in range(self.ndens):
             num = self.getnext()
             if num == "           -inf":
                 self.denss[i] = 0.0
@@ -81,7 +81,7 @@ class OpgQeos:
         self.temps = np.empty(self.ntemps)
         if self.verbose: 
             print("\n%i Temperatures [eV]:" % self.ntemps)
-        for i in xrange(self.ntemps):
+        for i in range(self.ntemps):
             num = self.getnext()
             if num == "           -inf":
                 self.temps[i] = 0.0

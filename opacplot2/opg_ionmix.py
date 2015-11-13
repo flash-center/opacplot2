@@ -160,9 +160,9 @@ class OpacIonmix:
         arr_pe = self.get_block(nd*nt*ng)
 
         i = 0
-        for g in xrange(ng):
-            for d in xrange(nd):
-                for t in xrange(nt):
+        for g in range(ng):
+            for d in range(nd):
+                for t in range(nt):
                     self.rosseland[d,t,g]     = arr_ro[i]
                     self.planck_absorb[d,t,g] = arr_pa[i]
                     self.planck_emiss[d,t,g]  = arr_pe[i]
@@ -222,7 +222,7 @@ class OpacIonmix:
 
         def write_block(var):
             count = 0
-            for n in xrange(len(var)):
+            for n in range(len(var)):
                 count += 1
 
                 f.write("%s" % convert(var[n]))
@@ -235,9 +235,9 @@ class OpacIonmix:
 
         def write_opac_block(var):
             count = 0
-            for g in xrange(self.ngroups):
-                for jd in xrange(self.ndens):
-                    for jt in xrange(self.ntemp):
+            for g in range(self.ngroups):
+                for jd in range(self.ndens):
+                    for jt in range(self.ntemp):
                         count += 1
 
                         f.write("%s" % convert(var[jd,jt,g]))
@@ -437,7 +437,7 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
 
     def write_block(var):
         count = 0
-        for n in xrange(len(var)):
+        for n in range(len(var)):
             count += 1
 
             f.write("%s" % convert(var[n]))
@@ -450,9 +450,9 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
 
     def write_opac_block(var):
         count = 0
-        for g in xrange(ngroups):
-            for jd in xrange(ndens):
-                for jt in xrange(ntemps):
+        for g in range(ngroups):
+            for jd in range(ndens):
+                for jt in range(ntemps):
                     count += 1
 
                     f.write("%s" % convert(var[jd,jt,g]))

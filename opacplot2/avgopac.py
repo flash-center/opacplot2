@@ -66,7 +66,7 @@ def avgopac(energies_in, opacs_in, trad, ebnds, weight="constant", bound="error"
 
     opavg = np.empty(len(ebnds)-1)
 
-    for i in xrange(len(opavg)):
+    for i in range(len(opavg)):
         numerator = quad(f, ebnds[i], ebnds[i+1], limit=500, epsrel=0.001)
         denominator = quad(weight, ebnds[i], ebnds[i+1], limit=500, epsrel=1.0e-06)
         opavg[i] = numerator[0]/denominator[0]

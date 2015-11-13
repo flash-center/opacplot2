@@ -17,7 +17,7 @@ class OplList:
         according to some tolerance.
         """
 
-        for n in xrange(self.nopacs):
+        for n in range(self.nopacs):
             rho_n, temp_n = self.getDensTemp(n)
 
             if( (abs(rho  - rho_n )/rho_n  <= rtol) and

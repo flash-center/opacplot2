@@ -184,10 +184,10 @@ class OpgSesame:
         data = np.empty(nentries)
 
         string = ""
-        for i in xrange(nlines):
+        for i in range(nlines):
             string += self.fhand.readline()[:self.WORDS_PER_LINE*self.entry_len]
 
-        for i in xrange(nentries):
+        for i in range(nentries):
             word = string[self.entry_len*i:self.entry_len*(i+1)]
             if word[-4] == '-': word = word[:-4] + "E" + word[-4:]
             data[i] = float(word)
