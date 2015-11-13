@@ -1,5 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+#from __future__ import division
+from __future__ import print_function
+#from __future__ import unicode_literals
+
 import argparse
 import os, os.path
 
@@ -37,10 +42,10 @@ def opac_diff():
     args = parser.parse_args()
 
     if len(args.tables)==1:
-        print 'One opacity table given only! Nothing to compare with!'
+        print('One opacity table given only! Nothing to compare with!')
         return
     elif len(args.tables)>3:
-        print 'More then 2 tables given! It means that error values will be compared between the first 2 tables only!'
+        print('More then 2 tables given! It means that error values will be compared between the first 2 tables only!')
 
     op = []
     alphabet = iter('ABCDEFGH')
@@ -59,7 +64,7 @@ def opac_diff():
 
     if os.path.isdir(args.out_dir):
         if not args.force:
-            print "Directory {0} already exists, use -f flag to overwrite!".format(args.out_dir)
+            print("Directory {0} already exists, use -f flag to overwrite!".format(args.out_dir))
     else:
         os.mkdir(args.out_dir)
 
@@ -91,14 +96,14 @@ def opac_diff():
         w(arr2str(op[0]['groups']))
 
 
-    print 'Plotting Zbar - done.'
+    print('Plotting Zbar - done.')
     fig = plt.figure(figsize=(12,4))
     plot_Zbar(fig, op)
     fig.savefig(os.path.join(args.out_dir, 'Zbar.png'), bbox_inches='tight')
 
 
 
-    print 'Generating spectra ',
+    print('Generating spectra ', end='')
     for idx0 in np.arange(0,len(rho), args.stride):
         for idx1 in np.arange(0,len(temp), args.stride):
             fig = plt.figure(figsize=(10,6))
@@ -109,14 +114,14 @@ def opac_diff():
             sys.stdout.write('.')
             sys.stdout.flush()
 
-    print ''
-    print 'Generating 2D error maps '
+    print('')
+    print('Generating 2D error maps ')
     for op0, op1 in itertools.combinations(op, 2):
         subdir = '{0}vs{1}'.format(op0['key'], op1['key'])
         subdir_full = os.path.join(args.out_dir, subdir)
         if not os.path.isdir(subdir_full):
             os.mkdir(subdir_full)
-        print '  -', subdir, ' ',
+        print('  -', subdir, ' ', end='')
         for temp_val in [10, 40, 100, 400, 1000, 2000]:
             fig = plt.figure(figsize=(20,5))
             plot_2D_map(fig, [op0, op1], temp_val)
@@ -125,7 +130,7 @@ def opac_diff():
             plt.close(fig)
             sys.stdout.write('.')
             sys.stdout.flush()
-        print ''
+        print('')
 
 
 

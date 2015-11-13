@@ -1,5 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+#from __future__ import division
+from __future__ import print_function
+#from __future__ import unicode_literals
+
 import argparse
 
 import os, os.path
@@ -44,7 +49,7 @@ def opac_table2hdf():
     if args.outname is not None:
         filename_out = os.path.splitext(os.path.abspath(args.outname))[0]
     else:
-        print basedir, basename_in
+        print( basedir, basename_in)
         filename_out = os.path.join(basedir, basename_in)
     if args.Znum is not None:
         Znum = [int(el) for el in args.Znum.split(',')]

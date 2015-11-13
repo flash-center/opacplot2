@@ -1,5 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+#from __future__ import division
+from __future__ import print_function
+#from __future__ import unicode_literals
+
 import argparse
 import os, os.path
 
@@ -39,7 +44,7 @@ def main():
         args.out = os.path.splitext(args.out)[0]
 
     if args.dbtype == 'sesame':
-        print "Parsing sesame input files."
+        print("Parsing sesame input files.")
         eos_sesame = opp.OpgSesame(os.path.join(args.dbdir, "xsesame_ascii"),
                                 opp.OpgSesame.SINGLE, verbose=False)
         cond_sesame = opp.OpgSesame(os.path.join(args.dbdir, "sescu_ascii"),
@@ -52,39 +57,39 @@ def main():
         # by default select the last (i.e. newest) table avalable
         cond_data_i = cond_sesame.data[cond_keys[-1]]
 
-        print 'Presets for sesame table', args.tablenum,
+        print('Presets for sesame table', args.tablenum, end='')
 
         # Merging ele and ion grids
         if args.tablenum in opp.presets.SESAME:
             eos_data = opp.adapt.EosMergeGrids(eos_data_i,
                                     **opp.presets.SESAME[args.tablenum]['merge'])
             fracs = opp.presets.SESAME[args.tablenum]['fracs']
-            print 'found'
+            print('found')
         else:
             eos_data = opp.adapt.EosMergeGrids(eos_data_i,
                        filter_dens=lambda x: x>0,
                        filter_temps=lambda x: x>0)
 
             fracs = (1.0,)
-            print 'not found'
+            print('not found')
 
         output_file = args.out+'.cn4'
-        print 'Generating IONMIX file: {0}'.format(output_file)
+        print('Generating IONMIX file: {0}'.format(output_file))
         numDens = opp.NA * eos_data['ele_dens'] / eos_data["abar"]
-        print 'Warning: for now zbar is set to 0.'
+        print('Warning: for now zbar is set to 0.')
         opp.writeIonmixFile(output_file, (eos_data['zmax'],), fracs,
                         numDens=numDens, temps=eos_data['ele_temps'],
                         eion=eos_data["ion_eint"],
                         eele=eos_data["ele_eint"],
                         pion=eos_data["ion_pres"],
                         pele=eos_data["ele_pres"])
-        print 'Trying to read if back... ',
+        print('Trying to read if back... ', end='')
         try:
             ionmix = opp.OpacIonmix(output_file, eos_data["abar"]/opp.NA, 
                             twot=True, man=True, verbose=False)
-            print '[ok]'
+            print('[ok]')
         except:
-            print '[failed]'
+            print('[failed]')
 
 def opacdump():
 
@@ -143,16 +148,16 @@ def opacdump():
 
     if args.value == 'grid2prp':
         #print tab.keys()
-        print "="*80
+        print("="*80)
         from ..opg_propaceos import OpgPropaceosGrid
         temp = np.unique(np.fmax(0.01, temp))
         nele = np.unique(np.fmax(1e10, nele))
         nele = np.unique(np.fmin(5e25, nele))
-        print OpgPropaceosGrid.format_grid1(nele, temp, groups)
-        print "="*80
-        print '+'*80
-        print '='*80
-        print OpgPropaceosGrid.format_grid2(nele, temp)
+        print(OpgPropaceosGrid.format_grid1(nele, temp, groups))
+        print("="*80)
+        print('+'*80)
+        print('='*80)
+        print(OpgPropaceosGrid.format_grid2(nele, temp))
     elif args.value == 'grid2file':
         outname_base = os.path.join('./', fname_base)
         np.savetxt(outname_base+'.nele-grid.txt', nele,
@@ -169,12 +174,12 @@ def opacdump():
             out += ['='*80]
             out = '\n'.join(out)
             return out + '\n'+ np.array2string(arr, precision=3, separator=',')
-        print repr_grid(rho, "Density grid [g/cc]")
-        print repr_grid(temp, 'Temperature grid [eV]')
+        print(repr_grid(rho, "Density grid [g/cc]"))
+        print(repr_grid(temp, 'Temperature grid [eV]'))
         if args.Abar is not None:
-            print repr_grid(nele, "Ionic density grid [1/cc]")
+            print( repr_grid(nele, "Ionic density grid [1/cc]") ) 
         if len(groups):
-            print repr_grid(groups, "Photon energy groups [eV]")
+            print(repr_grid(groups, "Photon energy groups [eV]") )
 
 def opac_checkhdf():
     parser = argparse.ArgumentParser(description= """

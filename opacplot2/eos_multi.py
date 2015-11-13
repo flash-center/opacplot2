@@ -59,8 +59,8 @@ if __name__ == "__main__":
     Nr = el['Nr']
     Nt = el['Nt']
     Ntot = 2*Nr + Nt + 2*Nr*Nt
-    print el['rho'], el['eint'], el['pres']
+    print( el['rho'], el['eint'], el['pres'])
 
-    print el['data'].shape, Ntot
+    print( el['data'].shape, Ntot)
 
     

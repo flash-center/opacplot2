@@ -1,5 +1,8 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+#from __future__ import division
+from __future__ import print_function
+
 import copy
 import numpy as np
 from scipy.interpolate import interp1d
@@ -13,9 +16,9 @@ class CheckEosConsistency:
         self.check_sound_speed()
         self.check_heat_capacity()
         if not self.fail:
-            print 'Sucess: passed {0}/{0} tests !'.format(self.num_tests)
+            print('Sucess: passed {0}/{0} tests !'.format(self.num_tests))
         else:
-            print 'Failure: {0}/{1} tests failed!'.format(self.fail, self.num_tests)
+            print('Failure: {0}/{1} tests failed!'.format(self.fail, self.num_tests))
 
     def check_pos(self):
         res = True
@@ -24,12 +27,12 @@ class CheckEosConsistency:
                 tab = self.eos['_'.join([spec, tab_name])]
                 self.num_tests += 1
                 if np.any(tab < 0):
-                    print "{0}_{1} table has negative values".format(spec, tab_name)
+                    print("{0}_{1} table has negative values".format(spec, tab_name))
                     bad_idx = np.nonzero(tab<0)
-                    print '        dens             temp           {0}_{1}'.format(spec, tab_name)
-                    print np.array([self.eos[spec+'_dens'][bad_idx[0]],
+                    print('        dens             temp           {0}_{1}'.format(spec, tab_name))
+                    print(np.array([self.eos[spec+'_dens'][bad_idx[0]],
                                    self.eos[spec+'_temps'][bad_idx[1]],
-                                   self.eos['_'.join([spec, tab_name])][bad_idx]]).T
+                                   self.eos['_'.join([spec, tab_name])][bad_idx]]).T)
                     self.fail +=1 
         return res
                     
@@ -45,7 +48,7 @@ class CheckEosConsistency:
         diff = np.diff(tab, axis=ax_idx)
         self.num_tests += 1
         if np.any(diff<0):
-            print 'd{{{0}}}/d{{{1}}} has negative values'.format(tab_name, axis) 
+            print('d{{{0}}}/d{{{1}}} has negative values'.format(tab_name, axis))
             self.fail +=1 
 
 def psedo_maxwell_loops(dens, temp, pres_in):
@@ -93,15 +96,15 @@ def insure_monotonicity(dens, temp, table_in, axis='dens'):
         X = temp
         Y = dens
         table = table.T
-    print "Assuring monotonicity",
+    print("Assuring monotonicity", end='')
     for y_idx in range(1,len(Y)):
 
         for x_idx in range(1,len(X)):
             df = table[x_idx, y_idx] - table[x_idx-1, y_idx]
             if df<0.0:
-                print '.',
+                print('.', end='')
                 table[x_idx, y_idx] = table[x_idx-1, y_idx] + 1e-9
-    print ''
+    print('')
     if axis == "temp":
         table = table.T
    
@@ -109,7 +112,7 @@ def insure_monotonicity(dens, temp, table_in, axis='dens'):
 
 def eint_offset(table):
     if np.any(table<0):
-        print "Insuring eint is positive. Adding offset of {0:.3e}".format(-table.min())
+        print("Insuring eint is positive. Adding offset of {0:.3e}".format(-table.min()))
         table = table + np.abs(table.min()) + 1e-9
     return table
 

@@ -1,5 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+#from __future__ import division
+from __future__ import print_function
+#from __future__ import unicode_literals
 
 import argparse
 
@@ -63,15 +67,15 @@ when applicable.')
             out += ['='*80]
             out = '\n'.join(out)
             return out + '\n'+ np.array2string(arr, precision=3, separator='')
-        print repr_grid(op['dens'][:], "Density grid [g/cc]")
-        print repr_grid(op['temp'][:], 'Temperature grid [eV]')
-        print repr_grid(op['idens'][:], "Ionic density grid [1/cc]")
+        print( repr_grid(op['dens'][:], "Density grid [g/cc]") )
+        print( repr_grid(op['temp'][:], 'Temperature grid [eV]') )
+        print( repr_grid(op['idens'][:], "Ionic density grid [1/cc]") )
         #print repr_grid(op['groups'][:], "Photon energy groups [eV]")
         nu = op['groups'][:]
         nu = 0.5*(nu[1:]+nu[:-1])
         out_op =  np.array([nu]+[op[key+'_mg'][0,0]*op['dens'][0] for key in ['opp', 'opr', 'emp']])
         np.set_printoptions(threshold=1e9)
-        print repr_grid(out_op.T, 'Opacity: nu [eV], opp [1/cm], opr[1/cm], emp [??]')
+        print( repr_grid(out_op.T, 'Opacity: nu [eV], opp [1/cm], opr[1/cm], emp [??]') )
 
 
 

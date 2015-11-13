@@ -1,5 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+#from __future__ import division
+from __future__ import print_function
+#from __future__ import unicode_literals
+
 import os
 import os.path
 import numpy as np
@@ -30,7 +35,7 @@ def get_related_multi_tables(folder, base_name, verbose=False):
     else:
         if verbose:
             valid_keys = [key for key in ['opp', 'opr', 'opz', 'eps'] if key in res]
-            print "Found {0} files of table {1}!".format(valid_keys, base_name)
+            print("Found {0} files of table {1}!".format(valid_keys, base_name))
         if 'ope' in res:
             res['eps'] = res['ope']
             del res['ope']
@@ -74,12 +79,12 @@ class OpgMulti(dict):
         """
         op = cls()
         table =  get_related_multi_tables(folder, base_name)
-        print 'Parsing opacity tables {0}'.format(re.sub(MULTI_EXT_FMT, '',table.items()[0][1]))
-        print ' '.join([' ']*10),
+        print('Parsing opacity tables {0}'.format(re.sub(MULTI_EXT_FMT, '', table.items()[0][1])))
+        print(' '.join([' ']*10, end='')
         for tabletype, path in table.items():
             op._parse(path, tabletype.lower())
-            print '...',tabletype,
-        print ''
+            print('...',tabletype, end='')
+        print('')
         return op
 
     def set_id(self, _id):
@@ -274,8 +279,8 @@ class OpgMulti(dict):
         if "eps_mg" in self:
             self['emp_mg'] = self['opp_mg']*self['eps_mg']
         else:
-            print 'Warning: looks like this is LTE opacity, no eps file found!'
-            print 'Setting planck emissivity to be the same as plack opacity...'
+            print('Warning: looks like this is LTE opacity, no eps file found!')
+            print('Setting planck emissivity to be the same as plack opacity...')
             self['emp_mg'] = self['opp_mg'].copy()
 
         names_dict = {'idens': 'idens',
@@ -315,6 +320,5 @@ class OpgMulti(dict):
 if __name__ == '__main__':
     BASE_PATH = '/home/rth/multi90/Tables/Aluminium'
     Al = OpgMulti((BASE_PATH, 'AL_mknlte'))
-    #print Al.rho
 
     Al.write('test')

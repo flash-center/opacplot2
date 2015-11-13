@@ -1,5 +1,10 @@
+from __future__ import absolute_import
+#from __future__ import division
+from __future__ import print_function
+#from __future__ import unicode_literals
+
 import numpy as np
-from constants import KELVIN_TO_EV, GPA_TO_ERGCC, MJKG_TO_ERGG
+from .constants import KELVIN_TO_EV, GPA_TO_ERGCC, MJKG_TO_ERGG
 
 class OpgQeos:
     """
@@ -19,7 +24,7 @@ class OpgQeos:
         self.count = 0
 
         if self.verbose == True:
-            print "Loading QEOS " + datatype + " file %s\n" % filename
+            print("Loading QEOS " + datatype + " file %s\n" % filename)
 
         self.parse()
 
@@ -60,7 +65,7 @@ class OpgQeos:
         # Read the densities:
         self.denss = np.empty(self.ndens)
         if self.verbose: 
-            print "%i Densities [g/cc]:" % self.ndens
+            print("%i Densities [g/cc]:" % self.ndens)
         for i in xrange(self.ndens):
             num = self.getnext()
             if num == "           -inf":
@@ -70,12 +75,12 @@ class OpgQeos:
                 if self.datatype == "zstar": self.denss[i] = 10**self.denss[i]
                 
             if self.verbose:
-                print "%3i  %15.6e" % (i, self.denss[i])
+                print("%3i  %15.6e" % (i, self.denss[i]))
                 
         # Read the temperatures:
         self.temps = np.empty(self.ntemps)
         if self.verbose: 
-            print "\n%i Temperatures [eV]:" % self.ntemps
+            print("\n%i Temperatures [eV]:" % self.ntemps)
         for i in xrange(self.ntemps):
             num = self.getnext()
             if num == "           -inf":
@@ -96,10 +101,10 @@ class OpgQeos:
                 self.temps[i] *= KELVIN_TO_EV
                 
             if self.verbose:
-                print "%3i  %15.6e" % (i, self.temps[i])
+                print("%3i  %15.6e" % (i, self.temps[i]))
 
 
-        print "\n"
+        print("\n")
                 
         if self.datatype == "zstar":
             self.zbar = 10**self.getblock()
