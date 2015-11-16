@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import matplotlib
-from matplotlib import pyplot as plt
 import numpy as np
+from matplotlib import pyplot as plt
 plt.rcParams.update({'text.usetex': True})
 
 def plot_zbar(denss, temps, zbar, zmax, fig):
@@ -256,22 +256,3 @@ def plot_Zbar(fig, op):
     ax[1].set_ylabel('Zbar')
     ax[1].set_title('slice at $10^{-2}$ g.cm$^{-2}$')
     return fig
-
-
-#idx = np.argmin(np.abs(temp - 0.025))
-#idx_imx = np.argmin(np.abs(imx.temps - 0.025))
-#idx_mt = np.argmin(np.abs(mt.Te - 0.025))
-#
-#ax[1].semilogx(dens, zbar_snop[idx,:], 'k', label='SNOP')
-#ax[1].semilogx(dens, zbar_tf[idx,:], 'k--', label='Thomas Fermi')
-#ax[1].semilogx(mt.rho, mt.opz[:, idx_mt], 'k:', label='SNOP ref: {0}'.format(
-#                        os.path.split(fpath)[1]).replace('_', '\_'))
-##ax[1].semilogx([], [], 'k:', label='Ionmix')
-#ax[1].legend(loc='best')
-#
-#
-#ax[1].set_xlabel(r'$\rho$ [g.cm$^{-3}$]')
-#ax[1].set_ylabel(r'Zbar')
-
-
-

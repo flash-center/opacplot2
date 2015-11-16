@@ -1,13 +1,13 @@
-from matplotlib import pyplot as plt
 import numpy as np
-
-plt.rcParams['font.sans-serif'] = 'FreeSans'
-plt.rcParams['font.size'] = 13
-plt.rcParams['font.weight'] = 'bold'
-plt.rcParams['legend.fontsize'] = 13
 
 class OpacPlotter:
     def __init__(self, fig, opacs, mplkwargs = None):
+        from matplotlib import pyplot as plt
+        plt.rcParams['font.sans-serif'] = 'FreeSans'
+        plt.rcParams['font.size'] = 13
+        plt.rcParams['font.weight'] = 'bold'
+        plt.rcParams['legend.fontsize'] = 13
+
         self.fig = fig
         self.opacs = opacs
         self.nopacs = len(opacs)

@@ -10,7 +10,6 @@ from .opg_yac     import *
 from .opg_sesame  import *
 
 from .opac_plotter import *
-from .eos_plotter import *
 from .histogram import *
 from .convert_opl import *
 from .avgopac import *
