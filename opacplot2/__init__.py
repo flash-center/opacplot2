@@ -18,3 +18,6 @@ from .constants import *
 from .interp import *
 from . import adapt
 from . import presets
+
+
+__version__ = '0.9.0'
