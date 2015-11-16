@@ -2,7 +2,13 @@ from math import exp
 import numpy as np
 
 def avgopac(energies_in, opacs_in, trad, ebnds, weight="constant", bound="error"):
-    from scipy.integrate import quad
+    try:
+        from scipy.integrate import quad
+    except ImportError:
+        print('Error: Scipy not installed, cannot caclulate opacity integrals!')
+        raise
+    except:
+        raise
     # Check for errors:
 
     # Make sure that none of the energy group boundaries is outside of
