@@ -28,7 +28,7 @@ install:
 
 # command to run tests
 script: 
-    - python  -c "import opacplot2.tests as opt; opt.test(coverage=True)"
+    - python  -c "import opacplot2.tests as opt; opt.test_cli(coverage=True)"
 
 #after_success:
 #    coveralls

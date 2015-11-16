@@ -14,11 +14,15 @@ def run(coverage=False):
     status = int(not result)
     return status
 
-
-if __name__ == '__main__':
-    status = run()
+def run_cli(coverage=False):
+    status = run(coverage=converage)
     print('Exit status: {}'.format(status))
     sys.exit(status)
+
+
+
+if __name__ == '__main__':
+    run_cli()
 
 
 
