@@ -10,7 +10,7 @@ Package for manipulating Equation of State (EoS) and Opacity data.
 
    This module requires Python 2.7 or 3.3-3.5. The latest version can be installed with
 
-       pip install opacplot2
+       pip install git+https://github.com/luli/opacplot2.git
 
 
 ### Supported file formats
