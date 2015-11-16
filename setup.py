@@ -17,7 +17,7 @@ if __name__ == "__main__":
           test_suite="opacplot2.tests.run",
           install_requires=[
               "numpy >= 1.6",
-              "pytables >= 3.0",
+              "tables >= 3.0",
               "six >= 1.6",
               "setuptools >= 18.0",
               "periodictable >=1.4.1"
