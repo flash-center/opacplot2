@@ -21,7 +21,7 @@ install:
     - conda update --yes conda
     - conda install --yes -c conda conda-env
     - conda install --yes $DEPS pip python=${TRAVIS_PYTHON_VERSION}
-    - pip install coveralls 
+    - pip install coveralls periodictable
     - python setup.py install
     - cd ~/
     - pwd

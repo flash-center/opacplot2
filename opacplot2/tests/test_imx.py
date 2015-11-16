@@ -94,19 +94,3 @@ def test_ionmix_read_write_0():
         if os.path.exists(tmp_file):
             os.remove(tmp_file) 
 
-
-
-#def test_hdf5_write():
-#    fh = OpgHdf5.open_file(reference_file)
-#    tmp_file =  os.path.join(BASE_DIR, 'imx_sample_tmp.h5')
-#
-#    try:
-#        fh.write2file(tmp_file)
-#    except:
-#        raise
-#    finally:
-#        fh.f.close()
-#        if os.path.exists(tmp_file):
-#            os.remove(tmp_file) 
-
-

@@ -1,9 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-#from __future__ import division
+from __future__ import division
 from __future__ import print_function
-#from __future__ import unicode_literals
+from __future__ import unicode_literals
+
+from io import open
 
 import os
 import os.path
@@ -11,6 +13,7 @@ import numpy as np
 import re
 import gzip
 import periodictable as ptab
+import codecs
 from scipy.constants import N_A
 
 MULTI_EXT_FMT = r'.(?P<ext>[oe]p[ezprs])(?:\.gz)?'
@@ -64,7 +67,6 @@ class OpgMulti(dict):
     _op_labels = dict(opp='PLANCK M', opr='ROSSELAND M', eps='EPS M ', opz='')
 
     @classmethod
-
     def open_file(cls, folder, base_name):
         """
         Parse MULTI format from a file
@@ -79,8 +81,10 @@ class OpgMulti(dict):
         """
         op = cls()
         table =  get_related_multi_tables(folder, base_name)
-        print('Parsing opacity tables {0}'.format(re.sub(MULTI_EXT_FMT, '', table.items()[0][1])))
-        print(' '.join([' ']*10, end='')
+        mitems = list(table.items())
+
+        print('Parsing opacity tables {0}'.format(re.sub(MULTI_EXT_FMT, '', mitems[0][1])))
+        print(' '.join([' ']*10), end='')
         for tabletype, path in table.items():
             op._parse(path, tabletype.lower())
             print('...',tabletype, end='')
@@ -102,9 +106,11 @@ class OpgMulti(dict):
 
         """
         if os.path.splitext(path)[1] == '.gz':
-            f = gzip.open(path)
+            zf = gzip.open(path, 'r')
+            reader = codecs.getreader("utf-8")
+            f = reader( zf )
         else:
-            f = open(path)
+            f = open(path, encoding='utf-8')
         idx = []
         i = 0
         # get table name and opacity type (ex: "1232323", "PLANCK M")
@@ -115,6 +121,7 @@ class OpgMulti(dict):
         for line in f:
             #if line.count('PLANCK M') or\
             #        line.count('ROSSE M') or line.count('EPS M'):
+            print(line)
             search_result = table_name_pattern.search(line)
             if search_result:
                 idx.append(i)
@@ -207,11 +214,14 @@ class OpgMulti(dict):
         for opt in filter(lambda k: k in ['opp_mg','opr_mg','eps_mg','zbar'], self):
             ctable =  self[opt]
             ext = extensions[opt]
-            f  = gzip.open("{prefix}.{ext}.gz".format(prefix=prefix, ext=ext), 'w')
+            f  = gzip.open("{prefix}.{ext}.gz".format(prefix=prefix, ext=ext), 'wb')
+
             if opt == 'zbar':
                 HEADER_FMT1 = " {tname:14} 0.60000000E+01"
-                f.write((HEADER_FMT1 + HEADER_FMT2).format(tname=self.table_name[ext],
-                                                    dim=ctable.shape, f=FMT))
+                f.write(bytes(
+                        (HEADER_FMT1 + HEADER_FMT2).format(tname=self.table_name[ext],
+                                                    dim=ctable.shape, f=FMT),
+                        'UTF-8'))
                 X = self['dens']
                 X = np.append(X, self['temp']*1e-3)
                 val = ctable[:,:].T
@@ -223,9 +233,12 @@ class OpgMulti(dict):
             else:
                 HEADER_FMT1 = " {tname:14}{op_type:14} "
                 for n in np.arange(len(self['groups']) - 1):
-                    f.write((HEADER_FMT1 + HEADER_FMT2).format(tname=self.table_name[ext],
-                            op_type=self._op_labels[ext]+'  ', dim = ctable.shape, f=FMT))
-                    f.write("{:{f}}{:{f}}\n".format(self['groups'][n], self['groups'][n+1], f=FMT))
+                    f.write(bytes(
+                              (HEADER_FMT1 + HEADER_FMT2).format(tname=self.table_name[ext],
+                               op_type=self._op_labels[ext]+'  ', dim = ctable.shape, f=FMT),
+                            'UTF-8'))
+                    f.write(bytes( "{:{f}}{:{f}}\n".format(self['groups'][n], self['groups'][n+1], f=FMT),
+                            'UTF-8'))
 
                     X = self['dens']
                     X = np.append(X, self['temp'])
