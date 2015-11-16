@@ -15,7 +15,7 @@ def run(coverage=False):
     return status
 
 def run_cli(coverage=False):
-    status = run(coverage=converage)
+    status = run(coverage=coverage)
     print('Exit status: {}'.format(status))
     sys.exit(status)
 
