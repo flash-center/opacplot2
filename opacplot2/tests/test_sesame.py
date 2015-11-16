@@ -17,7 +17,7 @@ import opacplot2 as opp
 
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), 'data')
-reference_name =  'matr_005761.ses'
+reference_name =  'matr_009999.ses'
 
 
 def test_opac_read():
