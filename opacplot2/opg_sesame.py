@@ -1,3 +1,11 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+#from __future__ import unicode_literals
+
+from io import open
+import six
+
 import numpy as np
 from .constants import KELVIN_TO_EV, GPA_TO_ERGCC, MJKG_TO_ERGCC
 
@@ -15,7 +23,7 @@ class OpgSesame:
 
     def __init__(self, filename, precision, verbose=False):
         self.verbose = verbose
-        self.fhand = open(filename)
+        self.fhand = open(filename, encoding='utf-8')
         if(precision == self.SINGLE):
            self.entry_len = 15
         elif(precision == self.DOUBLE):
@@ -72,8 +80,8 @@ class OpgSesame:
 
     def parseComment(self, nentries, matid, recid):
 
-        nlines = (nentries-1) / self.CHAR_LINE_LEN + 1
-        nchar = nentries + nlines        
+        nlines = (nentries-1) // self.CHAR_LINE_LEN + 1
+        nchar = nentries + nlines
         return self.fhand.read(nchar)
 
     def parseInfo(self, nentries, matid, recid):
@@ -179,7 +187,7 @@ class OpgSesame:
         words = self.readEntries(nentries) 
    
     def readEntries(self,nentries):
-        nlines = (nentries-1) / self.WORDS_PER_LINE + 1
+        nlines = (nentries-1) // self.WORDS_PER_LINE + 1
 
         data = np.empty(nentries)
 

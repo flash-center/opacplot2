@@ -9,6 +9,7 @@ import tables
 import numpy as np
 import sys
 import types
+from six import iteritems
 
 def testsuite(var, cond=None, mode='short'):
     """
@@ -113,7 +114,7 @@ class OpgHdf5(dict):
 
         f.createGroup(where='/', name='ion_frac', filters=h5filters)
         if 'ion_frac' in self:
-            for  ion_frac_key,  ion_frac_val in self['ion_frac'].iteritems():
+            for  ion_frac_key,  ion_frac_val in iteritems(self['ion_frac']):
                 atom = tables.Atom.from_dtype(ion_frac_val.dtype)
                 ds = f.createCArray(f.root.ion_frac, ion_frac_key, atom, ion_frac_val.shape)
                 ds[:] = ion_frac_val[:]
@@ -130,11 +131,11 @@ class OpgHdf5(dict):
         Load the while table into memory.
         Warning that can 
         """
-        for key, val in self.iteritems():
+        for key, val in iteritems(self):
             if type(val) is tables.carray.CArray:
                 self[key] = val[:]
             elif type(val) is dict:
-                for key_in, val_in in val.iteritems():
+                for key_in, val_in in iteritems(val):
                     print(key, key_in)
                     self[key][key_in] = val_in[:]
 
@@ -148,7 +149,7 @@ class OpgHdf5(dict):
             DT_shape = self['Zf_DT'].shape
             self['Zfo_DT'] = np.zeros(DT_shape)
             self['ion_frac_sum'] = np.zeros(DT_shape)
-            for Zel, Zfrac  in self['ion_frac'].iteritems():
+            for Zel, Zfrac  in iteritems(self['ion_frac']):
                 IonLvls = np.arange(int(Zel[1:])+1)
                 IonLvls_arr = np.tile(IonLvls, DT_shape).reshape(DT_shape +(-1,))
                 self['Zfo_DT'] += (Zfrac*IonLvls_arr).sum(axis=-1)

@@ -55,5 +55,7 @@ def test_export_hdf5():
 
     test = OpgHdf5.open_file(tmp_path, explicit_load=True)
 
+    test.f.close()
+
     if os.path.exists(tmp_path):
         os.remove(tmp_path)
