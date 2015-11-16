@@ -14,6 +14,7 @@ import numpy as np
 
 import opacplot2 as opp
 from opacplot2.opg_multi import OpgMulti
+from opacplot2.opg_hdf5 import OpgHdf5
 
 
 
@@ -51,6 +52,8 @@ def test_export_hdf5():
     He = OpgMulti.open_file(BASE_DIR, reference_name, verbose=False)
     tmp_path = os.path.join(BASE_DIR, tmp_name+'.h5')
     He.write2hdf(tmp_path, Znum=[2])
+
+    test = OpgHdf5.open_file(tmp_path, explicit_load=True)
 
     if os.path.exists(tmp_path):
         os.remove(tmp_path)
