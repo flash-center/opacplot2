@@ -14,10 +14,10 @@ import re
 import gzip
 import codecs
 
+from .constants import NA
 
 import six
 import periodictable as ptab
-from scipy.constants import N_A
 
 MULTI_EXT_FMT = r'.(?P<ext>[oe]p[ezprs])(?:\.gz)?'
 
@@ -297,7 +297,7 @@ class OpgMulti(dict):
             self['Xnum'] = np.array(Xnum)
         self['Abar'] = np.sum(self['Xnum']*self['Anum'])
         self['Zmax'] = np.sum(self['Xnum']*self['Znum'])
-        self['idens'] = self['dens']*N_A/self['Abar']
+        self['idens'] = self['dens']*NA/self['Abar']
         
         if "eps_mg" in self:
             self['emp_mg'] = self['opp_mg']*self['eps_mg']
@@ -319,7 +319,7 @@ class OpgMulti(dict):
         if 'eps_mg' in self:
             self['emp_mg'] = self['opp_mg']*self['eps_mg']
             names_dict['emp_mg'] = 'emp_mg'
-        for prp_key, h5_key in sorted(names_dict.iteritems()):
+        for prp_key, h5_key in sorted(six.iteritems(names_dict)):
             atom = tables.Atom.from_dtype(self[prp_key].dtype)
             ds = f.createCArray(f.root, h5_key, atom, self[prp_key].shape, filters=h5filters)
             ds[:] = self[prp_key]
@@ -338,10 +338,3 @@ class OpgMulti(dict):
         else:
             np.savetxt(f, X.reshape((-1,4)), fmt=PFMT, delimiter='')
         return f
-
-
-if __name__ == '__main__':
-    BASE_PATH = '/home/rth/multi90/Tables/Aluminium'
-    Al = OpgMulti((BASE_PATH, 'AL_mknlte'))
-
-    Al.write('test')

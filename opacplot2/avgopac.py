@@ -1,8 +1,8 @@
 from math import exp
 import numpy as np
-from scipy.integrate import quad
 
 def avgopac(energies_in, opacs_in, trad, ebnds, weight="constant", bound="error"):
+    from scipy.integrate import quad
     # Check for errors:
 
     # Make sure that none of the energy group boundaries is outside of

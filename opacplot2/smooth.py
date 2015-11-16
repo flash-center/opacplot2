@@ -5,7 +5,6 @@ from __future__ import print_function
 
 import copy
 import numpy as np
-from scipy.interpolate import interp1d
 
 class CheckEosConsistency:
     def __init__(self, eos):
@@ -117,6 +116,7 @@ def eint_offset(table):
     return table
 
 def interp_isochores_1d(eos, table='ele', ref_grid='ioncc'):
+    #from scipy.interpolate import interp1d
     eosi = copy.deepcopy(eos)
     temp_mask = np.array([temp_el not in eos[table+'_temps']\
                         for temp_el in eos[ref_grid+'_temps']], dtype='bool')
@@ -132,8 +132,11 @@ def interp_isochores_1d(eos, table='ele', ref_grid='ioncc'):
             eos[table+'_'+par][dens_idx, ~temp_mask] =  eosi[table+'_'+par][dens_idx, :]
 
             # interpolate the couple of values that are not there
-            itp = interp1d(eosi[table+'_temps'], eosi[table+'_'+par][dens_idx])
-            eos[table+'_'+par][dens_idx, temp_mask] =  itp(eos[table+'_temps'][temp_mask])
+            #itp = interp1d(eosi[table+'_temps'], eosi[table+'_'+par][dens_idx])
+            #eos[table+'_'+par][dens_idx, temp_mask] =  itp(eos[table+'_temps'][temp_mask])
+            eos[table+'_'+par][dens_idx, temp_mask] =  np.interp(eos[table+'_temps'][temp_mask],
+                                                        eosi[table+'_temps'],
+                                                        eosi[table+'_'+par][dens_idx])
     return eos
 
 

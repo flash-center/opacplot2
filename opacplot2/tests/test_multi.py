@@ -45,5 +45,12 @@ def test_multi_read_write():
         for ext in ['opp', 'opr', 'opz', 'eps']:
             real_file = "{prefix}.{ext}.gz".format(prefix=tmp_file, ext=ext)
             if os.path.exists(real_file):
-                #os.remove(real_file) 
-                pass
+                os.remove(real_file) 
+
+def test_export_hdf5():
+    He = OpgMulti.open_file(BASE_DIR, reference_name, verbose=False)
+    tmp_path = os.path.join(BASE_DIR, tmp_name+'.h5')
+    He.write2hdf(tmp_path, Znum=[2])
+
+    if os.path.exists(tmp_path):
+        os.remove(tmp_path)
