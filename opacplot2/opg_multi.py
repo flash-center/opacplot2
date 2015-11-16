@@ -3,7 +3,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-from __future__ import unicode_literals
+#from __future__ import unicode_literals
 
 from io import open
 
@@ -12,8 +12,11 @@ import os.path
 import numpy as np
 import re
 import gzip
-import periodictable as ptab
 import codecs
+
+
+import six
+import periodictable as ptab
 from scipy.constants import N_A
 
 MULTI_EXT_FMT = r'.(?P<ext>[oe]p[ezprs])(?:\.gz)?'
@@ -48,6 +51,8 @@ def get_related_multi_tables(folder, base_name, verbose=False):
 FMT = " 13.8E"
 PFMT = '%'+FMT
 
+SMALL_FLOAT_LOG = -4.42627399E+02
+
 
 class OpgMulti(dict):
     """
@@ -67,7 +72,7 @@ class OpgMulti(dict):
     _op_labels = dict(opp='PLANCK M', opr='ROSSELAND M', eps='EPS M ', opz='')
 
     @classmethod
-    def open_file(cls, folder, base_name):
+    def open_file(cls, folder, base_name, verbose=True):
         """
         Parse MULTI format from a file
         Parameters:
@@ -83,12 +88,15 @@ class OpgMulti(dict):
         table =  get_related_multi_tables(folder, base_name)
         mitems = list(table.items())
 
-        print('Parsing opacity tables {0}'.format(re.sub(MULTI_EXT_FMT, '', mitems[0][1])))
-        print(' '.join([' ']*10), end='')
+        if verbose:
+            print('Parsing opacity tables {0}'.format(re.sub(MULTI_EXT_FMT, '', mitems[0][1])))
+            print(' '.join([' ']*10), end='')
         for tabletype, path in table.items():
             op._parse(path, tabletype.lower())
-            print('...',tabletype, end='')
-        print('')
+            if verbose:
+                print('...',tabletype, end='')
+        if verbose:
+            print('')
         return op
 
     def set_id(self, _id):
@@ -119,9 +127,6 @@ class OpgMulti(dict):
         else:
             table_name_pattern = re.compile(r'(\d+)\b\s*(\w+\s\w)')
         for line in f:
-            #if line.count('PLANCK M') or\
-            #        line.count('ROSSE M') or line.count('EPS M'):
-            print(line)
             search_result = table_name_pattern.search(line)
             if search_result:
                 idx.append(i)
@@ -216,29 +221,34 @@ class OpgMulti(dict):
             ext = extensions[opt]
             f  = gzip.open("{prefix}.{ext}.gz".format(prefix=prefix, ext=ext), 'wb')
 
+            if six.PY3:
+                f.bwrite = lambda txt: f.write(bytes(txt, 'UTF-8'))
+            elif six.PY2:
+                f.bwrite = lambda txt: f.write(txt)
+
             if opt == 'zbar':
                 HEADER_FMT1 = " {tname:14} 0.60000000E+01"
-                f.write(bytes(
+                f.bwrite(
                         (HEADER_FMT1 + HEADER_FMT2).format(tname=self.table_name[ext],
-                                                    dim=ctable.shape, f=FMT),
-                        'UTF-8'))
+                                                    dim=ctable.shape, f=FMT))
                 X = self['dens']
                 X = np.append(X, self['temp']*1e-3)
                 val = ctable[:,:].T
                 if fmin is not None:
                     val = np.fmax(val, fmin)
                 X = np.append(X, val)
+                X[X==0.0] = np.nan
                 X = np.log10(X)
+                X[np.isnan(X)] = SMALL_FLOAT_LOG
                 self._write_vector(f, X)
             else:
                 HEADER_FMT1 = " {tname:14}{op_type:14} "
                 for n in np.arange(len(self['groups']) - 1):
-                    f.write(bytes(
+                    f.bwrite(
                               (HEADER_FMT1 + HEADER_FMT2).format(tname=self.table_name[ext],
-                               op_type=self._op_labels[ext]+'  ', dim = ctable.shape, f=FMT),
-                            'UTF-8'))
-                    f.write(bytes( "{:{f}}{:{f}}\n".format(self['groups'][n], self['groups'][n+1], f=FMT),
-                            'UTF-8'))
+                               op_type=self._op_labels[ext]+'  ', dim = ctable.shape, f=FMT))
+
+                    f.bwrite("{:{f}}{:{f}}\n".format(self['groups'][n], self['groups'][n+1], f=FMT),)
 
                     X = self['dens']
                     X = np.append(X, self['temp'])

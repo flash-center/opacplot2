@@ -23,18 +23,18 @@ tmp_name =  'He_snp_tmp'
 
 
 def test_multi_read():
-    He = OpgMulti.open_file(BASE_DIR, reference_name )
+    He = OpgMulti.open_file(BASE_DIR, reference_name, verbose=False)
 
 
 def test_multi_read_write():
-    He = OpgMulti.open_file(BASE_DIR, reference_name )
+    He = OpgMulti.open_file(BASE_DIR, reference_name, verbose=False)
     tmp_file =  os.path.join(BASE_DIR, 'tmp_name')
 
     try:
         He.write(tmp_file)
 
         # Open generated file to check there are no errors.
-        He_new = OpgMulti.open_file(BASE_DIR,  'tmp_name' )
+        He_new = OpgMulti.open_file(BASE_DIR,  'tmp_name' , verbose=False)
 
         for key in He:
             yield assert_allclose, He[key] , He_new[key]
