@@ -25,7 +25,7 @@ Package for manipulating Equation of State (EoS) and Opacity data.
 | TOPS                     | ✔        |          |           | 
 | INFERNO                  | ✔        |          |           | 
 | UW EoS                   | ✔        |          |           | 
-| (.prp)                   | ✔        |          |  not distributed    | 
+| PROPACEOS ASCII (.prp)   | ✔        |          |  not distributed    | 
 | Opal                     |          |          | see [pystellar](https://github.com/alexrudy/pystellar/blob/master/pystellar/opacity.py)   | 
 
 
