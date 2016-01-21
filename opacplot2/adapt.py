@@ -4,36 +4,39 @@ import numpy as np
 
 class EosMergeGrids(dict):
     def __init__(self, eos_data, filter_dens=lambda x: x>=0.,
-                 filter_temps=lambda x: x>=0., intersect=['ele', 'ion']):
+                 filter_temps=lambda x: x>=0., intersect=['ele', 'ioncc'],
+                 thresh=[]):
         """This class provides filtering capabilities for the EoS temperature and
         density grids. For instance SESAME tables may have some additionnal points 
         in the ion EoS table, compared to the elecron EoS table, and as FLASH requires
         the same density and temperature grid for all species, the simplest solution is
-        to remove those additionnal points.
+        to remove those extra points.
 
         Parameters
         ----------
         - eos_data: [dict] dictionary contraining the EoS data.
         - intersect: [list] the resulting temperature [eV] and density [g/cm⁻³]
                 grids will be computed as an intersection of grids of all the
-                species given in this list. Default: ['ele', 'ion']
+                species given in this list. Default: ['ele', 'ioncc']
         - filter_dens, filter_temps: [function] a function that takes a grid
                 and returns a mask of points we don't wont to keep.
                 Defaut: (lamdba x: x>0.) i.e. don't remove anything.
+        - thresh: zero threshold on folowing keys
         Returns
         -------
         - out: [dict] a dictionary with the same keys a eos_data.
 
-        Example
+        Exemple
         -------
         >> eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii", opp.OpgSesame.SINGLE,verbose=False)
         >> eos_data  = eos_sesame.data[3720]  # Aluminum
-        >> eos_data_filtered = EosFilterGrids(eos_data,
-                intersect=['ele', 'ion'],   # merge ele and ion grids
+        >> eos_data_filtered = EosMergeGrids(eos_data,
+                intersect=['ele', 'ioncc'],   # merge ele and ioncc grids
                 filter_temps=lamda x: x>1.) # remove temperatures below 1eV
         """
         user_filter = dict(temps=filter_temps, dens=filter_dens)
         self.origin = eos_data
+        self.threshold = thresh
         # computing the intersection of 'ele' and 'ion' grids
         i_grids = {}
         for key in ['dens', 'temps']:
@@ -78,7 +81,11 @@ class EosMergeGrids(dict):
                 # and '_temps' -> '_ntemps' that should really be fixed
                 return len(self[key.replace('_n', '_')+'s'])
             elif any([key.endswith(word) for word in ['pres', 'eint', 'free']]):
-                return self.origin[key][self._get_mask(key)]
+                data =  self.origin[key][self._get_mask(key)]
+                if key in self.threshold:
+                    return np.fmax(data, 0)
+                else:
+                    return data
             else:
                 return self.origin[key]
         else:

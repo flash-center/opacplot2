@@ -1,5 +1,5 @@
-from constants import BC_BOUND, BC_EXTRAP, BC_EXTRAP_ZERO
-from constants import INTERP_FUNC, INTERP_DFDD, INTERP_DFDT
+from .constants import BC_BOUND, BC_EXTRAP, BC_EXTRAP_ZERO
+from .constants import INTERP_FUNC, INTERP_DFDD, INTERP_DFDT
 import numpy as np
 import math
 
@@ -95,7 +95,7 @@ def interpDT(arr, dens, temps, d, t,
         ans = (fb-fa)/(t2-t1)
         if log == True and jt != 0: ans = ans/(10**t * math.log(10.0))
 
-        # print d,t, fa, fb, t2, t1, ans
+        # print( d,t, fa, fb, t2, t1, ans)
 
         return ans
     

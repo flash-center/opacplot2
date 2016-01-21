@@ -1,4 +1,4 @@
-from opl_list import OplList
+from .opl_list import OplList
 import numpy as np
 
 class OplTempGrid(OplList):
@@ -25,8 +25,8 @@ class OplTempGrid(OplList):
 
         def map(n):
             count = 0
-            for jt in xrange(len(self.temps)):
-                for jd in xrange(len(self.dens[jt])):
+            for jt in range(len(self.temps)):
+                for jd in range(len(self.dens[jt])):
                     if count == n:
                         return jd, jt
                     count += 1
@@ -41,7 +41,7 @@ class OplTempGrid(OplList):
             return self.go(jd,jt)
 
         nopac = 0
-        for jt in xrange(len(self.temps)):
+        for jt in range(len(self.temps)):
             nopac += len(self.dens[jt])
 
         OplList.__init__(self, nopac,
@@ -60,7 +60,7 @@ class OplTempGrid(OplList):
         if log == True:
             rho   = np.log10(rho)
             temp  = np.log10(temp)
-            for jt in xrange(len(temps)) : dens[jt] = np.log10(dens[jt])
+            for jt in range(len(temps)) : dens[jt] = np.log10(dens[jt])
             temps = np.log10(temps)
 
         # First, find the temperatures that straddle temp:
@@ -114,9 +114,9 @@ class OplTempGrid(OplList):
 
     def __str__(self):
         string = ""
-        for jt in xrange(len(self.temps)):
+        for jt in range(len(self.temps)):
             string += "%13.6e  |  " % self.temps[jt]
-            for jd in xrange(len(self.dens[jt])):
+            for jd in range(len(self.dens[jt])):
                 string += "%15.6e" % self.dens[jt][jd]
 
             string += "\n"

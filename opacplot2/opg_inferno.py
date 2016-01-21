@@ -1,4 +1,4 @@
-from opl_list import OplList
+from .opl_list import OplList
 import numpy as np
 
 class OpacInfernoSingle():
@@ -46,7 +46,7 @@ class OpacInferno:
     def __splitline(self, line):
         words = line.split()
 
-        for i in xrange(len(words)):
+        for i in range(len(words)):
             if(words[i][6] == '-'):
                 words[i] = words[i][:6] + "E-" + words[i][7:]
                
@@ -84,7 +84,7 @@ class OpacInferno:
         # isn't really needed because we have rho and zbar.
         self.file.readline()
 
-        for n in xrange(npts):
+        for n in range(npts):
             numbers = self.__splitline(self.file.readline())
 
             energies[n]  = numbers[0]
