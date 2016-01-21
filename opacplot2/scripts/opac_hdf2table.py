@@ -82,6 +82,23 @@ def opac_hdf2table():
         from ..opg_vtk import opg_op2vtk
 
         f = opg_op2vtk(op, outfile)
+    elif args.ftype == 'ionmix':
+
+        outfile = os.path.join(basedir, filename_out)
+
+        opp.writeIonmixFile(outfile,
+                    op['Znum'], op['Xnum'],
+                    numDens=op['idens'][:], temps=op['temp'][:],
+                    ngroups=op.Ng,
+                    opac_bounds=op['groups'][:],
+                    planck_absorb=op['opp_mg'][:],
+                    rosseland=op['opr_mg'][:],
+                    planck_emiss=op['emp_mg'][:])
+
+
+        # check that we can read the file back
+        ionmix = opp.OpacIonmix(outfile, op["Abar"]/opp.NA, twot=True, man=True, verbose=False)
+
     else:
         print( 'Error: {0} ftype not known!'.format(args.ftype) )
 
