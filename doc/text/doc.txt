@@ -1,0 +1,499 @@
+
+Introduction
+************
+
+*FLASH* uses the IONMIX4 format for its equations of state (EOS) and
+opacities. However, several other file formats for EOS and opacity
+data are popular, such as Propaceos and SESAME that are incompatible
+with *FLASH.* So, the Python module "opacplot2" was created. It
+contains read/write/write2hdf capabilities for various table formats,
+and as such it can be used to convert between the formats as needed
+for *FLASH* and other MHD Codes. Listed below are the current
+capabilities of "opacplot2":
+
++----------------------------+------------+------------+-------------+------------------------------------------------+
+| Name                       | Reader     | Writer     | Write2hdf   | Comments                                       |
++============================+============+============+=============+================================================+
+| Native HDF5                | ✔          | ✔          |             |                                                |
++----------------------------+------------+------------+-------------+------------------------------------------------+
+| IONMIX (.cn4)              | ✔          | ✔          |             |                                                |
++----------------------------+------------+------------+-------------+------------------------------------------------+
+| MULTI (.opp, .opr, .eps)   | ✔          | ✔          | ✔           |                                                |
++----------------------------+------------+------------+-------------+------------------------------------------------+
+| SESAME ASCII (.ses)        | ✔          |            | ✔           |                                                |
++----------------------------+------------+------------+-------------+------------------------------------------------+
+| SESAME Binary (.sesb)      |            |            |             | see pyeospac                                   |
++----------------------------+------------+------------+-------------+------------------------------------------------+
+| TOPS                       | ✔          |            |             |                                                |
++----------------------------+------------+------------+-------------+------------------------------------------------+
+| INFERNO                    | ✔          |            |             |                                                |
++----------------------------+------------+------------+-------------+------------------------------------------------+
+| UW EoS                     | ✔          |            |             |                                                |
++----------------------------+------------+------------+-------------+------------------------------------------------+
+| PROPACEOS ASCII (.prp)     | ✔          |            | ✔           | not distributed                                |
++----------------------------+------------+------------+-------------+------------------------------------------------+
+| Opal                       |            |            |             | see pystellar                                  |
++----------------------------+------------+------------+-------------+------------------------------------------------+
+
+
+Read/Write/Write2hdf
+====================
+
+If a format can be *read* by "opacplot2", it means that "opacplot2"
+can browse a file of that particular format and it will return a
+dictionary object containing keys corresponding to particular data
+types (such as the planck emmisivity, "emp_mg") that match up with the
+"numpy" arrays of the data. *Write* cabailities are not as simple.
+Some format submodules have different methods of writing to files than
+others. *Write2hdf* means that the format submodule can open up and
+read a file of that format, and then write that data to an HDF5 (.h5)
+file. The HDF5 format is somewhat of a middleman for most conversions,
+since it can store any kind of data from a file. Then, using the data
+stored in the HDF5 file, format submodules with *write* capabilities
+can write to a file.
+
+
+Installation
+************
+
+
+Prerequisites
+=============
+
+
+On Linux
+--------
+
+You could just use your system Python distribution and install numpy,
+pytables, six, periodictable with the system package manager. On
+Debian-based systems (Ubuntu, etc) this can be achieved with:
+
+   sudo apt-get install python-numpy python-tables python-six python-setuptools
+   sudo pip install periodictable
+
+
+On OSX/Windows
+--------------
+
+The recommended way is to use Anaconda Python distribution (although
+as long as you install the required packages this hardly matters):
+
+1. Download and install Anaconda Python 3.5 (or 2.7).
+
+2. Install the required packages:
+
+      conda install numpy tables six setuptools
+      pip install periodictable
+
+
+Install Opacplot2
+=================
+
+1. Setup a scientific Python environment including numpy and
+   PyTables (see instructions)
+
+2. Download the LULI fork of "opacplot2" here.
+
+3. (optional) if you have the opg_propaceos.py script (not
+   distributed on github), copy it to the
+   "opacplot2-master/opacplot2/" folder, then make sure it is ignored
+   by git:
+
+      cp opg_propaceos.py opacplot2-master/opacplot2/
+
+4. Install "opacplot2":
+
+      cd opacplot2-master/
+      python setup.py install
+
+
+File Format Submodules
+**********************
+
+For each supported format there is a submodule with the prefix
+"opg_formatname". These submodules are where you will find each
+format's read/write/write2hdf methods.
+
+
+Native HDF5
+===========
+
+
+"opg_hdf5.py"
+-------------
+
+This submodule contains the "OpgHdf5" class which inherits its
+properties from a dictionary object. Its main functionality is the
+method "open_file" that will read an HDF5 file into a dictionary.
+Then, we can use this to write to another format using that formats
+write capabilities and the information stored in the HDF5 file's
+dictionary. This is the functinality is used in the script
+"opac_table2hdf" in the Conversion Scripts.
+
+
+IONMIX (.cn4)
+=============
+
+
+"opg_ionmix"
+------------
+
+This is the main submodule for the IONMIX format that *FLASH* uses. It
+contains two main classes. The "OpacIonmix" class is used to read in
+an IONMIX file and translate its information into a dictionary object.
+It takes two required arguments, the filename ("fn") and the mass of
+positive ions ("mpi"). It also takes 3 optional boolean arguments,
+which all default to false: two temperature data ("twot"), manually
+entered temperatures and densities ("man"), and electron entropy data
+("hassele"). Since *FLASH* uses IONMIX files, this submodule also
+contains a special "writeIonmixFile" class. It takes five required
+arguments:
+
+1. filename ("fn")
+
+2. tuple of atomic numbers ("zvals")
+
+3. tuple of material fractions ("fracs")
+
+4. array of number densities ("numdens")
+
+5. array of temperatures ("temps")
+
+It also takes a large amount of optional keyword arguments that
+correspond to the IONMIX format's capabilities. A * indicates that
+this data point is ignored by *FLASH* per the user manual. A **
+indicates that this data point is only used for tabulated EoS in
+*FLASH*:
+
+1. average ionization ("zbar")**
+
+2. temperature derivative of average ionization ("dzdt")*
+
+3. ion pressure ("pion")**
+
+4. electron pressure ("pele")**
+
+5. temperature derivative of ion pressure ("dpidt")*
+
+6. temperature derivative of electron pressure ("dpedt")*
+
+7. ion specific internal energy ("eion")**
+
+8. electron specific internal energy ("eele")**
+
+9. ion heat capacity at constant volume ("cvion")*
+
+10. electron heat capacity at constant volume("cvele")*
+
+11. number derivative of ion energy ("deidn")*
+
+12. number derivative of electron energy ("deedn")*
+
+13. number of energy groups ("ngroups")
+
+14. energy group boundaries ("opac_bounds")
+
+15. Rosseland opacities ("rosseland")**
+
+16. Planck absorption opacity ("planck_absorb")**
+
+17. Planck emission opacity ("planck_emiss")**
+
+This is the functionality that the script "opac_hdf2table" in
+Conversion Scripts uses for the IONMIX format. It opens an HDF5 file
+into a dictionary and uses each key to assign a value to each of the
+"writeIonmixFile"'s arguments.
+
+
+"adapt.py"
+----------
+
+This class provides filtering capabilities for the EoS temperature and
+density grids. For instance, SESAME tables may have some additionnal
+points in the ion EoS table compared to the elecron EoS table. Since
+*FLASH* requires the same density and temperature grid for all
+species, the simplest solution is to remove those extra points.
+
+Parameters:
+
+1. eos_data: [dict] dictionary contraining the EoS data.
+
+2. intersect: [list] the resulting temperature [eV] and density
+   [g/cm⁻³] grids will be computed as an intersection of grids of all
+   the species given in this list. The default is "['ele', 'ioncc']".
+
+3. filter_dens, filter_temps: [function] a function that takes a
+   grid and returns a mask of points we don't wont to keep. The
+   default is "(lamdba x: x>0.)", i.e. don't remove anything.
+
+4. thresh: zero threshold on folowing keys
+
+Returns "out", a dictionary with the same keys a eos_data.
+
+Code example:
+
+   eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii", opp.OpgSesame.SINGLE,verbose=False)
+   eos_data  = eos_sesame.data[3720]  # Aluminum
+   eos_data_filtered = EosMergeGrids(eos_data,
+                       intersect=['ele', 'ioncc'],   # merge electron and ion grids
+                       filter_temps=lamda x: x>1.) # remove temperatures below 1eV
+
+
+MULTI (.opp, .opr, .eps)
+========================
+
+
+"eos_multi.py"
+--------------
+
+**Not sure on what this does compared to ``opg_multi``.**
+
+
+"opg_multi.py"
+--------------
+
+This submodule is used to either parse or write MULTIv5 tables. Its
+class "OpgMulti" has two ways to read data. The first, and more
+general way, is passing it an unpacked dictionary of EoS and opacity
+data. This is how the script "opac_hdf2table" uses the class in
+Conversion Scripts. It first opens up an HDF5 file into a dictionary
+object using "OpgHdf5". Then, it instantiates an "OpgMulti" object
+using the unpacked dictionary object from the HDF5 file. Here is an
+example that reads in an HDF5 file into an "OpgMulti" object:
+
+   op_hdf = OpgHdf5.open_file('base_dir', 'base_filename')
+   op_multi = OpgMulti(**op_hdf)
+
+The second way to read data in "OpgMulti" comes from the "open_file"
+class method. Unlike the last process, this will only read data from a
+MULTIv5 file. It takes two parameters: the "folder" and "base_name" of
+the designated file. It also has an optional "verbose" keyword
+argument.
+
+This submodule also includes two different write functionalities. One,
+"write", will take the data currently contained in an "OpgMulti"
+instance and write it to a MULTIv5 file format. It takes one
+parameter, "prefix", which specifies the common prefix of the files
+that "write" will create. From the example above, after reading in the
+dictionary of data from the HDF5 file, one must call:
+
+   op_multi.write('multi_')
+
+to write data files containing multigroup opacities specified by the
+'multi_' prefix.
+
+The second write functionality comes from the "write2hdf" method.
+This, like "write", relies on data already parsed into an "OpgMulti"
+instance. However, "write2hdf" will write to an HDF5 file rather than
+MULTIv5. This is particularly useful in converting between file
+formats using HDF5 as a middleman. This method takes one parameter,
+"filename", to specify the output file's name. It also has three
+optional keyword arguments: ''Znum'', ''Anum'', and ''Xnum''. The
+atomic number, ''Znum'', and relative fractions, ''Xnum'', must be
+given if they are not already parsed into an instance of "OpgMulti".
+If they are not, "write2hdf" will raise a "ValueError".
+
+
+SESAME ASCII (.ses)
+===================
+
+
+"opg_sesame.py"
+---------------
+
+This submodule is responsible for loading all SESAME formatted data
+files. The main class is "OpgSesame", which reads a SESAME file into a
+dictionary object as it is instantiated. It takes two parameters:
+"filename" and "precision" of the input file. Precision is either
+single or double and can be referenced with "OpgSesame.SINGLE" ("1")
+or "OpgSesame.DOUBLE" ("2"). It also has an optional "verbose" keyword
+argument.
+
+Upon instantiating "OpgSes_Instance", it creates a dictionary
+"OpgSes_Instance.data[]". The "data" dictionary contains keys
+corresponding to the table IDs contained in the SESAME file. So, the
+EoS data must be accessed by calling "OpgSes_Instance.data[table_id]".
+This dictionary will hold the EoS data for the table referenced by
+"table_id".
+
+**Note:** there are currently no handling functions for 500 series
+entries in the SESAME tables.
+
+
+TOPS
+====
+
+
+"opg_tops.py"
+-------------
+
+This completely doesn't match up with the files generated online.
+
+
+INFERNO
+=======
+
+
+"opg_inferno.py"
+----------------
+
+
+PROPACEOS ASCII (.prp)
+======================
+
+
+"opg_propaceos.py"
+------------------
+
+Not publicly distributed
+
+
+Conversion Scripts
+******************
+
+Opacplot2 supports a number of Opacity/EoS table formats that are
+listed in the Introduction.
+
+t is possible to directly convert between two table formats with a
+suitable Python script. A more systematic way consist in converting
+the source file to the HDF5 format which is then converted to the
+output format:
+
+   input table -> HDF5 EoS/Opacity format  ->  output table
+
+Convience script exist to perform this function, installed by
+"opacplot2": "opac_table2hdf" and "opac_hdf2table".
+
+After installation of "opacplot2", these two scripts will be placed in
+the system's path and can be called using "opac_table2hdf" and
+similarly "opac_hdf2table".
+
+
+"opac_table2hdf"
+================
+
+Usage:
+
+   opac_table2hdf [-h] [-t {multi,ionmix,hdf5,propaceos}] [-o OUTNAME] [--Znum ZNUM] [--Xnum XNUM] input_file
+
+This will take a file, "input_file" of the type specified by the "-t"
+tag and convert it to an HDF5 file with a name specified by the "-o"
+tag.
+
+In general, one will have to specify the atomic numbers and material
+fractions by using "--Znum" and "--Xnum", respectively. These are
+comma separated lists.
+
+
+"opac_hdf2table"
+================
+
+Usage:
+
+   opac_hdf2table [-h] [-t {multi,ionmix,ascii,vtk}] [-o OUTFILE] input_file
+
+This will take a file, "input_file" of HDF5 format and convert it to a
+file of the type specified by "-t", with a name specified by "-o".
+
+
+Testing Suite
+*************
+
+These are located in the "tests/" directory of "opacplot2". To import
+one, we write:
+
+   from opacplot2.tests import desired_module
+
+
+"run.py"
+========
+
+This is the main testing script to be used by the user, located in
+"opacplot2/tests/". The user may call this script manually using
+Python, and it will run all of the test functions located in the
+various testing scripts in the "tests/" directory.
+
+"run.py" accomplishes this by using the "nose" testing suite available
+for python. "nose.run()" will search for all scripts that "look" like
+test scripts (such as "test_multi.py") and run the functions that
+"look" like test functions (like "test_multi_read()"). It will return
+"0" if no problems were encountered. Anything else indicates that
+there was a problem.
+
+The "run.py" script will run all tests contained in the scripts
+described below. If the user only wants to run certain tests, they may
+use each script's functions separately by using the "import" statement
+described above.
+
+For more info on "nose", please visit nose's documentation
+
+
+TROUBLESHOOTING
+---------------
+
+If you the user is on Linux or OSX and "run.py" returns:
+
+   Ran 0 tests in 0.000s
+
+it is probably because the test scripts are executable. "nose" does
+NOT search for tests in python scripts that are executable. To fix
+this, ensure that all scripts with the prefix "test_" in the
+"opacplot2/tests/" directory are NOT executable. One may accomplish
+this on Linux/OSX with the following command (in the
+"opacplot2/tests/" directory):
+
+   chmod -x test_*
+
+
+"test_multi"
+============
+
+There are three functions defined by the "test_multi" module:
+"test_multi_read()", "test_multi_read_write()", and
+"test_export_hdf5()". "test_multi_read()" and "test_export_hdf5()" do
+not return a value, if one calls them and they raise no errors then
+the test has passed. However, "test_multi_read_write()" *does* return
+a value, so this test is the most comprehensive. First, it reads in
+all of the values from the MULTIv5 files included in "opacplot2"'s
+testing suite. It takes this data and uses "OpgMulti"'s writing
+function to write the data back to new files. Then, it returns a
+generator of tuples containing "numpy.testing"'s "assert_allclose"
+function, the new files' values at each key, and the old files' values
+at each key. The following example would check if "OpgMulti" is
+reading and writing MULTIv5 files properly:
+
+   from opacplot2.tests import test_multi
+   tests = test_multi.test_multi_read_write()
+   for t in tests:
+       if not t[0](t[1],t[2]):
+           print('OKAY')
+
+To elaborate, "tests = test_multi.test_multi_read_write()" sets
+"tests" equal to the generator described. As we iterate through
+"tests", the first position of the tuple ("t[0]") is the
+"numpy.testing.assert_allclose()" function. The second position is
+data from the original file, while the third is from the new file we
+just wrote. So, "t[0](t[1],t[2])" will compare every data point in the
+newly written and original file. It returns "None" if there are no
+noticeable differences. The "if" statement will print "'OKAY'"
+whenever the files match, which means the reading and writing are
+working properly.
+
+For more info on "numpy.testing.assert_allclose()", please visit
+numpy's documentation
+
+
+Plotting Submodules
+*******************
+
+
+"histogram.py"
+==============
+
+
+"eos_plotter.py"
+================
+
+
+"opac_plotter.py"
+=================
