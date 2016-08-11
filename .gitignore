@@ -1,3 +1,12 @@
+# virtualenv Python2.7.12
+venv2
+
+# virtualenv Python3.5.2
+venv3
+
+# documentation builder
+sphinx
+
 build
 dist
 opacplot2.egg-info
