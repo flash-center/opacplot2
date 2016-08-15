@@ -139,7 +139,7 @@ def opacdump():
             BASE_PATH, fname = os.path.split(FULL_PATH)
             patrn = re.compile(MULTI_EXT_FMT, re.IGNORECASE)
             fname_base = re.sub(patrn, '', fname) # strip the extension
-            tab = OpgMulti.fromfile(BASE_PATH, fname_base)
+            tab = OpgMulti.open_file(BASE_PATH, fname_base)
         temp = tab['temp']
         rho = tab['rho']
         groups = tab['groups']
@@ -191,6 +191,6 @@ def opac_checkhdf():
     args = parser.parse_args()
     from ..opg_hdf5 import OpgHdf5
 
-    op = OpgHdf5(args.input_file)
+    op = OpgHdf5.open_file(args.input_file)
     op.run_testsuite('short')
 

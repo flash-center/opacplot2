@@ -53,10 +53,10 @@ def opac_diff():
         basedir, filename = os.path.split(os.path.abspath(table_path))
         patrn = re.compile(MULTI_EXT_FMT, re.IGNORECASE)
         basename = re.sub(patrn, '', filename) # strip the extension
-        op += [OpgMulti.fromfile(basedir, basename)]
+        op += [OpgMulti.open_file(basedir, basename)]
         op[-1]['label'] = basename
         op[-1]['basedir'] = basedir
-        op[-1]['key'] = alphabet.next()
+        op[-1]['key'] = next(alphabet)
 
 
     rho = op[0]['rho']

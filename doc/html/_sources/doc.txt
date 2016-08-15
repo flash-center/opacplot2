@@ -57,6 +57,8 @@ write to a file.
 Installation
 ============
 
+.. _prerequisites:
+
 Prerequisites
 -------------
 
@@ -88,8 +90,8 @@ you install the required packages this hardly matters):
 Install Opacplot2
 -----------------
 
-#.  Setup a scientific Python environment including numpy and PyTables (see instructions)
-#.  Download the LULI fork of ``opacplot2`` here.
+#.  Setup a scientific Python environment including numpy and PyTables (see :ref:`prerequsites`)
+#.  Download the LULI fork of ``opacplot2`` `here <https://github.com/luli/opacplot2>`_.
 #.  (optional) if you have the opg_propaceos.py script (not distributed on github),
     copy it to the ``opacplot2-master/opacplot2/`` folder, then make sure it is
     ignored by git::
@@ -120,11 +122,14 @@ from a dictionary object. Its main functionality is the method ``open_file``
 that will read an HDF5 file into a dictionary. Then, we can use this to write
 to another format using that formats write capabilities and the information
 stored in the HDF5 file's dictionary. This is the functinality is used in the
-script ``opac_table2hdf`` in the :ref:`conversion-scripts`.
+script ``opac_table2hdf`` in the :ref:`command-line-tools`.
 
+
+.. _opg_ionmix:
 
 IONMIX (.cn4)
 -------------------------
+
 ``opg_ionmix``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -168,7 +173,7 @@ used for tabulated EoS in *FLASH*:
 #. Planck emission opacity (``planck_emiss``)**
 
 This is the functionality that the script ``opac_hdf2table`` in
-:ref:`conversion-scripts` uses for the IONMIX format. It opens an HDF5 file
+:ref:`command-line-tools` uses for the IONMIX format. It opens an HDF5 file
 into a dictionary and uses each key to assign a value to each of the
 ``writeIonmixFile``'s arguments.
 
@@ -219,7 +224,7 @@ MULTI (.opp, .opr, .eps)
 This submodule is used to either parse or write MULTIv5 tables. Its class
 ``OpgMulti`` has two ways to read data. The first, and more general way, is
 passing it an unpacked dictionary of EoS and opacity data. This is how the
-script ``opac_hdf2table`` uses the class in :ref:`conversion-scripts`. It first
+script ``opac_hdf2table`` uses the class in :ref:`command-line-tools`. It first
 opens up an HDF5 file into a dictionary object using ``OpgHdf5``. Then, it
 instantiates an ``OpgMulti`` object using the unpacked dictionary object from
 the HDF5 file. Here is an example that reads in an HDF5 file into an
@@ -280,6 +285,7 @@ entries in the SESAME tables.
 
 TOPS
 -------------------------
+
 ``opg_tops.py``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -288,33 +294,37 @@ This completely doesn't match up with the files generated online.
 
 INFERNO
 -------------------------
+
 ``opg_inferno.py``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Can't find any files online.
 
 
 PROPACEOS ASCII (.prp)
 -------------------------
+
 ``opg_propaceos.py``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Not publicly distributed
+Not publicly distributed.
 
 
-.. _conversion-scripts:
+.. _command-line-tools:
 
-Conversion Scripts
+Command Line Tools
 ==================
 
 Opacplot2 supports a number of Opacity/EoS table formats that are listed in the
 :ref:`introduction`.
 
-t is possible to directly convert between two table formats with a suitable
+It is possible to directly convert between two table formats with a suitable
 Python script. A more systematic way consist in converting the source file to
 the HDF5 format which is then converted to the output format::
 
     input table -> HDF5 EoS/Opacity format  ->  output table
 
-Convience script exist to perform this function, installed by ``opacplot2``:
+Convenience scripts exist to perform this function, installed as:
 ``opac_table2hdf`` and ``opac_hdf2table``.
 
 After installation of ``opacplot2``, these two scripts will be placed in the
@@ -323,7 +333,10 @@ system's path and can be called using ``opac_table2hdf`` and similarly
 
 
 ``opac_table2hdf``
--------------------------
+------------------
+
+Located in ``opacplot2.scripts.opac_table2hdf``.
+
 Usage::
 
     opac_table2hdf [-h] [-t {multi,ionmix,hdf5,propaceos}] [-o OUTNAME] [--Znum ZNUM] [--Xnum XNUM] input_file
@@ -337,7 +350,10 @@ lists.
 
 
 ``opac_hdf2table``
--------------------------
+------------------
+
+Located in ``opacplot2.scripts.opac_hdf2table``.
+
 Usage::
 
     opac_hdf2table [-h] [-t {multi,ionmix,ascii,vtk}] [-o OUTFILE] input_file
@@ -345,17 +361,86 @@ Usage::
 This will take a file, ``input_file`` of HDF5 format and convert it to a file of
 the type specified by ``-t``, with a name specified by ``-o``.
 
+Other Tools
+-----------
+
+``opacplot2``
+^^^^^^^^^^^^^
+
+**Has not been tested!**
+
+Located in ``opacplot2.scripts.main``.
+
+This script is used to automate EoS/opacity tables generation for *FLASH* from the
+SESAME database.
+
+Usage::
+
+    opacplot2 [-h] [-d DBDIR] [-t DBTYPE] -n TABLENUM [-o OUT]
+
+where::
+
+    -d DBDIR, --dbdir DBDIR             Path to the database. Default: current directory.
+
+    -t DBTYPE, --dbtype DBTYPE          Database type. Currently only supports SESAME (default).
+
+    -n TABLENUM, --tablenum TABLENUM    Table ID.
+
+    -o OUT, --out OUT                   Output Filename. Default: DBTYPE-eos-TABLENUM
+
+
+``opacdump``
+^^^^^^^^^^^^
+
+Located in ``opacplot2.scripts.main``.
+
+Currently not working, fails with ``KeyError: 'rho'``.
+
+``opac_checkhdf``
+^^^^^^^^^^^^^^^^^
+
+Located in ``opacplot2.scripts.main``.
+
+Currently not working, fails with ``KeyError: 'dens'``.
+
+
+``opac_diff``
+^^^^^^^^^^^^^
+
+Located in ``opacplot2.scripts.opac_diff``.
+
+Currently not working, fails with ``KeyError: 'rho'``.
+
 
 Testing Suite
 =============
 
-These are located in the ``tests/`` directory of ``opacplot2``. To import one, we
-write::
+These are located in the ``tests/`` directory of ``opacplot2``.
+Use these to test if ``opacplot2`` is running correctly on your system.
 
-    from opacplot2.tests import desired_module
 
-``run.py``
-----------
+Automatic Testing Using ``setup.py``
+------------------------------------
+
+Note: in order for this process to work, you need to have installed the ``nose``
+python module (available on PyPI).
+
+To run ``opacplot2``'s test suite, simply enter::
+
+     python setup.py nosetests
+
+in the ``opacplot2`` top-level directory (the one with ``setup.py``).
+This will run ``run.py`` in ``opacplot2/tests/``.
+
+NOTE: It is very important that you use ``nosetests``. Simply entering ``tests``
+will give you all sorts of errors.
+
+
+Test Scripts
+------------
+
+``run``
+^^^^^^^^^^
 
 This is the main testing script to be used by the user, located in
 ``opacplot2/tests/``. The user may call this script manually using Python, and it
@@ -375,32 +460,19 @@ separately by using the ``import`` statement described above.
 For more info on ``nose``, please visit
 `nose's documentation <http://nose.readthedocs.io/en/latest/index.html>`_
 
-TROUBLESHOOTING
-^^^^^^^^^^^^^^^^^^^^
-
-If you the user is on Linux or OSX and
-``run.py`` returns::
-
-    Ran 0 tests in 0.000s
-
-it is probably because the test scripts are executable. ``nose`` does NOT search
-for tests in python scripts that are executable. To fix this, ensure that all
-scripts with the prefix ``test_`` in the ``opacplot2/tests/`` directory are
-NOT executable. One may accomplish this on Linux/OSX with the following command
-(in the ``opacplot2/tests/`` directory)::
-
-    chmod -x test_*
-
+.. _test_multi:
 
 ``test_multi``
---------------
+^^^^^^^^^^^^^^
 
 There are three functions defined by the ``test_multi`` module:
 ``test_multi_read()``,
 ``test_multi_read_write()``,
 and ``test_export_hdf5()``.
+
 ``test_multi_read()`` and ``test_export_hdf5()`` do not return a value,
-if one calls them and they raise no errors then the test has passed. However,
+if one calls them and they raise no errors then the test has passed.
+
 ``test_multi_read_write()`` *does* return a value, so this test is the most
 comprehensive. First, it reads in all of the values from the MULTIv5 files
 included in ``opacplot2``'s testing suite. It takes this data and uses ``OpgMulti``'s
@@ -429,6 +501,62 @@ the files match, which means the reading and writing are working properly.
 For more info on ``numpy.testing.assert_allclose()``, please visit
 `numpy's documentation <http://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.testing.assert_allclose.html>`_
 
+
+``test_sesame``
+^^^^^^^^^^^^^^^^^^
+
+``test_opac_read()`` checks ``OpgSesame``'s reading capabilities.
+
+
+``test_imx``
+^^^^^^^^^^^^
+
+There are four test functions here:
+``test_ionmix_read()``,
+``test_extend_to_zero()``,
+``test_ionmix_read_write()``,
+and ``test_ionmix_read_write_0()``.
+
+``test_ionmix_read()`` checks ``OpacIonmix``'s reading capabilities.
+
+``test_extend_to_zero()`` will check ``OpacIonmix`` capabilities to add a
+temperature point at zero.
+
+``test_ionmix_read_write()`` will test the ``OpgIonmix.writeIonmixFile()`` function
+and verify it in the same way as :ref:`test_multi` verified ``OpgMulti``'s
+reading and writing, using ``numpy.testing.assert_allclose()``.
+Note that this is the ``writeIonmixFile()`` function, which takes its data as a collection
+of positional & keyword arguments. See :ref:`opg_ionmix` for more details.
+
+``test_ionmix_read_write()`` will test the ``OpgIonmix.write()`` function and
+verify it in the same way as ``test_ionmix_read_write`` and ``test_multi``.
+Note that ``write()`` writes the data that is *already* stored in an instance of
+``OpgIonmix`` as a dictionary.
+
+``test_hdf5``
+^^^^^^^^^^^^^
+
+``test_hdf5_read()`` this will check if ``OpgHdf5`` can read an HDF5 file.
+
+``test_hdf5_write()`` this will read in an HDF5 file and then test if ``OpgHdf5``
+can write one back.
+
+
+TROUBLESHOOTING
+---------------
+
+If you the user is on Linux or OSX and
+``python setup.py nosetests`` returns::
+
+    Ran 0 tests in 0.000s
+
+it is probably because the test scripts are executable. ``nose`` does NOT search
+for tests in python scripts that are executable. To fix this, ensure that all
+scripts with the prefix ``test_`` in the ``opacplot2/tests/`` directory are
+NOT executable. One may accomplish this on Linux/OSX with the following command
+(in the ``opacplot2/tests/`` directory)::
+
+    chmod -x test_*
 
 
 Plotting Submodules

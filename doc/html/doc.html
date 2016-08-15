@@ -23,7 +23,8 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Opacplot2 1.0 documentation" href="index.html" /> 
+    <link rel="top" title="Opacplot2 1.0 documentation" href="index.html" />
+    <link rel="prev" title="Welcome to Opacplot2 Docs’s documentation!" href="index.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -32,6 +33,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Opacplot2 Docs’s documentation!"
+             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Opacplot2 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -147,7 +151,7 @@ write to a file.</p>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="on-linux">
 <h3>On Linux<a class="headerlink" href="#on-linux" title="Permalink to this headline">¶</a></h3>
 <p>You could just use your system Python distribution and install numpy, pytables,
@@ -178,9 +182,9 @@ you install the required packages this hardly matters):</p>
 <div class="section" id="install-opacplot2">
 <h2>Install Opacplot2<a class="headerlink" href="#install-opacplot2" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p class="first">Setup a scientific Python environment including numpy and PyTables (see instructions)</p>
+<li><p class="first">Setup a scientific Python environment including numpy and PyTables (see <span class="xref std std-ref">prerequsites</span>)</p>
 </li>
-<li><p class="first">Download the LULI fork of <code class="docutils literal"><span class="pre">opacplot2</span></code> here.</p>
+<li><p class="first">Download the LULI fork of <code class="docutils literal"><span class="pre">opacplot2</span></code> <a class="reference external" href="https://github.com/luli/opacplot2">here</a>.</p>
 </li>
 <li><p class="first">(optional) if you have the opg_propaceos.py script (not distributed on github),
 copy it to the <code class="docutils literal"><span class="pre">opacplot2-master/opacplot2/</span></code> folder, then make sure it is
@@ -212,13 +216,13 @@ from a dictionary object. Its main functionality is the method <code class="docu
 that will read an HDF5 file into a dictionary. Then, we can use this to write
 to another format using that formats write capabilities and the information
 stored in the HDF5 file&#8217;s dictionary. This is the functinality is used in the
-script <code class="docutils literal"><span class="pre">opac_table2hdf</span></code> in the <a class="reference internal" href="#conversion-scripts"><span class="std std-ref">Conversion Scripts</span></a>.</p>
+script <code class="docutils literal"><span class="pre">opac_table2hdf</span></code> in the <a class="reference internal" href="#command-line-tools"><span class="std std-ref">Command Line Tools</span></a>.</p>
 </div>
 </div>
 <div class="section" id="ionmix-cn4">
-<h2>IONMIX (.cn4)<a class="headerlink" href="#ionmix-cn4" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="opg-ionmix">
-<h3><code class="docutils literal"><span class="pre">opg_ionmix</span></code><a class="headerlink" href="#opg-ionmix" title="Permalink to this headline">¶</a></h3>
+<span id="opg-ionmix"></span><h2>IONMIX (.cn4)<a class="headerlink" href="#ionmix-cn4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3><code class="docutils literal"><span class="pre">opg_ionmix</span></code><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>This is the main submodule for the IONMIX format that <em>FLASH</em> uses. It contains
 two main classes. The <code class="docutils literal"><span class="pre">OpacIonmix</span></code> class is used to read in an IONMIX file
 and translate its information into a dictionary object. It takes two required
@@ -259,7 +263,7 @@ used for tabulated EoS in <em>FLASH</em>:</p>
 <li>Planck emission opacity (<code class="docutils literal"><span class="pre">planck_emiss</span></code>)**</li>
 </ol>
 <p>This is the functionality that the script <code class="docutils literal"><span class="pre">opac_hdf2table</span></code> in
-<a class="reference internal" href="#conversion-scripts"><span class="std std-ref">Conversion Scripts</span></a> uses for the IONMIX format. It opens an HDF5 file
+<a class="reference internal" href="#command-line-tools"><span class="std std-ref">Command Line Tools</span></a> uses for the IONMIX format. It opens an HDF5 file
 into a dictionary and uses each key to assign a value to each of the
 <code class="docutils literal"><span class="pre">writeIonmixFile</span></code>&#8216;s arguments.</p>
 </div>
@@ -303,7 +307,7 @@ The default is <code class="docutils literal"><span class="pre">(lamdba</span> <
 <p>This submodule is used to either parse or write MULTIv5 tables. Its class
 <code class="docutils literal"><span class="pre">OpgMulti</span></code> has two ways to read data. The first, and more general way, is
 passing it an unpacked dictionary of EoS and opacity data. This is how the
-script <code class="docutils literal"><span class="pre">opac_hdf2table</span></code> uses the class in <a class="reference internal" href="#conversion-scripts"><span class="std std-ref">Conversion Scripts</span></a>. It first
+script <code class="docutils literal"><span class="pre">opac_hdf2table</span></code> uses the class in <a class="reference internal" href="#command-line-tools"><span class="std std-ref">Command Line Tools</span></a>. It first
 opens up an HDF5 file into a dictionary object using <code class="docutils literal"><span class="pre">OpgHdf5</span></code>. Then, it
 instantiates an <code class="docutils literal"><span class="pre">OpgMulti</span></code> object using the unpacked dictionary object from
 the HDF5 file. Here is an example that reads in an HDF5 file into an
@@ -368,33 +372,35 @@ entries in the SESAME tables.</p>
 <h2>INFERNO<a class="headerlink" href="#inferno" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="opg-inferno-py">
 <h3><code class="docutils literal"><span class="pre">opg_inferno.py</span></code><a class="headerlink" href="#opg-inferno-py" title="Permalink to this headline">¶</a></h3>
+<p>Can&#8217;t find any files online.</p>
 </div>
 </div>
 <div class="section" id="propaceos-ascii-prp">
 <h2>PROPACEOS ASCII (.prp)<a class="headerlink" href="#propaceos-ascii-prp" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="opg-propaceos-py">
 <h3><code class="docutils literal"><span class="pre">opg_propaceos.py</span></code><a class="headerlink" href="#opg-propaceos-py" title="Permalink to this headline">¶</a></h3>
-<p>Not publicly distributed</p>
+<p>Not publicly distributed.</p>
 </div>
 </div>
 </div>
-<div class="section" id="conversion-scripts">
-<span id="id2"></span><h1>Conversion Scripts<a class="headerlink" href="#conversion-scripts" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="command-line-tools">
+<span id="id4"></span><h1>Command Line Tools<a class="headerlink" href="#command-line-tools" title="Permalink to this headline">¶</a></h1>
 <p>Opacplot2 supports a number of Opacity/EoS table formats that are listed in the
 <a class="reference internal" href="#introduction"><span class="std std-ref">Introduction</span></a>.</p>
-<p>t is possible to directly convert between two table formats with a suitable
+<p>It is possible to directly convert between two table formats with a suitable
 Python script. A more systematic way consist in converting the source file to
 the HDF5 format which is then converted to the output format:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="n">table</span> <span class="o">-&gt;</span> <span class="n">HDF5</span> <span class="n">EoS</span><span class="o">/</span><span class="n">Opacity</span> <span class="nb">format</span>  <span class="o">-&gt;</span>  <span class="n">output</span> <span class="n">table</span>
 </pre></div>
 </div>
-<p>Convience script exist to perform this function, installed by <code class="docutils literal"><span class="pre">opacplot2</span></code>:
+<p>Convenience scripts exist to perform this function, installed as:
 <code class="docutils literal"><span class="pre">opac_table2hdf</span></code> and <code class="docutils literal"><span class="pre">opac_hdf2table</span></code>.</p>
 <p>After installation of <code class="docutils literal"><span class="pre">opacplot2</span></code>, these two scripts will be placed in the
 system&#8217;s path and can be called using <code class="docutils literal"><span class="pre">opac_table2hdf</span></code> and similarly
 <code class="docutils literal"><span class="pre">opac_hdf2table</span></code>.</p>
 <div class="section" id="opac-table2hdf">
 <h2><code class="docutils literal"><span class="pre">opac_table2hdf</span></code><a class="headerlink" href="#opac-table2hdf" title="Permalink to this headline">¶</a></h2>
+<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.opac_table2hdf</span></code>.</p>
 <p>Usage:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">opac_table2hdf</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="p">{</span><span class="n">multi</span><span class="p">,</span><span class="n">ionmix</span><span class="p">,</span><span class="n">hdf5</span><span class="p">,</span><span class="n">propaceos</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTNAME</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">Znum</span> <span class="n">ZNUM</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">Xnum</span> <span class="n">XNUM</span><span class="p">]</span> <span class="n">input_file</span>
 </pre></div>
@@ -407,6 +413,7 @@ lists.</p>
 </div>
 <div class="section" id="opac-hdf2table">
 <h2><code class="docutils literal"><span class="pre">opac_hdf2table</span></code><a class="headerlink" href="#opac-hdf2table" title="Permalink to this headline">¶</a></h2>
+<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.opac_hdf2table</span></code>.</p>
 <p>Usage:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">opac_hdf2table</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="p">{</span><span class="n">multi</span><span class="p">,</span><span class="n">ionmix</span><span class="p">,</span><span class="n">ascii</span><span class="p">,</span><span class="n">vtk</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTFILE</span><span class="p">]</span> <span class="n">input_file</span>
 </pre></div>
@@ -414,16 +421,67 @@ lists.</p>
 <p>This will take a file, <code class="docutils literal"><span class="pre">input_file</span></code> of HDF5 format and convert it to a file of
 the type specified by <code class="docutils literal"><span class="pre">-t</span></code>, with a name specified by <code class="docutils literal"><span class="pre">-o</span></code>.</p>
 </div>
+<div class="section" id="other-tools">
+<h2>Other Tools<a class="headerlink" href="#other-tools" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="opacplot2">
+<h3><code class="docutils literal"><span class="pre">opacplot2</span></code><a class="headerlink" href="#opacplot2" title="Permalink to this headline">¶</a></h3>
+<p><strong>Has not been tested!</strong></p>
+<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.main</span></code>.</p>
+<p>This script is used to automate EoS/opacity tables generation for <em>FLASH</em> from the
+SESAME database.</p>
+<p>Usage:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">opacplot2</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DBDIR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">DBTYPE</span><span class="p">]</span> <span class="o">-</span><span class="n">n</span> <span class="n">TABLENUM</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>where:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">d</span> <span class="n">DBDIR</span><span class="p">,</span> <span class="o">--</span><span class="n">dbdir</span> <span class="n">DBDIR</span>             <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">database</span><span class="o">.</span> <span class="n">Default</span><span class="p">:</span> <span class="n">current</span> <span class="n">directory</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">t</span> <span class="n">DBTYPE</span><span class="p">,</span> <span class="o">--</span><span class="n">dbtype</span> <span class="n">DBTYPE</span>          <span class="n">Database</span> <span class="nb">type</span><span class="o">.</span> <span class="n">Currently</span> <span class="n">only</span> <span class="n">supports</span> <span class="n">SESAME</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">n</span> <span class="n">TABLENUM</span><span class="p">,</span> <span class="o">--</span><span class="n">tablenum</span> <span class="n">TABLENUM</span>    <span class="n">Table</span> <span class="n">ID</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">,</span> <span class="o">--</span><span class="n">out</span> <span class="n">OUT</span>                   <span class="n">Output</span> <span class="n">Filename</span><span class="o">.</span> <span class="n">Default</span><span class="p">:</span> <span class="n">DBTYPE</span><span class="o">-</span><span class="n">eos</span><span class="o">-</span><span class="n">TABLENUM</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="opacdump">
+<h3><code class="docutils literal"><span class="pre">opacdump</span></code><a class="headerlink" href="#opacdump" title="Permalink to this headline">¶</a></h3>
+<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.main</span></code>.</p>
+<p>Currently not working, fails with <code class="docutils literal"><span class="pre">KeyError:</span> <span class="pre">'rho'</span></code>.</p>
+</div>
+<div class="section" id="opac-checkhdf">
+<h3><code class="docutils literal"><span class="pre">opac_checkhdf</span></code><a class="headerlink" href="#opac-checkhdf" title="Permalink to this headline">¶</a></h3>
+<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.main</span></code>.</p>
+<p>Currently not working, fails with <code class="docutils literal"><span class="pre">KeyError:</span> <span class="pre">'dens'</span></code>.</p>
+</div>
+<div class="section" id="opac-diff">
+<h3><code class="docutils literal"><span class="pre">opac_diff</span></code><a class="headerlink" href="#opac-diff" title="Permalink to this headline">¶</a></h3>
+<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.opac_diff</span></code>.</p>
+<p>Currently not working, fails with <code class="docutils literal"><span class="pre">KeyError:</span> <span class="pre">'rho'</span></code>.</p>
+</div>
+</div>
 </div>
 <div class="section" id="testing-suite">
 <h1>Testing Suite<a class="headerlink" href="#testing-suite" title="Permalink to this headline">¶</a></h1>
-<p>These are located in the <code class="docutils literal"><span class="pre">tests/</span></code> directory of <code class="docutils literal"><span class="pre">opacplot2</span></code>. To import one, we
-write:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">opacplot2.tests</span> <span class="k">import</span> <span class="n">desired_module</span>
+<p>These are located in the <code class="docutils literal"><span class="pre">tests/</span></code> directory of <code class="docutils literal"><span class="pre">opacplot2</span></code>.
+Use these to test if <code class="docutils literal"><span class="pre">opacplot2</span></code> is running correctly on your system.</p>
+<div class="section" id="automatic-testing-using-setup-py">
+<h2>Automatic Testing Using <code class="docutils literal"><span class="pre">setup.py</span></code><a class="headerlink" href="#automatic-testing-using-setup-py" title="Permalink to this headline">¶</a></h2>
+<p>Note: in order for this process to work, you need to have installed the <code class="docutils literal"><span class="pre">nose</span></code>
+python module (available on PyPI).</p>
+<p>To run <code class="docutils literal"><span class="pre">opacplot2</span></code>&#8216;s test suite, simply enter:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">nosetests</span>
 </pre></div>
 </div>
-<div class="section" id="run-py">
-<h2><code class="docutils literal"><span class="pre">run.py</span></code><a class="headerlink" href="#run-py" title="Permalink to this headline">¶</a></h2>
+<p>in the <code class="docutils literal"><span class="pre">opacplot2</span></code> top-level directory (the one with <code class="docutils literal"><span class="pre">setup.py</span></code>).
+This will run <code class="docutils literal"><span class="pre">run.py</span></code> in <code class="docutils literal"><span class="pre">opacplot2/tests/</span></code>.</p>
+<p>NOTE: It is very important that you use <code class="docutils literal"><span class="pre">nosetests</span></code>. Simply entering <code class="docutils literal"><span class="pre">tests</span></code>
+will give you all sorts of errors.</p>
+</div>
+<div class="section" id="test-scripts">
+<h2>Test Scripts<a class="headerlink" href="#test-scripts" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="run">
+<h3><code class="docutils literal"><span class="pre">run</span></code><a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h3>
 <p>This is the main testing script to be used by the user, located in
 <code class="docutils literal"><span class="pre">opacplot2/tests/</span></code>. The user may call this script manually using Python, and it
 will run all of the test functions located in the various testing scripts in the
@@ -438,32 +496,16 @@ If the user only wants to run certain tests, they may use each script&#8217;s fu
 separately by using the <code class="docutils literal"><span class="pre">import</span></code> statement described above.</p>
 <p>For more info on <code class="docutils literal"><span class="pre">nose</span></code>, please visit
 <a class="reference external" href="http://nose.readthedocs.io/en/latest/index.html">nose&#8217;s documentation</a></p>
-<div class="section" id="troubleshooting">
-<h3>TROUBLESHOOTING<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h3>
-<p>If you the user is on Linux or OSX and
-<code class="docutils literal"><span class="pre">run.py</span></code> returns:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Ran</span> <span class="mi">0</span> <span class="n">tests</span> <span class="ow">in</span> <span class="mf">0.000</span><span class="n">s</span>
-</pre></div>
-</div>
-<p>it is probably because the test scripts are executable. <code class="docutils literal"><span class="pre">nose</span></code> does NOT search
-for tests in python scripts that are executable. To fix this, ensure that all
-scripts with the prefix <code class="docutils literal"><span class="pre">test_</span></code> in the <code class="docutils literal"><span class="pre">opacplot2/tests/</span></code> directory are
-NOT executable. One may accomplish this on Linux/OSX with the following command
-(in the <code class="docutils literal"><span class="pre">opacplot2/tests/</span></code> directory):</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">chmod</span> <span class="o">-</span><span class="n">x</span> <span class="n">test_</span><span class="o">*</span>
-</pre></div>
-</div>
-</div>
 </div>
 <div class="section" id="test-multi">
-<h2><code class="docutils literal"><span class="pre">test_multi</span></code><a class="headerlink" href="#test-multi" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h3><code class="docutils literal"><span class="pre">test_multi</span></code><a class="headerlink" href="#test-multi" title="Permalink to this headline">¶</a></h3>
 <p>There are three functions defined by the <code class="docutils literal"><span class="pre">test_multi</span></code> module:
 <code class="docutils literal"><span class="pre">test_multi_read()</span></code>,
 <code class="docutils literal"><span class="pre">test_multi_read_write()</span></code>,
-and <code class="docutils literal"><span class="pre">test_export_hdf5()</span></code>.
-<code class="docutils literal"><span class="pre">test_multi_read()</span></code> and <code class="docutils literal"><span class="pre">test_export_hdf5()</span></code> do not return a value,
-if one calls them and they raise no errors then the test has passed. However,
-<code class="docutils literal"><span class="pre">test_multi_read_write()</span></code> <em>does</em> return a value, so this test is the most
+and <code class="docutils literal"><span class="pre">test_export_hdf5()</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">test_multi_read()</span></code> and <code class="docutils literal"><span class="pre">test_export_hdf5()</span></code> do not return a value,
+if one calls them and they raise no errors then the test has passed.</p>
+<p><code class="docutils literal"><span class="pre">test_multi_read_write()</span></code> <em>does</em> return a value, so this test is the most
 comprehensive. First, it reads in all of the values from the MULTIv5 files
 included in <code class="docutils literal"><span class="pre">opacplot2</span></code>&#8216;s testing suite. It takes this data and uses <code class="docutils literal"><span class="pre">OpgMulti</span></code>&#8216;s
 writing function to write the data back to new files. Then, it returns a
@@ -488,6 +530,53 @@ are no noticeable differences. The <code class="docutils literal"><span class="p
 the files match, which means the reading and writing are working properly.</p>
 <p>For more info on <code class="docutils literal"><span class="pre">numpy.testing.assert_allclose()</span></code>, please visit
 <a class="reference external" href="http://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.testing.assert_allclose.html">numpy&#8217;s documentation</a></p>
+</div>
+<div class="section" id="test-sesame">
+<h3><code class="docutils literal"><span class="pre">test_sesame</span></code><a class="headerlink" href="#test-sesame" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">test_opac_read()</span></code> checks <code class="docutils literal"><span class="pre">OpgSesame</span></code>&#8216;s reading capabilities.</p>
+</div>
+<div class="section" id="test-imx">
+<h3><code class="docutils literal"><span class="pre">test_imx</span></code><a class="headerlink" href="#test-imx" title="Permalink to this headline">¶</a></h3>
+<p>There are four test functions here:
+<code class="docutils literal"><span class="pre">test_ionmix_read()</span></code>,
+<code class="docutils literal"><span class="pre">test_extend_to_zero()</span></code>,
+<code class="docutils literal"><span class="pre">test_ionmix_read_write()</span></code>,
+and <code class="docutils literal"><span class="pre">test_ionmix_read_write_0()</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">test_ionmix_read()</span></code> checks <code class="docutils literal"><span class="pre">OpacIonmix</span></code>&#8216;s reading capabilities.</p>
+<p><code class="docutils literal"><span class="pre">test_extend_to_zero()</span></code> will check <code class="docutils literal"><span class="pre">OpacIonmix</span></code> capabilities to add a
+temperature point at zero.</p>
+<p><code class="docutils literal"><span class="pre">test_ionmix_read_write()</span></code> will test the <code class="docutils literal"><span class="pre">OpgIonmix.writeIonmixFile()</span></code> function
+and verify it in the same way as <a class="reference internal" href="#test-multi"><span class="std std-ref">test_multi</span></a> verified <code class="docutils literal"><span class="pre">OpgMulti</span></code>&#8216;s
+reading and writing, using <code class="docutils literal"><span class="pre">numpy.testing.assert_allclose()</span></code>.
+Note that this is the <code class="docutils literal"><span class="pre">writeIonmixFile()</span></code> function, which takes its data as a collection
+of positional &amp; keyword arguments. See <a class="reference internal" href="#opg-ionmix"><span class="std std-ref">IONMIX (.cn4)</span></a> for more details.</p>
+<p><code class="docutils literal"><span class="pre">test_ionmix_read_write()</span></code> will test the <code class="docutils literal"><span class="pre">OpgIonmix.write()</span></code> function and
+verify it in the same way as <code class="docutils literal"><span class="pre">test_ionmix_read_write</span></code> and <code class="docutils literal"><span class="pre">test_multi</span></code>.
+Note that <code class="docutils literal"><span class="pre">write()</span></code> writes the data that is <em>already</em> stored in an instance of
+<code class="docutils literal"><span class="pre">OpgIonmix</span></code> as a dictionary.</p>
+</div>
+<div class="section" id="test-hdf5">
+<h3><code class="docutils literal"><span class="pre">test_hdf5</span></code><a class="headerlink" href="#test-hdf5" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">test_hdf5_read()</span></code> this will check if <code class="docutils literal"><span class="pre">OpgHdf5</span></code> can read an HDF5 file.</p>
+<p><code class="docutils literal"><span class="pre">test_hdf5_write()</span></code> this will read in an HDF5 file and then test if <code class="docutils literal"><span class="pre">OpgHdf5</span></code>
+can write one back.</p>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>TROUBLESHOOTING<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>If you the user is on Linux or OSX and
+<code class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">nosetests</span></code> returns:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Ran</span> <span class="mi">0</span> <span class="n">tests</span> <span class="ow">in</span> <span class="mf">0.000</span><span class="n">s</span>
+</pre></div>
+</div>
+<p>it is probably because the test scripts are executable. <code class="docutils literal"><span class="pre">nose</span></code> does NOT search
+for tests in python scripts that are executable. To fix this, ensure that all
+scripts with the prefix <code class="docutils literal"><span class="pre">test_</span></code> in the <code class="docutils literal"><span class="pre">opacplot2/tests/</span></code> directory are
+NOT executable. One may accomplish this on Linux/OSX with the following command
+(in the <code class="docutils literal"><span class="pre">opacplot2/tests/</span></code> directory):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">chmod</span> <span class="o">-</span><span class="n">x</span> <span class="n">test_</span><span class="o">*</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="plotting-submodules">
@@ -530,7 +619,7 @@ the files match, which means the reading and writing are working properly.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#ionmix-cn4">IONMIX (.cn4)</a><ul>
-<li><a class="reference internal" href="#opg-ionmix"><code class="docutils literal"><span class="pre">opg_ionmix</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal"><span class="pre">opg_ionmix</span></code></a></li>
 <li><a class="reference internal" href="#adapt-py"><code class="docutils literal"><span class="pre">adapt.py</span></code></a></li>
 </ul>
 </li>
@@ -557,17 +646,29 @@ the files match, which means the reading and writing are working properly.</p>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#conversion-scripts">Conversion Scripts</a><ul>
+<li><a class="reference internal" href="#command-line-tools">Command Line Tools</a><ul>
 <li><a class="reference internal" href="#opac-table2hdf"><code class="docutils literal"><span class="pre">opac_table2hdf</span></code></a></li>
 <li><a class="reference internal" href="#opac-hdf2table"><code class="docutils literal"><span class="pre">opac_hdf2table</span></code></a></li>
+<li><a class="reference internal" href="#other-tools">Other Tools</a><ul>
+<li><a class="reference internal" href="#opacplot2"><code class="docutils literal"><span class="pre">opacplot2</span></code></a></li>
+<li><a class="reference internal" href="#opacdump"><code class="docutils literal"><span class="pre">opacdump</span></code></a></li>
+<li><a class="reference internal" href="#opac-checkhdf"><code class="docutils literal"><span class="pre">opac_checkhdf</span></code></a></li>
+<li><a class="reference internal" href="#opac-diff"><code class="docutils literal"><span class="pre">opac_diff</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#testing-suite">Testing Suite</a><ul>
-<li><a class="reference internal" href="#run-py"><code class="docutils literal"><span class="pre">run.py</span></code></a><ul>
-<li><a class="reference internal" href="#troubleshooting">TROUBLESHOOTING</a></li>
+<li><a class="reference internal" href="#automatic-testing-using-setup-py">Automatic Testing Using <code class="docutils literal"><span class="pre">setup.py</span></code></a></li>
+<li><a class="reference internal" href="#test-scripts">Test Scripts</a><ul>
+<li><a class="reference internal" href="#run"><code class="docutils literal"><span class="pre">run</span></code></a></li>
+<li><a class="reference internal" href="#test-multi"><code class="docutils literal"><span class="pre">test_multi</span></code></a></li>
+<li><a class="reference internal" href="#test-sesame"><code class="docutils literal"><span class="pre">test_sesame</span></code></a></li>
+<li><a class="reference internal" href="#test-imx"><code class="docutils literal"><span class="pre">test_imx</span></code></a></li>
+<li><a class="reference internal" href="#test-hdf5"><code class="docutils literal"><span class="pre">test_hdf5</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#test-multi"><code class="docutils literal"><span class="pre">test_multi</span></code></a></li>
+<li><a class="reference internal" href="#troubleshooting">TROUBLESHOOTING</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#plotting-submodules">Plotting Submodules</a><ul>
@@ -578,6 +679,9 @@ the files match, which means the reading and writing are working properly.</p>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Opacplot2 Docs&#8217;s documentation!</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -588,8 +692,8 @@ the files match, which means the reading and writing are working properly.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -605,12 +709,15 @@ the files match, which means the reading and writing are working properly.</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Opacplot2 Docs’s documentation!"
+             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Opacplot2 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2016, Jordan Laune.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
     </div>
   </body>
 </html>

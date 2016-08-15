@@ -30,17 +30,21 @@ Contents:
 
   * PROPACEOS ASCII (.prp)
 
-* Conversion Scripts
+* Command Line Tools
 
   * "opac_table2hdf"
 
   * "opac_hdf2table"
 
+  * Other Tools
+
 * Testing Suite
 
-  * "run.py"
+  * Automatic Testing Using "setup.py"
 
-  * "test_multi"
+  * Test Scripts
+
+  * TROUBLESHOOTING
 
 * Plotting Submodules
 
