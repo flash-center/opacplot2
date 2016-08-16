@@ -30,14 +30,6 @@ Contents:
 
   * PROPACEOS ASCII (.prp)
 
-* Command Line Tools
-
-  * "opac_table2hdf"
-
-  * "opac_hdf2table"
-
-  * Other Tools
-
 * Testing Suite
 
   * Automatic Testing Using "setup.py"
@@ -46,13 +38,21 @@ Contents:
 
   * TROUBLESHOOTING
 
-* Plotting Submodules
+* Plotting Capabilities
 
-  * "histogram.py"
+  * Configuring "matplotlib" to work with OSX
 
-  * "eos_plotter.py"
+  * "eos_plotter"
 
-  * "opac_plotter.py"
+  * "opg_vtk.py"
+
+* Command Line Tools
+
+  * "opac_table2hdf"
+
+  * "opac_hdf2table"
+
+  * Other Tools
 
 
 Indices and tables

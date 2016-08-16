@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>File Format Submodules &mdash; Opacplot2 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Opacplot2 1.0 documentation" href="index.html"/>
+        <link rel="next" title="Testing Suite" href="test.html"/>
+        <link rel="prev" title="Introduction" href="intro.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Opacplot2
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html#installation">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">File Format Submodules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#native-hdf5">Native HDF5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#opg-hdf5-py"><code class="docutils literal"><span class="pre">opg_hdf5.py</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ionmix-cn4">IONMIX (.cn4)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#opg-ionmix-py"><code class="docutils literal"><span class="pre">opg_ionmix.py</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adapt-py"><code class="docutils literal"><span class="pre">adapt.py</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#multi-opp-opr-eps">MULTI (.opp, .opr, .eps)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#eos-multi-py"><code class="docutils literal"><span class="pre">eos_multi.py</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#opg-multi-py"><code class="docutils literal"><span class="pre">opg_multi.py</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sesame-ascii-ses">SESAME ASCII (.ses)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#opg-sesame-py"><code class="docutils literal"><span class="pre">opg_sesame.py</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tops">TOPS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#opg-tops-py"><code class="docutils literal"><span class="pre">opg_tops.py</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#inferno">INFERNO</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#opg-inferno-py"><code class="docutils literal"><span class="pre">opg_inferno.py</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#propaceos-ascii-prp">PROPACEOS ASCII (.prp)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#opg-propaceos-py"><code class="docutils literal"><span class="pre">opg_propaceos.py</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">Testing Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">Plotting Capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clt.html">Command Line Tools</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Opacplot2</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>File Format Submodules</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/format.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="file-format-submodules">
+<h1>File Format Submodules<a class="headerlink" href="#file-format-submodules" title="Permalink to this headline">¶</a></h1>
+<p>For each supported format there is a submodule with the prefix
+<code class="docutils literal"><span class="pre">opg_formatname</span></code>. These submodules are where you will find each format&#8217;s
+read/write/write2hdf methods.</p>
+<div class="section" id="native-hdf5">
+<h2>Native HDF5<a class="headerlink" href="#native-hdf5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="opg-hdf5-py">
+<h3><code class="docutils literal"><span class="pre">opg_hdf5.py</span></code><a class="headerlink" href="#opg-hdf5-py" title="Permalink to this headline">¶</a></h3>
+<p>This submodule contains the <code class="docutils literal"><span class="pre">OpgHdf5</span></code> class which inherits its properties
+from a dictionary object. Its main functionality is the method <code class="docutils literal"><span class="pre">open_file</span></code>
+that will read an HDF5 file into a dictionary. Then, we can use this to write
+to another format using that formats write capabilities and the information
+stored in the HDF5 file&#8217;s dictionary. This is the functinality is used in the
+script <code class="docutils literal"><span class="pre">opac_table2hdf</span></code> in the <a class="reference internal" href="clt.html#clts"><span class="std std-ref">Command Line Tools</span></a>.</p>
+</div>
+</div>
+<div class="section" id="ionmix-cn4">
+<span id="opg-ionmix"></span><h2>IONMIX (.cn4)<a class="headerlink" href="#ionmix-cn4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="opg-ionmix-py">
+<h3><code class="docutils literal"><span class="pre">opg_ionmix.py</span></code><a class="headerlink" href="#opg-ionmix-py" title="Permalink to this headline">¶</a></h3>
+<p>This is the main submodule for the IONMIX format that <em>FLASH</em> uses. It contains
+two main classes. The <code class="docutils literal"><span class="pre">OpacIonmix</span></code> class is used to read in an IONMIX file
+and translate its information into a dictionary object. It takes two required
+arguments, the filename (<code class="docutils literal"><span class="pre">fn</span></code>) and the mass of positive ions (<code class="docutils literal"><span class="pre">mpi</span></code>). It
+also takes 3 optional boolean arguments, which all default to false: two
+temperature data (<code class="docutils literal"><span class="pre">twot</span></code>), manually entered temperatures and densities
+(<code class="docutils literal"><span class="pre">man</span></code>), and electron entropy data (<code class="docutils literal"><span class="pre">hassele</span></code>). Since <em>FLASH</em> uses IONMIX
+files, this submodule also contains a special <code class="docutils literal"><span class="pre">writeIonmixFile</span></code> class.
+It takes five required arguments:</p>
+<ol class="arabic simple">
+<li>filename (<code class="docutils literal"><span class="pre">fn</span></code>)</li>
+<li>tuple of atomic numbers (<code class="docutils literal"><span class="pre">zvals</span></code>)</li>
+<li>tuple of material fractions (<code class="docutils literal"><span class="pre">fracs</span></code>)</li>
+<li>array of number densities (<code class="docutils literal"><span class="pre">numdens</span></code>)</li>
+<li>array of temperatures (<code class="docutils literal"><span class="pre">temps</span></code>)</li>
+</ol>
+<p>It also takes a large amount of optional keyword arguments that correspond to
+the IONMIX format&#8217;s capabilities. A * indicates that this data point is ignored
+by <em>FLASH</em> per the user manual. A ** indicates that this data point is only
+used for tabulated EoS in <em>FLASH</em>:</p>
+<ol class="arabic simple">
+<li>average ionization (<code class="docutils literal"><span class="pre">zbar</span></code>)**</li>
+<li>temperature derivative of average ionization (<code class="docutils literal"><span class="pre">dzdt</span></code>)*</li>
+<li>ion pressure (<code class="docutils literal"><span class="pre">pion</span></code>)**</li>
+<li>electron pressure (<code class="docutils literal"><span class="pre">pele</span></code>)**</li>
+<li>temperature derivative of ion pressure (<code class="docutils literal"><span class="pre">dpidt</span></code>)*</li>
+<li>temperature derivative of electron pressure (<code class="docutils literal"><span class="pre">dpedt</span></code>)*</li>
+<li>ion specific internal energy (<code class="docutils literal"><span class="pre">eion</span></code>)**</li>
+<li>electron specific internal energy (<code class="docutils literal"><span class="pre">eele</span></code>)**</li>
+<li>ion heat capacity at constant volume (<code class="docutils literal"><span class="pre">cvion</span></code>)*</li>
+<li>electron heat capacity at constant volume(<code class="docutils literal"><span class="pre">cvele</span></code>)*</li>
+<li>number derivative of ion energy (<code class="docutils literal"><span class="pre">deidn</span></code>)*</li>
+<li>number derivative of electron energy (<code class="docutils literal"><span class="pre">deedn</span></code>)*</li>
+<li>number of energy groups (<code class="docutils literal"><span class="pre">ngroups</span></code>)</li>
+<li>energy group boundaries (<code class="docutils literal"><span class="pre">opac_bounds</span></code>)</li>
+<li>Rosseland opacities (<code class="docutils literal"><span class="pre">rosseland</span></code>)**</li>
+<li>Planck absorption opacity (<code class="docutils literal"><span class="pre">planck_absorb</span></code>)**</li>
+<li>Planck emission opacity (<code class="docutils literal"><span class="pre">planck_emiss</span></code>)**</li>
+</ol>
+<p>This is the functionality that the script <code class="docutils literal"><span class="pre">opac_hdf2table</span></code> in
+<a class="reference internal" href="clt.html#clts"><span class="std std-ref">Command Line Tools</span></a> uses for the IONMIX format. It opens an HDF5 file
+into a dictionary and uses each key to assign a value to each of the
+<code class="docutils literal"><span class="pre">writeIonmixFile</span></code>&#8216;s arguments.</p>
+</div>
+<div class="section" id="adapt-py">
+<h3><code class="docutils literal"><span class="pre">adapt.py</span></code><a class="headerlink" href="#adapt-py" title="Permalink to this headline">¶</a></h3>
+<p>This class provides filtering capabilities for the EoS temperature and
+density grids. For instance, SESAME tables may have some additionnal points
+in the ion EoS table compared to the elecron EoS table. Since <em>FLASH</em> requires
+the same density and temperature grid for all species, the simplest solution is
+to remove those extra points.</p>
+<p>Parameters:</p>
+<ol class="arabic simple">
+<li>eos_data: [dict] dictionary contraining the EoS data.</li>
+<li>intersect: [list] the resulting temperature [eV] and density [g/cm⁻³]
+grids will be computed as an intersection of grids of all the
+species given in this list. The default is <code class="docutils literal"><span class="pre">['ele',</span> <span class="pre">'ioncc']</span></code>.</li>
+<li>filter_dens, filter_temps: [function] a function that takes a grid
+and returns a mask of points we don&#8217;t wont to keep.
+The default is <code class="docutils literal"><span class="pre">(lamdba</span> <span class="pre">x:</span> <span class="pre">x&gt;0.)</span></code>, i.e. don&#8217;t remove anything.</li>
+<li>thresh: zero threshold on folowing keys</li>
+</ol>
+<p>Returns <code class="docutils literal"><span class="pre">out</span></code>, a dictionary with the same keys a eos_data.</p>
+<p>Code example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">eos_sesame</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgSesame</span><span class="p">(</span><span class="s2">&quot;../sesame/xsesame_ascii&quot;</span><span class="p">,</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgSesame</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">eos_data</span>  <span class="o">=</span> <span class="n">eos_sesame</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">3720</span><span class="p">]</span>  <span class="c1"># Aluminum</span>
+<span class="n">eos_data_filtered</span> <span class="o">=</span> <span class="n">EosMergeGrids</span><span class="p">(</span><span class="n">eos_data</span><span class="p">,</span>
+                    <span class="n">intersect</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ele&#39;</span><span class="p">,</span> <span class="s1">&#39;ioncc&#39;</span><span class="p">],</span>   <span class="c1"># merge electron and ion grids</span>
+                    <span class="n">filter_temps</span><span class="o">=</span><span class="n">lamda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">&gt;</span><span class="mf">1.</span><span class="p">)</span> <span class="c1"># remove temperatures below 1eV</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="multi-opp-opr-eps">
+<h2>MULTI (.opp, .opr, .eps)<a class="headerlink" href="#multi-opp-opr-eps" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="eos-multi-py">
+<h3><code class="docutils literal"><span class="pre">eos_multi.py</span></code><a class="headerlink" href="#eos-multi-py" title="Permalink to this headline">¶</a></h3>
+<p><strong>Not sure on what this does compared to ``opg_multi``.</strong></p>
+</div>
+<div class="section" id="opg-multi-py">
+<h3><code class="docutils literal"><span class="pre">opg_multi.py</span></code><a class="headerlink" href="#opg-multi-py" title="Permalink to this headline">¶</a></h3>
+<p>This submodule is used to either parse or write MULTIv5 tables. Its class
+<code class="docutils literal"><span class="pre">OpgMulti</span></code> has two ways to read data. The first, and more general way, is
+passing it an unpacked dictionary of EoS and opacity data. This is how the
+script <code class="docutils literal"><span class="pre">opac_hdf2table</span></code> uses the class in <a class="reference internal" href="clt.html#clts"><span class="std std-ref">Command Line Tools</span></a>. It first
+opens up an HDF5 file into a dictionary object using <code class="docutils literal"><span class="pre">OpgHdf5</span></code>. Then, it
+instantiates an <code class="docutils literal"><span class="pre">OpgMulti</span></code> object using the unpacked dictionary object from
+the HDF5 file. Here is an example that reads in an HDF5 file into an
+<code class="docutils literal"><span class="pre">OpgMulti</span></code> object:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">op_hdf</span> <span class="o">=</span> <span class="n">OpgHdf5</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;base_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;base_filename&#39;</span><span class="p">)</span>
+<span class="n">op_multi</span> <span class="o">=</span> <span class="n">OpgMulti</span><span class="p">(</span><span class="o">**</span><span class="n">op_hdf</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The second way to read data in <code class="docutils literal"><span class="pre">OpgMulti</span></code> comes from the <code class="docutils literal"><span class="pre">open_file</span></code> class
+method. Unlike the last process, this will only read data from a MULTIv5 file.
+It takes two parameters: the <code class="docutils literal"><span class="pre">folder</span></code> and <code class="docutils literal"><span class="pre">base_name</span></code> of the designated
+file. It also has an optional <code class="docutils literal"><span class="pre">verbose</span></code> keyword argument.</p>
+<p>This submodule also includes two different write functionalities. One,
+<code class="docutils literal"><span class="pre">write</span></code>, will take the data currently contained in an <code class="docutils literal"><span class="pre">OpgMulti</span></code> instance
+and write it to a MULTIv5 file format. It takes one parameter, <code class="docutils literal"><span class="pre">prefix</span></code>,
+which specifies the common prefix of the files that <code class="docutils literal"><span class="pre">write</span></code> will create. From
+the example above, after reading in the dictionary of data from the HDF5 file,
+one must call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">op_multi</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;multi_&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to write data files containing multigroup opacities specified by the &#8216;multi_&#8217;
+prefix.</p>
+<p>The second write functionality comes from the <code class="docutils literal"><span class="pre">write2hdf</span></code> method. This, like
+<code class="docutils literal"><span class="pre">write</span></code>, relies on data already parsed into an <code class="docutils literal"><span class="pre">OpgMulti</span></code> instance.
+However, <code class="docutils literal"><span class="pre">write2hdf</span></code> will write to an HDF5 file rather than MULTIv5. This is
+particularly useful in converting between file formats using HDF5 as a
+middleman. This method takes one parameter, <code class="docutils literal"><span class="pre">filename</span></code>, to specify the output
+file&#8217;s name. It also has three optional keyword arguments: &#8216;&#8217;Znum&#8217;&#8216;, &#8216;&#8217;Anum&#8217;&#8216;,
+and &#8216;&#8217;Xnum&#8217;&#8216;. The atomic number, &#8216;&#8217;Znum&#8217;&#8216;, and relative fractions, &#8216;&#8217;Xnum&#8217;&#8216;,
+must be given if they are not already parsed into an instance of <code class="docutils literal"><span class="pre">OpgMulti</span></code>.
+If they are not, <code class="docutils literal"><span class="pre">write2hdf</span></code> will raise a <code class="docutils literal"><span class="pre">ValueError</span></code>.</p>
+</div>
+</div>
+<div class="section" id="sesame-ascii-ses">
+<h2>SESAME ASCII (.ses)<a class="headerlink" href="#sesame-ascii-ses" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="opg-sesame-py">
+<h3><code class="docutils literal"><span class="pre">opg_sesame.py</span></code><a class="headerlink" href="#opg-sesame-py" title="Permalink to this headline">¶</a></h3>
+<p>This submodule is responsible for loading all SESAME formatted data files. The
+main class is <code class="docutils literal"><span class="pre">OpgSesame</span></code>, which reads a SESAME file into a dictionary object as it
+is instantiated. It takes two parameters: <code class="docutils literal"><span class="pre">filename</span></code> and <code class="docutils literal"><span class="pre">precision</span></code> of the
+input file. Precision is either single or double and can be referenced with
+<code class="docutils literal"><span class="pre">OpgSesame.SINGLE</span></code> (<code class="docutils literal"><span class="pre">1</span></code>) or <code class="docutils literal"><span class="pre">OpgSesame.DOUBLE</span></code> (<code class="docutils literal"><span class="pre">2</span></code>). It also has an
+optional <code class="docutils literal"><span class="pre">verbose</span></code> keyword argument.</p>
+<p>Upon instantiating <code class="docutils literal"><span class="pre">OpgSes_Instance</span></code>, it creates a dictionary
+<code class="docutils literal"><span class="pre">OpgSes_Instance.data[]</span></code>. The <code class="docutils literal"><span class="pre">data</span></code> dictionary contains keys corresponding
+to the table IDs contained in the SESAME file. So, the EoS data must be
+accessed by calling <code class="docutils literal"><span class="pre">OpgSes_Instance.data[table_id]</span></code>. This dictionary will
+hold the EoS data for the table referenced by <code class="docutils literal"><span class="pre">table_id</span></code>.</p>
+<p><strong>Note:</strong> there are currently no handling functions for 500 series
+entries in the SESAME tables.</p>
+</div>
+</div>
+<div class="section" id="tops">
+<h2>TOPS<a class="headerlink" href="#tops" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="opg-tops-py">
+<h3><code class="docutils literal"><span class="pre">opg_tops.py</span></code><a class="headerlink" href="#opg-tops-py" title="Permalink to this headline">¶</a></h3>
+<p>This completely doesn&#8217;t match up with the files generated online.</p>
+</div>
+</div>
+<div class="section" id="inferno">
+<h2>INFERNO<a class="headerlink" href="#inferno" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="opg-inferno-py">
+<h3><code class="docutils literal"><span class="pre">opg_inferno.py</span></code><a class="headerlink" href="#opg-inferno-py" title="Permalink to this headline">¶</a></h3>
+<p>Can&#8217;t find any files online.</p>
+</div>
+</div>
+<div class="section" id="propaceos-ascii-prp">
+<h2>PROPACEOS ASCII (.prp)<a class="headerlink" href="#propaceos-ascii-prp" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="opg-propaceos-py">
+<h3><code class="docutils literal"><span class="pre">opg_propaceos.py</span></code><a class="headerlink" href="#opg-propaceos-py" title="Permalink to this headline">¶</a></h3>
+<p>Not publicly distributed.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="test.html" class="btn btn-neutral float-right" title="Testing Suite" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="intro.html" class="btn btn-neutral" title="Introduction" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Jordan Laune.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

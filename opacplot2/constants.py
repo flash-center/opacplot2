@@ -10,7 +10,10 @@ ERG_TO_JOULE = 1.0/JOULE_TO_ERG
 # Convert GPa to Ergs/cc:
 GPA_TO_ERGCC = 1.0e+10
 
-# Convert MJ/kg to Ergs/cc:
+# Convert MJ/kg to Ergs/g:
+MJKG_TO_ERGG = 1.0e+10
+
+# Convert MJ/kg to Ergs/cc: 
 MJKG_TO_ERGCC = 1.0e+10
 
 # Convert Kelvin to eV:

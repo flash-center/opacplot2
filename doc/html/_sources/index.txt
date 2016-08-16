@@ -11,7 +11,11 @@ Contents:
 .. toctree::
    :maxdepth: 2
    
-   doc
+   intro
+   format
+   test
+   plot
+   clt
 
 
 Indices and tables

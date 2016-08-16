@@ -1,0 +1,52 @@
+
+Plotting Capabilities
+*********************
+
+
+Configuring "matplotlib" to work with OSX
+=========================================
+
+
+"eos_plotter"
+=============
+
+
+Troubleshooting
+---------------
+
+
+"opg_vtk.py"
+============
+
+
+Troubleshooting
+---------------
+
+For OSX Users: VTK is currrently very touchy with its Python library.
+There are at least three possible ways to make it work:
+
+1. Use system Python.
+
+2. Use brew Python 3.5 and build vtk from source with Python3 using
+   brew. This can be accomplished with:
+
+      brew install vtk --with-python3 --without-python
+
+3. Use Anaconda Python 2.7. Install "vtk" using the "conda"
+   installer:
+
+      conda install vtk
+
+   If you have Anaconda Python 3.5 installed, this will throw an error
+   and you will not be able to install it. You may create a conda
+   virtual environment using Python 2.7 with the command:
+
+      conda create -n ENVNAME python=2.7 anaconda
+
+   and then activate it with "source activate ENVNAME". For more
+   information about Anaconda Python, see here.
+
+Furthermore, if you are not planning on using VTK, simply comment this
+line out in "opacplot2.__init__.py":
+
+   from .opg_vtk       import *
