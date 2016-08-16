@@ -1,9 +1,11 @@
 # Opacplot2
 
-Master:
+**master:**
+
 [![Build Status](https://travis-ci.org/jtlaune/opacplot2.svg?branch=master)](https://travis-ci.org/jtlaune/opacplot2)
 
-Develop:
+**develop:**
+
 [![Build Status](https://travis-ci.org/jtlaune/opacplot2.svg?branch=develop)](https://travis-ci.org/jtlaune/opacplot2)
 
 Package for manipulating Equation of State (EoS) and Opacity data.
