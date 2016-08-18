@@ -188,10 +188,12 @@ script <code class="docutils literal"><span class="pre">opac_table2hdf</span></c
 <p>This is the main submodule for the IONMIX format that <em>FLASH</em> uses. It contains
 two main classes. The <code class="docutils literal"><span class="pre">OpacIonmix</span></code> class is used to read in an IONMIX file
 and translate its information into a dictionary object. It takes two required
-arguments, the filename (<code class="docutils literal"><span class="pre">fn</span></code>) and the mass of positive ions (<code class="docutils literal"><span class="pre">mpi</span></code>). It
+arguments, the filename (<code class="docutils literal"><span class="pre">fn</span></code>) and the atomic mass (<code class="docutils literal"><span class="pre">mpi</span></code>). It
 also takes 3 optional boolean arguments, which all default to false: two
-temperature data (<code class="docutils literal"><span class="pre">twot</span></code>), manually entered temperatures and densities
-(<code class="docutils literal"><span class="pre">man</span></code>), and electron entropy data (<code class="docutils literal"><span class="pre">hassele</span></code>). Since <em>FLASH</em> uses IONMIX
+temperature data (<code class="docutils literal"><span class="pre">twot</span></code>), <strong>??? unknown ???</strong>
+(<code class="docutils literal"><span class="pre">man</span></code>), and electron entropy data (<code class="docutils literal"><span class="pre">hassele</span></code>). If you receive a <code class="docutils literal"><span class="pre">ValueError:</span>
+<span class="pre">invalid</span> <span class="pre">literal</span> <span class="pre">for</span> <span class="pre">int()</span> <span class="pre">with</span> <span class="pre">base</span> <span class="pre">10</span></code> erro, setting <code class="docutils literal"><span class="pre">man=True</span></code> will fix this.</p>
+<p>Since <em>FLASH</em> uses IONMIX
 files, this submodule also contains a special <code class="docutils literal"><span class="pre">writeIonmixFile</span></code> class.
 It takes five required arguments:</p>
 <ol class="arabic simple">

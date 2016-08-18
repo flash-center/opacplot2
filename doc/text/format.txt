@@ -33,13 +33,15 @@ IONMIX (.cn4)
 This is the main submodule for the IONMIX format that *FLASH* uses. It
 contains two main classes. The "OpacIonmix" class is used to read in
 an IONMIX file and translate its information into a dictionary object.
-It takes two required arguments, the filename ("fn") and the mass of
-positive ions ("mpi"). It also takes 3 optional boolean arguments,
-which all default to false: two temperature data ("twot"), manually
-entered temperatures and densities ("man"), and electron entropy data
-("hassele"). Since *FLASH* uses IONMIX files, this submodule also
-contains a special "writeIonmixFile" class. It takes five required
-arguments:
+It takes two required arguments, the filename ("fn") and the atomic
+mass ("mpi"). It also takes 3 optional boolean arguments, which all
+default to false: two temperature data ("twot"), **??? unknown ???**
+("man"), and electron entropy data ("hassele"). If you receive a
+"ValueError: invalid literal for int() with base 10" erro, setting
+"man=True" will fix this.
+
+Since *FLASH* uses IONMIX files, this submodule also contains a
+special "writeIonmixFile" class. It takes five required arguments:
 
 1. filename ("fn")
 

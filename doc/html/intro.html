@@ -88,6 +88,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#installation">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-packages">Python Packages</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#on-linux">On Linux</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#on-osx-windows">On OSX/Windows</a></li>
 </ul>
@@ -250,13 +251,26 @@ write to a file.</p>
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="prerequisites">
 <span id="id2"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="python-packages">
+<h3>Python Packages<a class="headerlink" href="#python-packages" title="Permalink to this headline">¶</a></h3>
+<p>Required packages:</p>
+<ol class="arabic simple">
+<li><code class="docutils literal"><span class="pre">numpy</span></code></li>
+<li><code class="docutils literal"><span class="pre">pytables</span></code></li>
+<li><code class="docutils literal"><span class="pre">six</span></code></li>
+<li><code class="docutils literal"><span class="pre">setuptools</span></code></li>
+<li><code class="docutils literal"><span class="pre">periodictable</span></code></li>
+<li><code class="docutils literal"><span class="pre">matplotlib</span></code></li>
+<li><code class="docutils literal"><span class="pre">scipy</span></code></li>
+</ol>
+</div>
 <div class="section" id="on-linux">
 <h3>On Linux<a class="headerlink" href="#on-linux" title="Permalink to this headline">¶</a></h3>
 <p>You could just use your system Python distribution and install numpy, pytables,
 six, periodictable with the system package manager. On Debian-based systems
 (Ubuntu, etc) this can be achieved with:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">numpy</span> <span class="n">python</span><span class="o">-</span><span class="n">tables</span> <span class="n">python</span><span class="o">-</span><span class="n">six</span> <span class="n">python</span><span class="o">-</span><span class="n">setuptools</span>
-<span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">periodictable</span>
+<span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">periodictable</span> <span class="n">matplotlib</span>
 </pre></div>
 </div>
 </div>
@@ -272,7 +286,7 @@ you install the required packages this hardly matters):</p>
 </dl>
 </li>
 <li><p class="first">Install the required packages:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">numpy</span> <span class="n">tables</span> <span class="n">six</span> <span class="n">setuptools</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">numpy</span> <span class="n">tables</span> <span class="n">six</span> <span class="n">setuptools</span> <span class="n">matplotlib</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="n">periodictable</span>
 </pre></div>
 </div>

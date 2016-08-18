@@ -61,6 +61,26 @@ Prerequisites
 =============
 
 
+Python Packages
+---------------
+
+Required packages:
+
+1. "numpy"
+
+2. "pytables"
+
+3. "six"
+
+4. "setuptools"
+
+5. "periodictable"
+
+6. "matplotlib"
+
+7. "scipy"
+
+
 On Linux
 --------
 
@@ -69,7 +89,7 @@ pytables, six, periodictable with the system package manager. On
 Debian-based systems (Ubuntu, etc) this can be achieved with:
 
    sudo apt-get install python-numpy python-tables python-six python-setuptools
-   sudo pip install periodictable
+   sudo pip install periodictable matplotlib
 
 
 On OSX/Windows
@@ -84,7 +104,7 @@ as long as you install the required packages this hardly matters):
 
 2. Install the required packages:
 
-      conda install numpy tables six setuptools
+      conda install numpy tables six setuptools matplotlib
       pip install periodictable
 
 
