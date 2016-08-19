@@ -70,6 +70,8 @@ def plot_eos_grid(tdata, var):
         plt.title(r'Density grids: $\rho$ [g.cm$^{-3}$]')
     else:
         plt.title(r'Temperature grids: $T$ [eV]')
+    
+    return fig
 
 def plot_eos_field(eos_data, species, parameter, grad=None):
     if grad is True:
@@ -151,7 +153,7 @@ def plot_diff_mg_opac(fig, op_list, idx=None):
     plt.rcParams.update({'text.usetex': True})
     ax = [plt.subplot(2,2,i) for i in range(1, 5)] 
     groups = op_list[0]['groups']
-    plt.suptitle('Multigroup opacity comparaison: {0:.2e} g.cm$^{{-2}}$, {1:.3f} eV'.format(
+    plt.suptitle('Multigroup opacity comparison: {0:.2e} g.cm$^{{-2}}$, {1:.3f} eV'.format(
                         op_list[0]['rho'][idx[0]], op_list[0]['temp'][idx[1]]))
     for var_idx, var in enumerate(['opp_mg', 'opr_mg', 'eps_mg']):
         for op in op_list:

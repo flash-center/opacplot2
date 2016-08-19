@@ -6,6 +6,7 @@ build
 dist
 opacplot2.egg-info
 visualization/*.ipynb
+visualization/.ipynb_checkpoints
 *.swp
 *pyc
 *cn4

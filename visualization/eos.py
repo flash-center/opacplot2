@@ -53,7 +53,7 @@ eos_data.update(cond_data_i)
 
 # <codecell>
 
-# Lookig what is happenning at room temperature and solid density
+# Looking at what is happenning at room temperature and solid density
 
 
 #eos_unified = opp.adapt.EosMergeGrids(eos_data)
