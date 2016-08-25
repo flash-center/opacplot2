@@ -12,7 +12,41 @@ from .constants import KELVIN_TO_EV, GPA_TO_ERGCC, MJKG_TO_ERGCC
 
 class OpgSesame:
     """
-    This class is responsible for loading all SESAME formatted data files
+    This class is responsible for loading all SESAME formatted data files.
+    
+    ``OpgSesame`` reads in a SESAME file. Each key:value pair of the ``data``
+    attribute corresponds to a table ID and its data from the file, respectively.
+    
+    Parameters
+    ----------
+    fn : str
+       Name of file to open.
+
+    precision : int
+       ``opacplot2.OpgSesame.SINGLE`` for entry lengths of 15
+       or ``opacplot2.OpgSesame.Double`` for entry lengths of 22.
+
+    verbose : bool
+       Verbose option.
+    
+    Attributes
+    ----------
+    data : dict
+        Dictionary of material IDs included in the SESAME file.
+       
+    Examples
+    --------
+    The ``opacplot2.OpgSesame.data`` dictionary will
+    hold the EoS data for the table referenced by ``table_id``. For example, if
+    we are in a directory with the file ``sesame.ses``::
+
+       >>> import opacplot2 as opp
+       >>> op = opp.OpgSesame('sesame.ses', opp.OpgSesame.SINGLE)
+       >>> print(op.data.keys())
+       dict_keys([..., 13719]) # Table ID numbers; Aluminum.
+       >>> data = op.data[13719]
+       >>> print(sorted(data.keys()))
+       dict_keys(['abar',...,'zmax']) # Dictionary containing EoS data.
     """
     
     SINGLE = 1

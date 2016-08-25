@@ -1,0 +1,44 @@
+Utilities
+#########
+
+``interp``
+**********
+
+``interpDT()``
+==============
+
+Usage::
+
+    interpDT(arr, dens, temps, d, t,
+             bcdmin=BC_BOUND, bcdmax=BC_BOUND,
+             bctmin=BC_BOUND, bctmax=BC_BOUND,
+             log = False, lookup=INTERP_FUNC)
+
+
+``interpDT()`` takes a data array ``arr`` such as electron energy,
+a density array ``dens``, a temperature array ``temps``, and a density point
+``d`` and temperature point ``t``. It also has options for the boundary conditions
+on the densities and temperatures. It adjusts for logarithmic values with the ``log``
+flag. What ``interpDT()`` returns is dependent upon the ``lookup`` argument.
+
+Boundary Conditions
+-------------------
+
+``BC_BOUND`` is the default setting. If ``d`` (or ``t``) is smaller than the smallest value
+in the ``dens`` (or ``temps``) array, then ``d`` (``t``) will automatically be 
+set to this smallest value.
+
+``BC_EXTRAP_ZERO`` will set ``d`` (``t``) to zero if it is smaller than the smallest
+value in the ``dens`` (``temps``) array.
+
+Lookup
+------
+
+``INTERP_FUNC`` will interpolate the two points around ``d`` and ``t`` to return
+a value from ``arr`` for the desired point.
+
+``INTERP_DFDD`` will interpolate the two points around ``d`` and ``t`` to calculate
+the first-order density derivative in ``arr``.
+
+``INTERP_DFDT`` will interpolate the two points around ``d`` and ``t`` to calculate
+the first-order temperature derivative in ``arr``.

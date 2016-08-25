@@ -1,0 +1,1050 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>File Format Functions and Classes &mdash; Opacplot2 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Opacplot2 1.0 documentation" href="index.html"/>
+        <link rel="next" title="Testing Suite" href="test.html"/>
+        <link rel="prev" title="Introduction" href="intro.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Opacplot2
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">File Format Functions and Classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#native-hdf5">Native HDF5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-points">Data Points</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ionmix-cn4">IONMIX (.cn4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multi-opp-opr-eps">MULTI (.opp, .opr, .eps)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sesame-ascii-ses">SESAME ASCII (.ses)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-prefixes">Data Prefixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Data Points</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tops">TOPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inferno">INFERNO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#propaceos-ascii-prp">PROPACEOS ASCII (.prp)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">Testing Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">Plotting Capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clt.html">Command Line Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Opacplot2</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>File Format Functions and Classes</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/format.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="file-format-functions-and-classes">
+<h1>File Format Functions and Classes<a class="headerlink" href="#file-format-functions-and-classes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="native-hdf5">
+<h2>Native HDF5<a class="headerlink" href="#native-hdf5" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="opacplot2.OpgHdf5">
+<em class="property">class </em><code class="descclassname">opacplot2.</code><code class="descname">OpgHdf5</code><a class="headerlink" href="#opacplot2.OpgHdf5" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="opacplot2.OpgHdf5.force_eval">
+<code class="descname">force_eval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgHdf5.force_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the while table into memory.
+Warning that can</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="opacplot2.OpgHdf5.open_file">
+<em class="property">classmethod </em><code class="descname">open_file</code><span class="sig-paren">(</span><em>filename</em>, <em>explicit_load=False</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgHdf5.open_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open an HDF5 file containing opacity data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; Name of file to open.</li>
+<li><strong>explicit_load</strong> (<em>bool</em>) &#8211; Option to load the whole file to memory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>To open a file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgHdf5</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;infile.h5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="go">dict_keys([&#39;Anum&#39;, ..., &#39;Znum&#39;]) # OpgHdf5 is a dictionary.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;Zf_DT&#39;</span><span class="p">])</span>
+<span class="go">array([...]) # Array for average ionization.</span>
+</pre></div>
+</div>
+<p class="rubric">Notes</p>
+<p>Loading the entire file into memory can be potentially dangerous. Use
+<code class="docutils literal"><span class="pre">explicit_load</span></code> with caution.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="opacplot2.OpgHdf5.write2file">
+<code class="descname">write2file</code><span class="sig-paren">(</span><em>filename</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgHdf5.write2file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write to an HDF5 output file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; Name of output file.</li>
+<li><strong>args</strong> (<em>dict</em>) &#8211; Dictionary of data to write.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="data-points">
+<h3>Data Points<a class="headerlink" href="#data-points" title="Permalink to this headline">¶</a></h3>
+<p>Depending on what kind of data has been written to an HDF5 file, each HDF5
+file may vary widely. Despite this fact, listed below are the naming conventions
+<code class="docutils literal"><span class="pre">opacplot2</span></code> uses for HDF5 data points that are relevant to IONMIX. The
+abbreviations are keys unless otherwise stated to be an attribute to the
+<code class="docutils literal"><span class="pre">OpgHdf5</span></code> object.</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="51%" />
+<col width="49%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><code class="docutils literal"><span class="pre">opacplot2</span></code> Abbr</th>
+<th class="head">Physical Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">Znum</span></code></td>
+<td>Atomic numbers</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">Xnum</span></code></td>
+<td>Element fractions</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">idens</span></code></td>
+<td>Number densities</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">temp</span></code></td>
+<td>Temperature array</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">Ng</span></code> (attr)</td>
+<td>Number of energy groups</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">groups</span></code></td>
+<td>Energy group boundaries</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">opp_mg</span></code></td>
+<td>Planck absorption</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">opr_mg</span></code></td>
+<td>Rosseland opacities</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">emp_mg</span></code></td>
+<td>Planck emissivity</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>For example, if we wanted to open up an HDF5 file named <code class="docutils literal"><span class="pre">input.h5</span></code> and write it to an IONMIX file
+named <code class="docutils literal"><span class="pre">output.cn4</span></code>, we could write:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">OpgHdf5</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;input.h5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opp</span><span class="o">.</span><span class="n">writeIonmixFile</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span>
+<span class="go">                 op[&#39;Znum&#39;], op[&#39;Xnum&#39;],</span>
+<span class="go">                 numDens=op[&#39;idens&#39;][:], temps=op[&#39;temp&#39;][:],</span>
+<span class="go">                 ngroups=op.Ng,</span>
+<span class="go">                 opac_bounds=op[&#39;groups&#39;][:],</span>
+<span class="go">                 planck_absorb=op[&#39;opp_mg&#39;][:],</span>
+<span class="go">                 rosseland=op[&#39;opr_mg&#39;][:],</span>
+<span class="go">                 planck_emiss=op[&#39;emp_mg&#39;][:])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="ionmix-cn4">
+<span id="opg-ionmix"></span><h2>IONMIX (.cn4)<a class="headerlink" href="#ionmix-cn4" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="opacplot2.OpacIonmix">
+<em class="property">class </em><code class="descclassname">opacplot2.</code><code class="descname">OpacIonmix</code><span class="sig-paren">(</span><em>fn</em>, <em>mpi</em>, <em>twot=False</em>, <em>man=False</em>, <em>hassele=False</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpacIonmix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to read in IONMIX EOS and Opacity Files.</p>
+<p>The <code class="docutils literal"><span class="pre">OpacIonmix</span></code> class is used to read in an IONMIX file
+and translate its information into object attributes.
+All energies in this file are in Joules and must be converted to ergs.
+Unlike other file classes, <code class="docutils literal"><span class="pre">OpacIonmix</span></code> does not store its data as a
+dictionary. Instead, it stores its data in class attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fn</strong> (<em>str</em>) &#8211; The name of the file to open.</li>
+<li><strong>mpi</strong> (<em>str</em>) &#8211; The mass per ion.</li>
+<li><strong>twot</strong> (<em>bool</em>) &#8211; Flag for two-temperature data.</li>
+<li><strong>man</strong> (<em>bool</em>) &#8211; Flag for manual temperature/density points.</li>
+<li><strong>hassele</strong> (<em>bool</em>) &#8211; lag for electron entropy data.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="OpacIonmix.fn">
+<code class="descname">fn</code><a class="headerlink" href="#OpacIonmix.fn" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Filename.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.mpi">
+<code class="descname">mpi</code><a class="headerlink" href="#OpacIonmix.mpi" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Mass per ion.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.twot">
+<code class="descname">twot</code><a class="headerlink" href="#OpacIonmix.twot" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.man">
+<code class="descname">man</code><a class="headerlink" href="#OpacIonmix.man" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Manual temp/dens points.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.hassele">
+<code class="descname">hassele</code><a class="headerlink" href="#OpacIonmix.hassele" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Has electron entropy data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.verb">
+<code class="descname">verb</code><a class="headerlink" href="#OpacIonmix.verb" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Verbose.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.ntemp">
+<code class="descname">ntemp</code><a class="headerlink" href="#OpacIonmix.ntemp" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Number of temperature points.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.ndens">
+<code class="descname">ndens</code><a class="headerlink" href="#OpacIonmix.ndens" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Number of density points.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.numDens">
+<code class="descname">numDens</code><a class="headerlink" href="#OpacIonmix.numDens" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Number densitites.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.temps">
+<code class="descname">temps</code><a class="headerlink" href="#OpacIonmix.temps" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Temperatures.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.ngroups">
+<code class="descname">ngroups</code><a class="headerlink" href="#OpacIonmix.ngroups" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Number of groups</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.data">
+<code class="descname">data</code><a class="headerlink" href="#OpacIonmix.data" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Data at the end of the IONMIX file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.dens">
+<code class="descname">dens</code><a class="headerlink" href="#OpacIonmix.dens" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Densities.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">ngroups</code></dt>
+<dd><p><em>int</em> &#8211; Number of groups.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.zbar">
+<code class="descname">zbar</code><a class="headerlink" href="#OpacIonmix.zbar" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Average ionizations.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.etot">
+<code class="descname">etot</code><a class="headerlink" href="#OpacIonmix.etot" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Total energy.
+Only included in single-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.cvtot">
+<code class="descname">cvtot</code><a class="headerlink" href="#OpacIonmix.cvtot" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Total C_v.
+Only included in single-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.dedn">
+<code class="descname">dedn</code><a class="headerlink" href="#OpacIonmix.dedn" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; de/dn.
+Only included in single-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.dzdt">
+<code class="descname">dzdt</code><a class="headerlink" href="#OpacIonmix.dzdt" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; dz/dt.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.pion">
+<code class="descname">pion</code><a class="headerlink" href="#OpacIonmix.pion" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Ion pressure.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.pele">
+<code class="descname">pele</code><a class="headerlink" href="#OpacIonmix.pele" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Electron pressure.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.dpidt">
+<code class="descname">dpidt</code><a class="headerlink" href="#OpacIonmix.dpidt" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; dp_i/dt.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.dpedt">
+<code class="descname">dpedt</code><a class="headerlink" href="#OpacIonmix.dpedt" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; dp_e/dt.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.eion">
+<code class="descname">eion</code><a class="headerlink" href="#OpacIonmix.eion" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Ion energy.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.eele">
+<code class="descname">eele</code><a class="headerlink" href="#OpacIonmix.eele" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Electron energy.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.cvion">
+<code class="descname">cvion</code><a class="headerlink" href="#OpacIonmix.cvion" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; C_v for ions.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.cvele">
+<code class="descname">cvele</code><a class="headerlink" href="#OpacIonmix.cvele" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; C_v for electrons.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.deidn">
+<code class="descname">deidn</code><a class="headerlink" href="#OpacIonmix.deidn" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; de_i/dn.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.deedn">
+<code class="descname">deedn</code><a class="headerlink" href="#OpacIonmix.deedn" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; de_e/dn.
+Only included in two-temperature data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.opac_bounds">
+<code class="descname">opac_bounds</code><a class="headerlink" href="#OpacIonmix.opac_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Opacity boundaries.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.rosseland">
+<code class="descname">rosseland</code><a class="headerlink" href="#OpacIonmix.rosseland" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Rosseland opacity.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.planck_absorb">
+<code class="descname">planck_absorb</code><a class="headerlink" href="#OpacIonmix.planck_absorb" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Planck absorption.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="OpacIonmix.planck_emiss">
+<code class="descname">planck_emiss</code><a class="headerlink" href="#OpacIonmix.planck_emiss" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Planck emissivity.</p>
+</dd></dl>
+
+<p class="rubric">Examples</p>
+<p>For a directory with the IONMIX file <code class="docutils literal"><span class="pre">imx.cn4</span></code> for Aluminum:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">Opac_Ionmix</span><span class="p">(</span><span class="s1">&#39;imx.cn4&#39;</span><span class="p">,</span> <span class="mf">26.981539</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">zbar</span><span class="p">)</span>
+<span class="go">array([...]) # Array of average ionizations for dens/temp points.</span>
+</pre></div>
+</div>
+<p class="rubric">Notes</p>
+<p>If you receive a <code class="docutils literal"><span class="pre">ValueError:</span>
+<span class="pre">invalid</span> <span class="pre">literal</span> <span class="pre">for</span> <span class="pre">int()</span> <span class="pre">with</span> <span class="pre">base</span> <span class="pre">10</span></code> error,
+setting <code class="docutils literal"><span class="pre">man=True</span></code> may help to fix this.</p>
+<dl class="method">
+<dt id="opacplot2.OpacIonmix.extendToZero">
+<code class="descname">extendToZero</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpacIonmix.extendToZero" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine adds another temperature point at zero.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="opacplot2.OpacIonmix.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>fn</em>, <em>zvals</em>, <em>fracs</em>, <em>twot=None</em>, <em>man=None</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpacIonmix.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method writes to an IONMIX file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fn</strong> (<em>str</em>) &#8211; Name of output file.</li>
+<li><strong>zvals</strong> (<em>tuple</em>) &#8211; Atomic numbers.</li>
+<li><strong>fracs</strong> (<em>tuple</em>) &#8211; Element fractions.</li>
+<li><strong>twot</strong> (<em>bool</em>) &#8211; Flag for two-temperature data.</li>
+<li><strong>man</strong> (<em>bool</em>) &#8211; Flag for manual temp/dens points.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>In order to extend <code class="docutils literal"><span class="pre">imx.cn4</span></code> for Al to zero:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpacIonmix</span><span class="p">(</span><span class="s1">&#39;imx.cn4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">13</span><span class="p">,),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span><span class="o">.</span><span class="n">extendToZero</span><span class="p">()</span> <span class="c1"># Add temperature point at zero.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;imx-0.cn4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">13</span><span class="p">,),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="opacplot2.writeIonmixFile">
+<code class="descclassname">opacplot2.</code><code class="descname">writeIonmixFile</code><span class="sig-paren">(</span><em>fn</em>, <em>zvals</em>, <em>fracs</em>, <em>numDens</em>, <em>temps</em>, <em>zbar=None</em>, <em>dzdt=None</em>, <em>pion=None</em>, <em>pele=None</em>, <em>dpidt=None</em>, <em>dpedt=None</em>, <em>eion=None</em>, <em>eele=None</em>, <em>cvion=None</em>, <em>cvele=None</em>, <em>deidn=None</em>, <em>deedn=None</em>, <em>ngroups=None</em>, <em>opac_bounds=None</em>, <em>rosseland=None</em>, <em>planck_absorb=None</em>, <em>planck_emiss=None</em>, <em>sele=None</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.writeIonmixFile" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">opacplot2.writeIonmixFile()</span></code> provides an explicit and flexible
+way to write IONMIX files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fn</strong> (<em>str</em>) &#8211; Name of the file to write.</li>
+<li><strong>zvals</strong> (<em>tuple</em>) &#8211; Atomic numbers of elements to write to file.</li>
+<li><strong>fracs</strong> (<em>tuple</em>) &#8211; Element  fractions.</li>
+<li><strong>numdens</strong> (<em>numpy.ndarray</em>) &#8211; Number densities.</li>
+<li><strong>temps</strong> (<em>numpy.ndarray</em>) &#8211; Temperature array.</li>
+<li><strong>zbar=None</strong> (<em>numpy.ndarray</em>) &#8211; Average ionization. Only used for tabulated EoS in <em>FLASH</em>.</li>
+<li><strong>dzdt=None</strong> (<em>numpy.ndarray</em>) &#8211; Temperature derivative of average ionization. Ignored by <em>FLASH</em>.</li>
+<li><strong>pion=None</strong> (<em>numpy.ndarray</em>) &#8211; Ion pressure  Only used for tabulated EoS in <em>FLASH</em>.</li>
+<li><strong>pele=None</strong> (<em>numpy.ndarray</em>) &#8211; Electron pressure. Only used for tabulated EoS in <em>FLASH</em>.</li>
+<li><strong>dpidt=None</strong> (<em>numpy.ndarray</em>) &#8211; Temperature derivative of ion pressure. Ignored by <em>FLASH</em>.</li>
+<li><strong>dpedt=None</strong> (<em>numpy.ndarray</em>) &#8211; Temperature derivative of electron pressure. Ignored by <em>FLASH</em>.</li>
+<li><strong>eion=None</strong> (<em>numpy.ndarray</em>) &#8211; Ion specific internal energy. Only used for tabulated EoS in <em>FLASH</em>.</li>
+<li><strong>eele=None</strong> (<em>numpy.ndarray</em>) &#8211; Electron specific internal energy. Only used for tabulated EoS in <em>FLASH</em>.</li>
+<li><strong>cvion=None</strong> (<em>numpy.ndarray</em>) &#8211; Ion heat capacity at constant volume. Ignored by <em>FLASH</em>.</li>
+<li><strong>cvele=None</strong> (<em>numpy.ndarray</em>) &#8211; Electron heat capacity at constant volume. Ignored by <em>FLASH</em>.</li>
+<li><strong>deidn=None</strong> (<em>numpy.ndarray</em>) &#8211; Number derivative of ion energy. Ignored by <em>FLASH</em>.</li>
+<li><strong>deedn=None</strong> (<em>numpy.ndarray</em>) &#8211; Number derivative of electron energy. Ignored by <em>FLASH</em>.</li>
+<li><strong>ngroups=None</strong> (<em>int</em>) &#8211; Number of energy groups.</li>
+<li><strong>opac_bounds=None</strong> (<em>numpy.ndarray</em>) &#8211; Energy group boundaries.</li>
+<li><strong>rosseland=None</strong> (<em>numpy.ndarray</em>) &#8211; Rosseland opacities. Only used for tabulated EoS in <em>FLASH</em>.</li>
+<li><strong>orb=None</strong> (<em>planck_abs</em>) &#8211; Planck absorption opacity. Only used for tabulated EoS in <em>FLASH</em>.</li>
+<li><strong>planck_emiss=None</strong> (<em>numpy.ndarray</em>) &#8211; Planck emission opacity. Only used for tabulated EoS in <em>FLASH</em>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Here we open an HDF5 file containing EoS and Opacity data and
+write it to an IONMIX file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgHdf5</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;/path/to/infile.h5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opp</span><span class="o">.</span><span class="n">writeIonmixFile</span><span class="p">(</span><span class="s1">&#39;outfile.cn4&#39;</span><span class="p">,</span>
+<span class="go">                op[&#39;Znum&#39;], op[&#39;Xnum&#39;],</span>
+<span class="go">                numDens=op[&#39;idens&#39;][:], temps=op[&#39;temp&#39;][:],</span>
+<span class="go">                ngroups=op.Ng,</span>
+<span class="go">                opac_bounds=op[&#39;groups&#39;][:],</span>
+<span class="go">                planck_absorb=op[&#39;opp_mg&#39;][:],</span>
+<span class="go">                rosseland=op[&#39;opr_mg&#39;][:],</span>
+<span class="go">                planck_emiss=op[&#39;emp_mg&#39;][:])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="opacplot2.adapt.EosMergeGrids">
+<em class="property">class </em><code class="descclassname">opacplot2.adapt.</code><code class="descname">EosMergeGrids</code><span class="sig-paren">(</span><em>eos_data, filter_dens=&lt;function EosMergeGrids.&lt;lambda&gt;&gt;, filter_temps=&lt;function EosMergeGrids.&lt;lambda&gt;&gt;, intersect=['ele', 'ioncc'], thresh=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.adapt.EosMergeGrids" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class provides filtering capabilities for the EoS temperature and
+density grids.</p>
+<p>For instance, SESAME tables may have some additional points
+in the ion EoS table, compared to the electron EoS table, and as
+FLASH requires the same density and temperature grid for all species,
+the simplest solution is to remove those extra points.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eos_data</strong> (<em>dict</em>) &#8211; Dictionary contraining the EoS data.</li>
+<li><strong>intersect</strong> (<em>list</em>) &#8211; The resulting temperature [eV] and density [g/cm⁻³]
+grids will be computed as an intersection of grids of all the
+species given in this list. Default: [&#8216;ele&#8217;, &#8216;ioncc&#8217;]</li>
+<li><strong>filter_dens</strong> (<em>function</em>) &#8211; A function that takes a grid of densities
+and returns a mask of points we don&#8217;t wont to keep.
+Defaut: (lamdba x: x&gt;0.) i.e. don&#8217;t remove anything.</li>
+<li><strong>filter_temps</strong> (<em>function</em>) &#8211; A function that takes a grid of temperatures
+and returns a mask of points we don&#8217;t wont to keep.
+Defaut: (lamdba x: x&gt;0.) i.e. don&#8217;t remove anything.</li>
+<li><strong>thresh</strong> (<em>list</em>) &#8211; Zero threshold on following keys</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> &#8211; A dictionary with the same keys a eos_data.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eos_sesame</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgSesame</span><span class="p">(</span><span class="s2">&quot;../sesame/xsesame_ascii&quot;</span><span class="p">,</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgSesame</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eos_data</span>  <span class="o">=</span> <span class="n">eos_sesame</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">3720</span><span class="p">]</span>  <span class="c1"># Aluminum</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eos_data_filtered</span> <span class="o">=</span> <span class="n">EosMergeGrids</span><span class="p">(</span><span class="n">eos_data</span><span class="p">,</span>
+<span class="go">        intersect=[&#39;ele&#39;, &#39;ioncc&#39;],   # Merge ele and ioncc grids</span>
+<span class="go">        filter_temps=lamda x: x&gt;1.) # Remove temperatures below 1eV</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="multi-opp-opr-eps">
+<h2>MULTI (.opp, .opr, .eps)<a class="headerlink" href="#multi-opp-opr-eps" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="opacplot2.OpgMulti">
+<em class="property">class </em><code class="descclassname">opacplot2.</code><code class="descname">OpgMulti</code><span class="sig-paren">(</span><em>*cargs</em>, <em>**vargs</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgMulti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Can be used either to parse or to write MULTIv5 tables.</p>
+<p><code class="docutils literal"><span class="pre">OpgMulti</span></code> is a subclass of <code class="docutils literal"><span class="pre">dict</span></code>. Through <code class="docutils literal"><span class="pre">open_file()</span></code>, it can
+read EoS and opacity data from MULTI files. Then, the data can be accessed
+through the key:value pairs of the <code class="docutils literal"><span class="pre">OpgMulti</span></code> instance.</p>
+<p class="rubric">Examples</p>
+<p>If we are in a directory with the files <code class="docutils literal"><span class="pre">He_snp.eps.gz</span></code>, <code class="docutils literal"><span class="pre">He_snp.opp.gz</span></code>,
+<code class="docutils literal"><span class="pre">He_snp.opr.gz</span></code>, and <code class="docutils literal"><span class="pre">He_snp.opz.gz</span></code>, then the following would read their data
+into an <code class="docutils literal"><span class="pre">OpgMulti</span></code> object:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgMulti</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;/path/to/current/dir&#39;</span><span class="p">,</span> <span class="s1">&#39;He_snp&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="classmethod">
+<dt id="opacplot2.OpgMulti.open_file">
+<em class="property">classmethod </em><code class="descname">open_file</code><span class="sig-paren">(</span><em>folder</em>, <em>base_name</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgMulti.open_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse MULTI format from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>str</strong> (<em>folder</em>) &#8211; Name of directory containing MULTI files.</li>
+<li><strong>base_name</strong> (<em>str</em>) &#8211; Base name of MULTI files.</li>
+<li><strong>verbose</strong> (<em>bool</em>) &#8211; Verbose option.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dictionary containing EoS and/or opacity data.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#opacplot2.OpgMulti" title="opacplot2.OpgMulti">OpgMulti</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="opacplot2.OpgMulti.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>prefix</em>, <em>fmin=None</em>, <em>fmax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgMulti.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write multigroup opacities to files specified by a prefix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prefix</strong> (<em>str</em>) &#8211; Prefix to append to files that are written.</li>
+<li><strong>fmin</strong> (<em>float</em>) &#8211; Minimum value for opacities to write.</li>
+<li><strong>fmax</strong> (<em>float</em>) &#8211; Maximum value for opacities to write.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>After filling an instance of <code class="docutils literal"><span class="pre">OpgMulti</span></code> with EoS/opacity data,
+one could call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">op_multi</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;multi_&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to write data files containing multigroup opacities specified by the
+&#8216;multi_&#8217; prefix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="opacplot2.OpgMulti.write2hdf">
+<code class="descname">write2hdf</code><span class="sig-paren">(</span><em>filename</em>, <em>Znum=None</em>, <em>Anum=None</em>, <em>Xnum=None</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgMulti.write2hdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to HDF5 parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; Output filename.</li>
+<li><strong>Znum</strong> (<em>tuple</em>) &#8211; Atomic numbers of elements.</li>
+<li><strong>Anum</strong> (<em>tuple</em>) &#8211; Atomic masses of elements.</li>
+<li><strong>Xnum</strong> (<em>tuple</em>) &#8211; Fractions of elements.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>The atomic number and relative fractions
+must be given if they are not already parsed into an instance of <code class="docutils literal"><span class="pre">OpgMulti</span></code>.
+If they are not, <code class="docutils literal"><span class="pre">write2hdf</span></code> will raise a <code class="docutils literal"><span class="pre">ValueError</span></code>.</p>
+<p>If we were in the same directory as the previous example, the following would
+write an HDF5 file with data from our MULTI files:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgMulti</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;/path/to/current/dir&#39;</span><span class="p">,</span> <span class="s1">&#39;He_snp&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span><span class="o">.</span><span class="n">write2hdf</span><span class="p">(</span><span class="s1">&#39;outfile.h5&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="opacplot2.get_related_multi_tables">
+<code class="descclassname">opacplot2.</code><code class="descname">get_related_multi_tables</code><span class="sig-paren">(</span><em>folder</em>, <em>base_name</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.get_related_multi_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all related multi Tables defined by a folder and a base name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>folder</strong> (<em>str</em>) &#8211; Folder containing the tables.</li>
+<li><strong>base_name</strong> (<em>str</em>) &#8211; Base name of the table.</li>
+<li><strong>verbose</strong> (<em>bool</em>) &#8211; Flag for verbose option.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="sesame-ascii-ses">
+<h2>SESAME ASCII (.ses)<a class="headerlink" href="#sesame-ascii-ses" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="opacplot2.OpgSesame">
+<em class="property">class </em><code class="descclassname">opacplot2.</code><code class="descname">OpgSesame</code><span class="sig-paren">(</span><em>filename</em>, <em>precision</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgSesame" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is responsible for loading all SESAME formatted data files.</p>
+<p><code class="docutils literal"><span class="pre">OpgSesame</span></code> reads in a SESAME file. Each key:value pair of the <code class="docutils literal"><span class="pre">data</span></code>
+attribute corresponds to a table ID and its data from the file, respectively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fn</strong> (<em>str</em>) &#8211; Name of file to open.</li>
+<li><strong>precision</strong> (<em>int</em>) &#8211; <code class="docutils literal"><span class="pre">opacplot2.OpgSesame.SINGLE</span></code> for entry lengths of 15
+or <code class="docutils literal"><span class="pre">opacplot2.OpgSesame.Double</span></code> for entry lengths of 22.</li>
+<li><strong>verbose</strong> (<em>bool</em>) &#8211; Verbose option.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="OpgSesame.data">
+<code class="descname">data</code><a class="headerlink" href="#OpgSesame.data" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> &#8211; Dictionary of material IDs included in the SESAME file.</p>
+</dd></dl>
+
+<p class="rubric">Examples</p>
+<p>The <code class="docutils literal"><span class="pre">opacplot2.OpgSesame.data</span></code> dictionary will
+hold the EoS data for the table referenced by <code class="docutils literal"><span class="pre">table_id</span></code>. For example, if
+we are in a directory with the file <code class="docutils literal"><span class="pre">sesame.ses</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgSesame</span><span class="p">(</span><span class="s1">&#39;sesame.ses&#39;</span><span class="p">,</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgSesame</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="go">dict_keys([..., 13719]) # Table ID numbers; Aluminum.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">13719</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+<span class="go">dict_keys([&#39;abar&#39;,...,&#39;zmax&#39;]) # Dictionary containing EoS data.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There are currently no handling functions for 500 series entries in the SESAME tables.</p>
+</div>
+<div class="section" id="data-prefixes">
+<h3>Data Prefixes<a class="headerlink" href="#data-prefixes" title="Permalink to this headline">¶</a></h3>
+<p>From <a class="reference external" href="http://www.lanl.gov/org/padste/adtsc/theoretical/physics-chemistry-materials/_assets/docs/LAUR-92-3407.pdf">Los Alamos National Laboratory</a>,
+each SESAME table has five different parts of their EoS tables:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="54%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Table #</th>
+<th class="head">Data Type</th>
+<th class="head"><code class="docutils literal"><span class="pre">opacplot2</span></code> prefix</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Table 301</td>
+<td>TotalEOS(304+305+306)</td>
+<td><code class="docutils literal"><span class="pre">total_</span></code></td>
+</tr>
+<tr class="row-odd"><td>Table 303</td>
+<td>Ion EOS Plus Cold Curve (305 + 306)</td>
+<td><code class="docutils literal"><span class="pre">ioncc_</span></code></td>
+</tr>
+<tr class="row-even"><td>Table 304</td>
+<td>Electron EOS</td>
+<td><code class="docutils literal"><span class="pre">ele_</span></code></td>
+</tr>
+<tr class="row-odd"><td>Table 305</td>
+<td>Ion EOS (Including Zero Point)</td>
+<td><code class="docutils literal"><span class="pre">ion_</span></code></td>
+</tr>
+<tr class="row-even"><td>Table 306</td>
+<td>Cold Curve (No Zero Point)</td>
+<td><code class="docutils literal"><span class="pre">cc_</span></code></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>If we wanted to print out all of the EoS data for the
+electrons:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgSesame</span><span class="p">(</span><span class="s1">&#39;sesame.ses&#39;</span><span class="p">,</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgSesame</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">13719</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span> <span class="c1"># Table ID for aluminum.</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="s1">&#39;cc_&#39;</span> <span class="o">==</span> <span class="n">key</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="o">+</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>Data Points<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>There are several top-level data points that are not included in a specific
+curve of the SESAME tables:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="48%" />
+<col width="52%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><code class="docutils literal"><span class="pre">opacplot2</span></code> Abbr.</th>
+<th class="head">Phys. Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">abar</span></code></td>
+<td>Mean Atomic Mass</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">bulkmod</span></code></td>
+<td>Bulk Modulus</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">excoef</span></code></td>
+<td>Exchange Coefficient</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">rho0</span></code></td>
+<td>Normal Density</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">zmax</span></code></td>
+<td>Mean Atomic number</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Furthermore, each table (301, ..., 305) prefixes these data points:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="48%" />
+<col width="52%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><code class="docutils literal"><span class="pre">opacplot2</span></code> Abbr.</th>
+<th class="head">Phys. Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">dens</span></code></td>
+<td>Density</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">eint</span></code></td>
+<td>Energy</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ndens</span></code></td>
+<td>Number of Densities</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ntemp</span></code></td>
+<td>Number of Temperatures</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">pres</span></code></td>
+<td>Pressures</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">temps</span></code></td>
+<td>Temperatures</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>From the example in the previous section, if we wanted to print out the
+density array of electrons, we would simply type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ele_dens&#39;</span><span class="p">])</span>
+<span class="go">array([...]) # Electron density array.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="tops">
+<h2>TOPS<a class="headerlink" href="#tops" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="inferno">
+<h2>INFERNO<a class="headerlink" href="#inferno" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="propaceos-ascii-prp">
+<h2>PROPACEOS ASCII (.prp)<a class="headerlink" href="#propaceos-ascii-prp" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Handling for Propaceos EoS tables is not publicly distributed with <code class="docutils literal"><span class="pre">opacplot2</span></code> and so its documentation will not be presented here.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="test.html" class="btn btn-neutral float-right" title="Testing Suite" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="intro.html" class="btn btn-neutral" title="Introduction" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Jordan Laune.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

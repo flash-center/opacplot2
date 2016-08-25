@@ -25,10 +25,14 @@ def get_related_multi_tables(folder, base_name, verbose=False):
     """
     Get all related multi Tables defined by a folder and a base name.
 
-    Parameters:
-    -----------
-      - folder [str]: folder containing the tables
-      - base_name [str]: base name of the table
+    Parameters
+    ----------
+    folder : str 
+        Folder containing the tables.
+    base_name : str 
+        Base name of the table.
+    verbose : bool
+        Flag for verbose option.
     """
     patrn = re.compile((r'{0}'+MULTI_EXT_FMT).format(base_name), re.IGNORECASE)
     folder = os.path.abspath(folder)
@@ -56,13 +60,20 @@ SMALL_FLOAT_LOG = -4.42627399E+02
 
 class OpgMulti(dict):
     """
-    Can be used either to parse or to write MULIv5 tables.
+    Can be used either to parse or to write MULTIv5 tables.
+    
+    ``OpgMulti`` is a subclass of ``dict``. Through ``open_file()``, it can
+    read EoS and opacity data from MULTI files. Then, the data can be accessed
+    through the key:value pairs of the ``OpgMulti`` instance.
+    
+    Examples
+    --------
+    If we are in a directory with the files ``He_snp.eps.gz``, ``He_snp.opp.gz``,
+    ``He_snp.opr.gz``, and ``He_snp.opz.gz``, then the following would read their data
+    into an ``OpgMulti`` object::
 
-    Parameters:
-
-     * table - two use cases are possible
-       1. (folder, base_name) 
-       2. dict
+       >>> import opacplot2 as opp
+       >>> op = opp.OpgMulti.open_file('/path/to/current/dir', 'He_snp')
     """
 
     def __init__(self, *cargs, **vargs):
@@ -74,15 +85,21 @@ class OpgMulti(dict):
     @classmethod
     def open_file(cls, folder, base_name, verbose=True):
         """
-        Parse MULTI format from a file
-        Parameters:
-        -----------
-          - folder
-          - base name
+        Parse MULTI format from a file.
+        
+        Parameters
+        ----------
+        folder   str
+            Name of directory containing MULTI files.
+        base_name : str
+            Base name of MULTI files.
+        verbose : bool
+            Verbose option.
 
-        Returns:
-        --------
-          OpgMulti
+        Returns
+        -------
+        OpgMulti
+            Dictionary containing EoS and/or opacity data.
         """
         op = cls()
         table =  get_related_multi_tables(folder, base_name)
@@ -107,8 +124,9 @@ class OpgMulti(dict):
     def _parse(self, path, tabletype):
         """
         Parse MULTIv5 opacity/ionization file
-        Parameters:
-        -----------
+        
+        Parameters
+        ----------
           - path [str]: path to the file
           - tabletype [str]: table type, one of ('opp', 'opr', 'eps', 'opz')
 
@@ -203,7 +221,28 @@ class OpgMulti(dict):
 
     def write(self, prefix, fmin=None, fmax=None):
         """
-        Write multigroup opacities to files specified by a prefix
+        Write multigroup opacities to files specified by a prefix.
+        
+        Parameters
+        ----------
+        prefix : str
+            Prefix to append to files that are written.
+
+        fmin : float
+            Minimum value for opacities to write.
+
+        fmax : float
+            Maximum value for opacities to write.
+        
+        Examples
+        --------
+        After filling an instance of ``OpgMulti`` with EoS/opacity data,
+        one could call::
+
+            >>> op_multi.write('multi_')
+
+        to write data files containing multigroup opacities specified by the 
+        'multi\_' prefix.
         """
         for key in ['eps_mg', 'temp', 'dens', 'opp_mg', 'opr_mg', 'emp_mg']:
             if key in self:
@@ -267,8 +306,31 @@ class OpgMulti(dict):
 
 
     def write2hdf(self, filename, Znum=None, Anum=None, Xnum=None):
-        """ Convert to hdf5
+        """ Convert to HDF5 parameters.
+        
         Parameters
+        ----------
+        filename : str
+           Output filename.
+        Znum : tuple
+           Atomic numbers of elements.
+        Anum : tuple
+           Atomic masses of elements.
+        Xnum : tuple
+           Fractions of elements.
+        
+        Examples
+        --------
+        The atomic number and relative fractions
+        must be given if they are not already parsed into an instance of ``OpgMulti``.
+        If they are not, ``write2hdf`` will raise a ``ValueError``.
+
+        If we were in the same directory as the previous example, the following would
+        write an HDF5 file with data from our MULTI files::
+
+           >>> import opacplot2 as opp
+           >>> op = opp.OpgMulti.open_file('/path/to/current/dir', 'He_snp')
+           >>> op.write2hdf('outfile.h5')
         """
         import tables
         h5filters = tables.Filters(complib='blosc', complevel=7, shuffle=True,
@@ -279,7 +341,7 @@ class OpgMulti(dict):
             if "Znum" in self:
                 Znum = self['Znum']
             else:
-                raise ValueError('Znum Varray should be providied!')
+                raise ValueError('Znum Varray should be provided!')
         if type(Znum) is int:
             Znum = [Znum]
         self['Znum'] = np.array(Znum, dtype='int')

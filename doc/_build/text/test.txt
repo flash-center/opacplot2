@@ -1,0 +1,149 @@
+
+Testing Suite
+*************
+
+These are located in the "tests/" directory of "opacplot2". Use these
+to test if "opacplot2" is running correctly on your system.
+
+
+Automatic Testing Using "setup.py"
+==================================
+
+Note: in order for this process to work, you need to have installed
+the "nose" python module (available on PyPI).
+
+To run "opacplot2"'s test suite, simply enter:
+
+   python setup.py nosetests
+
+in the "opacplot2" top-level directory (the one with "setup.py"). This
+will run "run.py" in "opacplot2/tests/".
+
+NOTE: It is very important that you use "nosetests". Simply entering
+"tests" will give you all sorts of errors.
+
+
+Test Scripts
+============
+
+
+"run"
+-----
+
+This is the main testing script to be used by the user, located in
+"opacplot2/tests/". The user may call this script manually using
+Python, and it will run all of the test functions located in the
+various testing scripts in the "tests/" directory.
+
+"run.py" accomplishes this by using the "nose" testing suite available
+for Python. "nose.run()" will search for all scripts that "look" like
+test scripts (such as "test_multi.py") and run the functions that
+"look" like test functions (like "test_multi_read()"). It will return
+"0" if no problems were encountered. Anything else indicates that
+there was a problem.
+
+The "run.py" script will run all tests contained in the scripts
+described below. If the user only wants to run certain tests, they may
+use each script's functions separately by using the "import" statement
+described above.
+
+For more info on "nose", please visit nose's documentation.
+
+
+"test_multi"
+------------
+
+There are three functions defined by the "test_multi" module:
+"test_multi_read()", "test_multi_read_write()", and
+"test_export_hdf5()".
+
+"test_multi_read()" and "test_export_hdf5()" do not return a value, if
+one calls them and they raise no errors then the test has passed.
+
+"test_multi_read_write()" *does* return a value, so this test is the
+most comprehensive. First, it reads in all of the values from the
+MULTIv5 files included in "opacplot2"'s testing suite. It takes this
+data and uses "OpgMulti"'s writing function to write the data back to
+new files. Then, it returns a generator of tuples containing
+"numpy.testing"'s "assert_allclose" function, the new files' values at
+each key, and the old files' values at each key. The following example
+would check if "OpgMulti" is reading and writing MULTIv5 files
+properly:
+
+   from opacplot2.tests import test_multi
+   tests = test_multi.test_multi_read_write()
+   for t in tests:
+       if not t[0](t[1],t[2]):
+           print('OKAY')
+
+To elaborate, "tests = test_multi.test_multi_read_write()" sets
+"tests" equal to the generator described. As we iterate through
+"tests", the first position of the tuple ("t[0]") is the
+"numpy.testing.assert_allclose()" function. The second position is
+data from the original file, while the third is from the new file we
+just wrote. So, "t[0](t[1],t[2])" will compare every data point in the
+newly written and original file. It returns "None" if there are no
+noticeable differences. The "if" statement will print "'OKAY'"
+whenever the files match, which means the reading and writing are
+working properly.
+
+For more info on "numpy.testing.assert_allclose()", please visit
+numpy's documentation
+
+
+"test_sesame"
+-------------
+
+"test_opac_read()" checks "OpgSesame"'s reading capabilities.
+
+
+"test_imx"
+----------
+
+There are four test functions here: "test_ionmix_read()",
+"test_extend_to_zero()", "test_ionmix_read_write()", and
+"test_ionmix_read_write_0()".
+
+"test_ionmix_read()" checks "OpacIonmix"'s reading capabilities.
+
+"test_extend_to_zero()" will check "OpacIonmix" capabilities to add a
+temperature point at zero.
+
+"test_ionmix_read_write()" will test the "OpgIonmix.writeIonmixFile()"
+function and verify it in the same way as test_multi verified
+"OpgMulti"'s reading and writing, using
+"numpy.testing.assert_allclose()". Note that this is the
+"writeIonmixFile()" function, which takes its data as a collection of
+positional & keyword arguments. See IONMIX (.cn4) for more details.
+
+"test_ionmix_read_write()" will test the "OpgIonmix.write()" function
+and verify it in the same way as "test_ionmix_read_write" and
+"test_multi". Note that "write()" writes the data that is *already*
+stored in an instance of "OpgIonmix" as a dictionary.
+
+
+"test_hdf5"
+-----------
+
+"test_hdf5_read()" this will check if "OpgHdf5" can read an HDF5 file.
+
+"test_hdf5_write()" this will read in an HDF5 file and then test if
+"OpgHdf5" can write one back.
+
+
+Troubleshooting
+===============
+
+If you the user is on Linux or OSX and "python setup.py nosetests"
+returns:
+
+   Ran 0 tests in 0.000s
+
+it is probably because the test scripts are executable. "nose" does
+NOT search for tests in Python scripts that are executable. To fix
+this, ensure that all scripts with the prefix "test_" in the
+"opacplot2/tests/" directory are NOT executable. One may accomplish
+this on Linux/OSX with the following command (in the
+"opacplot2/tests/" directory):
+
+   chmod -x test_*

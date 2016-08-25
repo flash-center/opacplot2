@@ -11,7 +11,7 @@ import numpy as np
 # For OPAC file format the parser might be opacplot2/opg_tabop.py
 # otherwise it would have to be implemented.
 
-print dir(opp.OpgSesame)
+print(dir(opp.OpgSesame))
 eos_data = opp.OpgSesame("../../../eos/sesame/xsesame_ascii", opp.OpgSesame.SINGLE, verbose=False).data[5761]
 
 

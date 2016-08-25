@@ -3,37 +3,50 @@
 import numpy as np
 
 class EosMergeGrids(dict):
+    """This class provides filtering capabilities for the EoS temperature and
+    density grids. 
+             
+    For instance, SESAME tables may have some additional points 
+    in the ion EoS table, compared to the electron EoS table, and as 
+    FLASH requires the same density and temperature grid for all species, 
+    the simplest solution is to remove those extra points.
+    
+    Parameters
+    ----------
+    eos_data : dict 
+        Dictionary contraining the EoS data.
+    intersect : list 
+        The resulting temperature [eV] and density [g/cm⁻³]
+        grids will be computed as an intersection of grids of all the
+        species given in this list. Default: ['ele', 'ioncc']
+    filter_dens : function
+        A function that takes a grid of densities
+        and returns a mask of points we don't wont to keep.
+        Defaut: (lamdba x: x>0.) i.e. don't remove anything.
+    filter_temps : function
+        A function that takes a grid of temperatures
+        and returns a mask of points we don't wont to keep.
+        Defaut: (lamdba x: x>0.) i.e. don't remove anything.
+    thresh : list 
+        Zero threshold on following keys
+    
+    Returns
+    -------
+    out : dict 
+        A dictionary with the same keys a eos_data.
+    
+    Example
+    -------
+    >>> eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii", opp.OpgSesame.SINGLE,verbose=False)
+    >>> eos_data  = eos_sesame.data[3720]  # Aluminum
+    >>> eos_data_filtered = EosMergeGrids(eos_data,
+            intersect=['ele', 'ioncc'],   # Merge ele and ioncc grids
+            filter_temps=lamda x: x>1.) # Remove temperatures below 1eV
+    """
     def __init__(self, eos_data, filter_dens=lambda x: x>=0.,
                  filter_temps=lambda x: x>=0., intersect=['ele', 'ioncc'],
                  thresh=[]):
-        """This class provides filtering capabilities for the EoS temperature and
-        density grids. For instance SESAME tables may have some additionnal points 
-        in the ion EoS table, compared to the elecron EoS table, and as FLASH requires
-        the same density and temperature grid for all species, the simplest solution is
-        to remove those extra points.
-
-        Parameters
-        ----------
-        - eos_data: [dict] dictionary contraining the EoS data.
-        - intersect: [list] the resulting temperature [eV] and density [g/cm⁻³]
-                grids will be computed as an intersection of grids of all the
-                species given in this list. Default: ['ele', 'ioncc']
-        - filter_dens, filter_temps: [function] a function that takes a grid
-                and returns a mask of points we don't wont to keep.
-                Defaut: (lamdba x: x>0.) i.e. don't remove anything.
-        - thresh: zero threshold on folowing keys
-        Returns
-        -------
-        - out: [dict] a dictionary with the same keys a eos_data.
-
-        Exemple
-        -------
-        >> eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii", opp.OpgSesame.SINGLE,verbose=False)
-        >> eos_data  = eos_sesame.data[3720]  # Aluminum
-        >> eos_data_filtered = EosMergeGrids(eos_data,
-                intersect=['ele', 'ioncc'],   # merge ele and ioncc grids
-                filter_temps=lamda x: x>1.) # remove temperatures below 1eV
-        """
+        
         user_filter = dict(temps=filter_temps, dens=filter_dens)
         self.origin = eos_data
         self.threshold = thresh

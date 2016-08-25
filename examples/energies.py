@@ -134,26 +134,26 @@ def gamc(opimx, rho, tele, tion, trad,
     gamc = rho/ptot * (dpedd_se + dpidd_si + (4*prad)/(3*rho))
 
     if verbose == True:
-        print "rho      = %17.10e" % rho
-        print "tele     = %17.10e" % tele
-        print "tion     = %17.10e" % tion
-        print "deidti   = %17.10e" % deidti_val
-        print "dpidti   = %17.10e" % dpidti_val
-        print "dpidd    = %17.10e" % dpidd_val
-        print "dpidd_si = %17.10e" % dpidd_si
-        print "pion     = %17.10e" % pion_val
+        print( "rho      = %17.10e" % rho)
+        print( "tele     = %17.10e" % tele)
+        print( "tion     = %17.10e" % tion)
+        print( "deidti   = %17.10e" % deidti_val)
+        print( "dpidti   = %17.10e" % dpidti_val)
+        print( "dpidd    = %17.10e" % dpidd_val)
+        print( "dpidd_si = %17.10e" % dpidd_si)
+        print( "pion     = %17.10e" % pion_val)
         
-        print "deedte   = %17.10e" % deedte_val
-        print "dpedte   = %17.10e" % dpedte_val
-        print "dpedd    = %17.10e" % dpedd_val
-        print "dpedd_se = %17.10e" % dpedd_se
-        print "pele     = %17.10e" % pele_val
+        print( "deedte   = %17.10e" % deedte_val)
+        print( "dpedte   = %17.10e" % dpedte_val)
+        print( "dpedd    = %17.10e" % dpedd_val)
+        print( "dpedd_se = %17.10e" % dpedd_se)
+        print( "pele     = %17.10e" % pele_val)
         
-        print "prad     = %17.10e" % prad
-        print "ptot     = %17.10e" % ptot
-        print "gamc     = %17.10e" % gamc
-        print "gamc_ion = %17.10e" % (dpidd_si * rho/pion_val)
-        print "gamc_ele = %17.10e" % (dpedd_se * rho/pele_val)
+        print( "prad     = %17.10e" % prad)
+        print( "ptot     = %17.10e" % ptot)
+        print( "gamc     = %17.10e" % gamc)
+        print( "gamc_ion = %17.10e" % (dpidd_si * rho/pion_val))
+        print( "gamc_ele = %17.10e" % (dpedd_se * rho/pele_val))
 
     return gamc
 
@@ -179,23 +179,23 @@ pele_tot =  1.0033128000e+08
 
 eion_he = eion(heimx, rho*mfhe, tion)
 eion_al = eion(alimx, rho*mfal, tion)
-print "EION:", eion_tot, mfhe*eion_he + mfal*eion_al
+print( "EION:", eion_tot, mfhe*eion_he + mfal*eion_al)
 
 eele_he = eele(heimx, rho*mfhe, tele)
 eele_al = eele(alimx, rho*mfal, tele)
-print "EELE:",eele_tot, mfhe*eele_he + mfal*eele_al
+print( "EELE:",eele_tot, mfhe*eele_he + mfal*eele_al)
 
 pele_he = pele(heimx, rho*mfhe, tele)
 pele_al = pele(alimx, rho*mfal, tele)
-print "PELE:",pele_tot, pele_he + pele_al
+print( "PELE:",pele_tot, pele_he + pele_al)
 
 pion_he = pion(heimx, rho*mfhe, tion)
 pion_al = pion(alimx, rho*mfal, tion)
-print "PION:",pion_tot, pion_he + pion_al
+print( "PION:",pion_tot, pion_he + pion_al)
 
-print "\nHELUM GAMC:"
+print( "\nHELUM GAMC:")
 gamc_he = gamc(heimx, rho*mfhe, tele, tion, 0.0, verbose=True)
-print "\nALUMINUM GAMC:"
+print( "\nALUMINUM GAMC:")
 gamc_al = gamc(alimx, rho*mfal, tele, tion, 0.0, verbose=True)
 
 
@@ -250,45 +250,45 @@ gamc_al = gamc(alimx, rho*mfal, tele, tion, 0.0, verbose=True)
 #     gamc = rho/ptot * (dpedd_se + dpidd_si + (4*prad)/(3*rho))
 
 #     if verbose == True:
-#         print "deidti   = %17.10e" % deidti
-#         print "dpidti   = %17.10e" % dpidti
-#         print "dpidd    = %17.10e" % dpidd
-#         print "dpidd_si = %17.10e" % dpidd_si
-#         print "pion     = %17.10e" % pion
+#         print( "deidti   = %17.10e" % deidti)
+#         print( "dpidti   = %17.10e" % dpidti)
+#         print( "dpidd    = %17.10e" % dpidd)
+#         print( "dpidd_si = %17.10e" % dpidd_si)
+#         print( "pion     = %17.10e" % pion)
         
-#         print "deedte   = %17.10e" % deedte
-#         print "dpedte   = %17.10e" % dpedte
-#         print "dpedd    = %17.10e" % dpedd
-#         print "dpedd_se = %17.10e" % dpedd_se
-#         print "pele     = %17.10e" % pele    
+#         print( "deedte   = %17.10e" % deedte)
+#         print( "dpedte   = %17.10e" % dpedte)
+#         print( "dpedd    = %17.10e" % dpedd)
+#         print( "dpedd_se = %17.10e" % dpedd_se)
+#         print( "pele     = %17.10e" % pele)
         
-#         print "prad     = %17.10e" % prad
-#         print "ptot     = %17.10e" % ptot
-#         print "gamc     = %17.10e" % gamc
+#         print( "prad     = %17.10e" % prad)
+#         print( "ptot     = %17.10e" % ptot)
+#         print( "gamc     = %17.10e" % gamc)
 
 #     return gamc
 
-# print "\n\n"
+# print( "\n\n")
 
 # rho  = 1e-05
 # tele = 0.025
 # tion = 0.025
 # trad = 0.0
-# print "\ngamc(rho=%g,tele=%g,tion=%g,trad=%g) = %g" % \
+# print( "\ngamc(rho=%g,tele=%g,tion=%g,trad=%g) = %g" % \
 #     (rho, tele, tion, trad, gamc(rho,tele,tion,trad, verbose=True, bctmin=BC_EXTRAP_ZERO))
 
-# print "\n\n"
+# print( "\n\n")
 
 # rho  = 2.0e-07
 # tele = 4e+05
 # tion = 3e+05
 # trad = 5.0
-# print "\ngamc(rho=%g,tele=%g,tion=%g,trad=%g) = %g" % \
+# print( "\ngamc(rho=%g,tele=%g,tion=%g,trad=%g) = %g" % \
 #     (rho, tele, tion, trad, gamc(rho,tele,tion,trad, verbose=True))
 
-# print "\n"
+# print( "\n")
 # gamc(2e-07,2e+05,2e+05,5.0)
-# print "\n"
+# print( "\n")
 # gamc(2e-07,2e+05,3e+05,5.0)
 
 # rho  = 6.646476174630e-08
@@ -296,4 +296,4 @@ gamc_al = gamc(alimx, rho*mfal, tele, tion, 0.0, verbose=True)
 # pion = opp.interpDT(opimx.pion, opimx.dens, opimx.temps,
 #                     rho, tion,
 #                     lookup=opp.INTERP_FUNC)
-# print "pion =", pion, rho/mpi * KB * tion
+# print( "pion =", pion, rho/mpi * KB * tion)

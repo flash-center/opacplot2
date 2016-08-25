@@ -1,6 +1,3 @@
-# documentation builder
-sphinx
-
 .DS_Store
 build
 dist
@@ -11,3 +8,6 @@ visualization/.ipynb_checkpoints
 *pyc
 *cn4
 .coverage
+
+doc/*
+!doc/_build/

@@ -15,15 +15,16 @@ def testsuite(var, cond=None, mode='short'):
     """
     Test suite decorator to check consistency of an opacity table
 
-    Parameter:
-    ----------
-    cond: None, bool or lambda function
-          that takes self and returns a mask in the DT domaine
-          in case of None, the existance of the var parameters is taken as condition
-    var:  str, lambda func
-          variable to print if something goes wrong
-    mode: str 'short' ot 'full'
-          type of the test
+    Parameter
+    ---------
+    cond : None, bool, or lambda expression
+        Lambda function takes self and returns a mask in the DT domain.
+        In case of None, the existence of the var parameters is taken as 
+        condition.
+    var :  str, lambda func
+        Variable to print if something goes wrong.
+    mode : str 
+        Type of the test: 'short' or 'full'.
     """
     def func_outerwrap(func):
         def func_wrapper(self, req_mode):
@@ -31,27 +32,38 @@ def testsuite(var, cond=None, mode='short'):
                 if type(var) is str:
                     var_expr = lambda x: x[var]
                 else:
-                    var_expr = var
+                    var_expr = var # If var is lambda expression.
                 if cond is None:
-                    cond_expr = np.any(var_expr(self))
+                    # Throws KeyError if var not in self.
+                    # cond_expr true if self[var] is not all false/zero.
+                    cond_expr = np.any(var_expr(self)) 
                 elif type(cond) is bool:
-                    cond_expr = cond
+                    cond_expr = cond 
                 else:
+                    # For lambda expression, check whether cond(self)
+                    # is not all false/zero.
                     cond_expr = np.any(cond(self))
             except KeyError:
-                cond_expr = False  # means that the var thing doens't exist for instance
+                cond_expr = False  # var is not in self.
             except:
-                raise
-
+                raise # @testsuite() not called correctly.
+            
+            # Only run if cond_expr==True.
+            # If run_testsuite(mode='full'), run all tests.
+            # If run_testsuite(mode='short'), only run tests such that
+            # @testsuite(mode='short').
             if cond_expr and \
                     (req_mode == 'full' or req_mode == mode == 'short'):
                 mask =  ~func(self, mode=req_mode)
+                # If test has failed.
                 if len(np.nonzero(mask)[0]):
                     sys.stdout.write('F\n')
                     print()
                     print(self._repr_arr_error(mask, var_expr(self), func.__doc__))
+                # If test passes.
                 else:
                     sys.stdout.write('.')
+            # If we skip this test.
             else:
                 sys.stdout.write('S')
             sys.stdout.flush()
@@ -63,14 +75,30 @@ class OpgHdf5(dict):
     @classmethod
     def open_file(cls, filename, explicit_load=False):
         """
-        Open an HDF5 file containing opacity data
+        Open an HDF5 file containing opacity data.
 
-        Parameters:
-        -----------
-        filename: str
-                  path to the hdf5 file
-        explicit_load: bool
-                  load the whole file to memory
+        Parameters
+        ----------
+        filename : str
+                  Name of file to open.
+        explicit_load : bool
+                  Option to load the whole file to memory.
+        
+        Examples
+        --------
+        To open a file::
+
+           >>> import opacplot2 as opp
+           >>> op = opp.OpgHdf5.open_file('infile.h5')
+           >>> print(op.keys())
+           dict_keys(['Anum', ..., 'Znum']) # OpgHdf5 is a dictionary.
+           >>> print(op['Zf_DT'])
+           array([...]) # Array for average ionization.
+        
+        Notes
+        -----
+        Loading the entire file into memory can be potentially dangerous. Use
+        ``explicit_load`` with caution.
         """
         self = cls()
         self.f = f = tables.openFile(filename, 'r')
@@ -95,6 +123,16 @@ class OpgHdf5(dict):
         return self
 
     def write2file(self, filename, **args):
+        """Write to an HDF5 output file.
+        
+        Parameters
+        ----------
+        filename : str
+           Name of output file.
+        args : dict
+           Dictionary of data to write.
+        
+        """
         import tables
         h5filters = tables.Filters(complib='blosc', complevel=7, shuffle=True)
         f = tables.openFile(filename, 'w', filters=h5filters)
@@ -125,11 +163,11 @@ class OpgHdf5(dict):
                 setattr(f.root._v_attrs,attr, self[attr])
         f.close()
 
-
+    # Would we want force_eval() to count in coverage tests, since it can
+    # be dangerous to load entire file into memory? - JT
     def force_eval(self):
         """
-        Load the while table into memory.
-        Warning that can 
+        Load the whole table into memory.
         """
         for key, val in iteritems(self):
             if type(val) is tables.carray.CArray:
@@ -138,10 +176,12 @@ class OpgHdf5(dict):
                 for key_in, val_in in iteritems(val):
                     print(key, key_in)
                     self[key][key_in] = val_in[:]
-
+    
+    # 'ion_frac' is only included in opg_propaceos. Should we include it
+    # in our coverage tests? - JT
     def _compute_ionization(self):
         """
-        Compute ionization from populations if avalable
+        Compute ionization from populations if available.
         """
         if 'ion_frac' not in self:
             self['Zfo_DT'] = None
@@ -201,7 +241,8 @@ class OpgHdf5(dict):
                     return np.isclose(np.sum(self['ion_frac'][key][:], axis=-1), 1.0, atol=0.01)
                 setattr(self, 'check_ion_frac_{0}_sum_1'.format(key),
                             types.MethodType(check_ionfrac_sum_1, self))
-
+    
+    # Would we want to include our error message in our coverage tests? -JT
     def _repr_arr_error(self, idx, var, msg):
         """
         Print an error message when array failed to pass consistency checks.

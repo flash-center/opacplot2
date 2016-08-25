@@ -19,12 +19,12 @@ mpi = a / opp.NA
 
 temps = np.logspace(-1, 5, 13)
 nt = len(temps)
-print "temps =", temps
+print("temps =", temps)
 
 nions = np.logspace(12, 27, 16)
 neles = z * nions
 nni   = len(nions)
-print "nions =", nions
+print("nions =", nions)
 
 
 # Make arrays:
@@ -63,4 +63,4 @@ opg_imx = opp.OpacIonmix("al-idealgas-001.cn6", mpi,
 
 for jni, nion in enumerate(nions):
     for jt, temp in enumerate(temps):
-        print "%6i %6i %15.6e %15.6e %15.6e" % (jni, jt, nion, temp, opg_imx.sele[jni,jt])
+        print("%6i %6i %15.6e %15.6e %15.6e" % (jni, jt, nion, temp, opg_imx.sele[jni,jt]))
