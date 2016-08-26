@@ -10,66 +10,7 @@ import numpy as np
 import sys
 import types
 from six import iteritems
-
-def testsuite(var, cond=None, mode='short'):
-    """
-    Test suite decorator to check consistency of an opacity table
-
-    Parameter
-    ---------
-    cond : None, bool, or lambda expression
-        Lambda function takes self and returns a mask in the DT domain.
-        In case of None, the existence of the var parameters is taken as 
-        condition.
-    var :  str, lambda func
-        Variable to print if something goes wrong.
-    mode : str 
-        Type of the test: 'short' or 'full'.
-    """
-    def func_outerwrap(func):
-        def func_wrapper(self, req_mode):
-            try:
-                if type(var) is str:
-                    var_expr = lambda x: x[var]
-                else:
-                    var_expr = var # If var is lambda expression.
-                if cond is None:
-                    # Throws KeyError if var not in self.
-                    # cond_expr true if self[var] is not all false/zero.
-                    cond_expr = np.any(var_expr(self)) 
-                elif type(cond) is bool:
-                    cond_expr = cond 
-                else:
-                    # For lambda expression, check whether cond(self)
-                    # is not all false/zero.
-                    cond_expr = np.any(cond(self))
-            except KeyError:
-                cond_expr = False  # var is not in self.
-            except:
-                raise # @testsuite() not called correctly.
-            
-            # Only run if cond_expr==True.
-            # If run_testsuite(mode='full'), run all tests.
-            # If run_testsuite(mode='short'), only run tests such that
-            # @testsuite(mode='short').
-            if cond_expr and \
-                    (req_mode == 'full' or req_mode == mode == 'short'):
-                mask =  ~func(self, mode=req_mode)
-                # If test has failed.
-                if len(np.nonzero(mask)[0]):
-                    sys.stdout.write('F\n')
-                    print()
-                    print(self._repr_arr_error(mask, var_expr(self), func.__doc__))
-                # If test passes.
-                else:
-                    sys.stdout.write('.')
-            # If we skip this test.
-            else:
-                sys.stdout.write('S')
-            sys.stdout.flush()
-            return None
-        return func_wrapper
-    return func_outerwrap
+from .tests.suite import testsuite
 
 class OpgHdf5(dict):
     @classmethod
@@ -177,8 +118,6 @@ class OpgHdf5(dict):
                     print(key, key_in)
                     self[key][key_in] = val_in[:]
     
-    # 'ion_frac' is only included in opg_propaceos. Should we include it
-    # in our coverage tests? - JT
     def _compute_ionization(self):
         """
         Compute ionization from populations if available.
@@ -195,28 +134,30 @@ class OpgHdf5(dict):
                 self['Zfo_DT'] += (Zfrac*IonLvls_arr).sum(axis=-1)
                 self['ion_frac_sum'] += np.sum(Zfrac, axis=-1)
 
+    test_keys=['dens', 'temp']
+    
     def run_testsuite(self, mode='short'):
         for attr in dir(self):
             if 'check_' in attr:
                 getattr(self, attr)(mode)
         print('')
 
-    @testsuite(var='Zf_DT', mode='short')
+    @testsuite(test_keys, var='Zf_DT', mode='short')
     def check_Zf_gt_0(self, mode):
         """Checking that Zf_DT>0!"""
-        return self['Zf_DT'][:]> 0
+        return self['Zf_DT'][:] > 0
 
-    @testsuite(var='Zf_DT', mode='short')
+    @testsuite(test_keys, var='Zf_DT', mode='short')
     def check_Zf_lt_Zmax(self, mode):
         """Checking that Zf_DT<Zmax!"""
-        return self['Zf_DT'][:]<= self['Zmax']
+        return self['Zf_DT'][:] <= self['Zmax']
 
-    @testsuite(var='Zfo_DT', mode='short')
+    @testsuite(test_keys, var='Zfo_DT', mode='short')
     def check_Zfo_lt_Zmax(self, mode):
         """Checking that Zfo_DT<Zmax!"""
         return self['Zfo_DT'][:]<= self['Zmax']
 
-    @testsuite(var='Anum_prp', mode='short')
+    @testsuite(test_keys, var='Anum_prp', mode='short')
     def check_Abar_prp(self, mode):
         """Checking that Anum_prp is consistant with Abar!"""
         return np.isclose(self['Anum_prp'][:], self['Anum'][:], atol=0.05)
@@ -243,35 +184,35 @@ class OpgHdf5(dict):
                             types.MethodType(check_ionfrac_sum_1, self))
     
     # Would we want to include our error message in our coverage tests? -JT
-    def _repr_arr_error(self, idx, var, msg):
-        """
-        Print an error message when array failed to pass consistency checks.
-        """
-        out = ['-'*80]
-        out.append(' Test failed for {0}/{1} points: {2}'.format(idx.sum(),idx.size, msg))
-        out.append('-'*80)
-        arr2str = np.array2string
-
-        if idx.size >= self['temp'][:].size* self['dens'][:].size:
-            out.append(' == density mask ==')
-            out.append(arr2str(np.nonzero(idx)[0]))
-            out.append(arr2str(self['dens'][np.nonzero(idx)[0]]))
-
-            out.append(' == temperature mask ==')
-            out.append(arr2str(np.nonzero(idx)[1]))
-            out.append(arr2str(self['temp'][np.nonzero(idx)[1]]))
-
-        out.append(' ==     var     ==')
-        if var.ndim == idx.ndim:
-            out.append(arr2str(var[idx]))
-        elif var.ndim == 3 and idx.ndim == 2:
-            # probably something to do with the "ionfrac sums to 1" test
-            out.append(arr2str(np.sum(var, axis=-1)[idx]))
-
-
-        out.append('-'*80)
-        return '\n'.join(out)
-
+#    def _repr_arr_error(self, idx, var, msg):
+#        """
+#        Print an error message when array failed to pass consistency checks.
+#        """
+#        out = ['-'*80]
+#        out.append(' Test failed for {0}/{1} points: {2}'.format(idx.sum(),idx.size, msg))
+#        out.append('-'*80)
+#        arr2str = np.array2string
+#
+#        if idx.size >= self['temp'][:].size* self['dens'][:].size:
+#            out.append(' == density mask ==')
+#            out.append(arr2str(np.nonzero(idx)[0]))
+#            out.append(arr2str(self['dens'][np.nonzero(idx)[0]]))
+#
+#            out.append(' == temperature mask ==')
+#            out.append(arr2str(np.nonzero(idx)[1]))
+#            out.append(arr2str(self['temp'][np.nonzero(idx)[1]]))
+#
+#        out.append(' ==     var     ==')
+#        if var.ndim == idx.ndim:
+#            out.append(arr2str(var[idx]))
+#        elif var.ndim == 3 and idx.ndim == 2:
+#            # probably something to do with the "ionfrac sums to 1" test
+#            out.append(arr2str(np.sum(var, axis=-1)[idx]))
+#
+#
+#        out.append('-'*80)
+#        return '\n'.join(out)
+#
 
 
 

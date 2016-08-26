@@ -8,6 +8,7 @@ visualization/.ipynb_checkpoints
 *pyc
 *cn4
 .coverage
+opacplot2/opg_propaceos.py
 
 doc/*
 !doc/_build/

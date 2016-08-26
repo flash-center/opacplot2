@@ -23,3 +23,10 @@ reference_name =  'matr_009999.ses'
 def test_opac_read():
     fh = opp.OpgSesame(os.path.join(BASE_DIR, reference_name),
             opp.OpgSesame.SINGLE)
+
+# SEE OpgSesame
+#
+# def test_OpgSesame():
+#     fh = opp.OpgSesame(os.path.join(BASE_DIR, reference_name),
+#             opp.OpgSesame.SINGLE)
+#     fh.run_testsuite(mode='full')
