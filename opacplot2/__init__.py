@@ -16,7 +16,9 @@ from .opg_hdf5      import *
 from .opg_inferno   import *
 from .opg_ionmix    import *
 from .opg_multi     import *
-from .opg_propaceos import *
+# The Propaceos module is not distributed. More details can be found in
+# opg_propaceos-note.py.
+# from .opg_propaceos import *
 from .opg_qeos      import *
 from .opg_sesame    import *
 from .opg_tabop     import *
