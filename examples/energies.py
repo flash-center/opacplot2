@@ -1,4 +1,5 @@
 import opacplot2 as opp
+from opacplot2 import utils
 from opacplot2 import RADCONST as AR, KB, BC_BOUND, BC_EXTRAP_ZERO
 import numpy as np
 from matplotlib import pyplot as plt
@@ -12,61 +13,61 @@ mpi = 26.9815386 / opp.NA
 alimx = opp.OpacIonmix("data/al-imx-002.cn4", mpi, twot=True, man=True, verbose=True)
 
 def pion(opimx, rho, tion, log=False):
-    return opp.interpDT(opimx.pion, opimx.dens, opimx.temps, 
+    return opp.utils.interpDT(opimx.pion, opimx.dens, opimx.temps, 
                         rho, tion, log=False, lookup=opp.INTERP_FUNC,
                         bctmin=opp.BC_EXTRAP_ZERO, 
                         bcdmin=opp.BC_EXTRAP_ZERO)
 
 def pele(opimx, rho, tele, log=False):
-    return opp.interpDT(opimx.pele, opimx.dens, opimx.temps, 
+    return opp.utils.interpDT(opimx.pele, opimx.dens, opimx.temps, 
                         rho, tele, log=False, lookup=opp.INTERP_FUNC,
                         bctmin=opp.BC_EXTRAP_ZERO, 
                         bcdmin=opp.BC_EXTRAP_ZERO)
 
 
 def eion(opimx, rho, tion, log=False):
-    return opp.interpDT(opimx.eion, opimx.dens, opimx.temps, 
+    return opp.utils.interpDT(opimx.eion, opimx.dens, opimx.temps, 
                         rho, tion, log=False, lookup=opp.INTERP_FUNC,
                         bctmin=opp.BC_EXTRAP_ZERO)
 
 def eele(opimx, rho, tele, log=False):
-    return opp.interpDT(opimx.eele, opimx.dens, opimx.temps, 
+    return opp.utils.interpDT(opimx.eele, opimx.dens, opimx.temps, 
                         rho, tele, log=False, lookup=opp.INTERP_FUNC,
                         bctmin=opp.BC_EXTRAP_ZERO)
 
 
 def deidti(opimx, rho, tion, log=False):
-    return opp.interpDT(opimx.eion, opimx.dens, opimx.temps, 
+    return opp.utils.interpDT(opimx.eion, opimx.dens, opimx.temps, 
                         rho, tion, log=False, lookup=opp.INTERP_DFDT,
                         bctmin=opp.BC_EXTRAP_ZERO)
 
 def deedte(opimx, rho, tele, log=False):
-    return opp.interpDT(opimx.eele, opimx.dens, opimx.temps, 
+    return opp.utils.interpDT(opimx.eele, opimx.dens, opimx.temps, 
                         rho, tele, log=False, lookup=opp.INTERP_DFDT,
                         bctmin=opp.BC_EXTRAP_ZERO)
 
 
 def dpidti(opimx, rho, tion, log=False):
-    return opp.interpDT(opimx.pion, opimx.dens, opimx.temps, 
+    return opp.utils.interpDT(opimx.pion, opimx.dens, opimx.temps, 
                         rho, tion, log=False, lookup=opp.INTERP_DFDT,
                         bctmin=opp.BC_EXTRAP_ZERO, 
                         bcdmin=opp.BC_EXTRAP_ZERO)
 
 def dpedte(opimx, rho, tele, log=False):
-    return opp.interpDT(opimx.pele, opimx.dens, opimx.temps, 
+    return opp.utils.interpDT(opimx.pele, opimx.dens, opimx.temps, 
                         rho, tele, log=False, lookup=opp.INTERP_DFDT,
                         bctmin=opp.BC_EXTRAP_ZERO,
                         bcdmin=opp.BC_EXTRAP_ZERO)
 
 
 def dpidd(opimx, rho, tion, log=False):
-    return opp.interpDT(opimx.pion, opimx.dens, opimx.temps, 
+    return opp.utils.interpDT(opimx.pion, opimx.dens, opimx.temps, 
                         rho, tion, log=False, lookup=opp.INTERP_DFDD,
                         bctmin=opp.BC_EXTRAP_ZERO, 
                         bcdmin=opp.BC_EXTRAP_ZERO)
 
 def dpedd(opimx, rho, tele, log=False):
-    return opp.interpDT(opimx.pele, opimx.dens, opimx.temps, 
+    return opp.utils.interpDT(opimx.pele, opimx.dens, opimx.temps, 
                         rho, tele, log=False, lookup=opp.INTERP_DFDD,
                         bctmin=opp.BC_EXTRAP_ZERO, 
                         bcdmin=opp.BC_EXTRAP_ZERO)
@@ -89,7 +90,7 @@ def gamc(opimx, rho, tele, tion, trad,
     # if bctmax == BC_BOUND and tion > opimx.temps[-1]: tion = opimx.temps[-1]
 
     # def interpDT(var, r, t, lookup):
-    #     return opp.interpDT(var, opimx.dens, opimx.temps, 
+    #     return opp.utils.interpDT(var, opimx.dens, opimx.temps, 
     #                         r, t,
     #                         lookup=lookup, log=log,                          
     #                         bcdmin=bcdmin, bcdmax=bcdmax,
@@ -200,7 +201,7 @@ gamc_al = gamc(alimx, rho*mfal, tele, tion, 0.0, verbose=True)
 
 
 
-#         return opp.interpDT(var, opimx.dens, opimx.temps, 
+#         return opp.utils.interpDT(var, opimx.dens, opimx.temps, 
 #                             r, t,
 #                             lookup=lookup, log=log,                          
 #                             bcdmin=bcdmin, bcdmax=bcdmax,
@@ -223,7 +224,7 @@ gamc_al = gamc(alimx, rho*mfal, tele, tion, 0.0, verbose=True)
 #     if bctmax == BC_BOUND and tion > opimx.temps[-1]: tion = opimx.temps[-1]
 
 #     def interpDT(var, r, t, lookup):
-#         return opp.interpDT(var, opimx.dens, opimx.temps, 
+#         return opp.utils.interpDT(var, opimx.dens, opimx.temps, 
 #                             r, t,
 #                             lookup=lookup, log=log,                          
 #                             bcdmin=bcdmin, bcdmax=bcdmax,
@@ -293,7 +294,7 @@ gamc_al = gamc(alimx, rho*mfal, tele, tion, 0.0, verbose=True)
 
 # rho  = 6.646476174630e-08
 # tion = 2.0e+05
-# pion = opp.interpDT(opimx.pion, opimx.dens, opimx.temps,
+# pion = opp.utils.interpDT(opimx.pion, opimx.dens, opimx.temps,
 #                     rho, tion,
 #                     lookup=opp.INTERP_FUNC)
 # print( "pion =", pion, rho/mpi * KB * tion)

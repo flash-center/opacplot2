@@ -14,6 +14,7 @@ import os.path
 import copy
 
 import opacplot2 as opp
+from opacplot2 import utils
 from opacplot2 import plot_eos_grid, plot_eos_field, plot_zbar
 import numpy as np
 import matplotlib
@@ -155,7 +156,7 @@ denss = eos_data["ele_dens"]
 zbar = np.empty((ndens, ntemp))
 for jd in xrange(ndens):
     for jt in xrange(ntemp):
-        zbar[jd,jt] = opp.interpDT(cond_data_i["zbar"],
+        zbar[jd,jt] = opp.utils.interpDT(cond_data_i["zbar"],
                                        cond_data_i["zbar_dens"],
                                        cond_data_i["zbar_temps"],
                                        denss[jd], temps[jt],

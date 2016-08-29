@@ -17,7 +17,7 @@ from scipy.constants import physical_constants
 from ..opg_hdf5 import OpgHdf5
 
 eV2K_cst = physical_constants['electron volt-kelvin relationship'][0]
-avalable_formats = ['multi', 'ionmix', 'ascii', 'vtk']
+avalable_formats = ['multi', 'ionmix', 'ascii']
 
 def opac_hdf2table():
 
@@ -59,6 +59,7 @@ def opac_hdf2table():
         op = OpgMulti(**op)
         op.set_id(3717) # just a random number, shouldn't matter
         op.write(os.path.join(basedir, filename_out), floor=None)
+    
     elif args.ftype == 'ascii':
         outfile = os.path.join(basedir, filename_out)+'.txt'
         def repr_grid(arr, label):
@@ -77,11 +78,7 @@ def opac_hdf2table():
         out_op =  np.array([nu]+[op[key+'_mg'][0,0]*op['dens'][0] for key in ['opp', 'opr', 'emp']])
         np.set_printoptions(threshold=1e9)
         print( repr_grid(out_op.T, 'Opacity: nu [eV], opp [1/cm], opr[1/cm], emp [??]') )
-    elif args.ftype == 'vtk':
-        outfile = os.path.join(basedir, filename_out)
-        from ..opg_vtk import opg_op2vtk
-
-        f = opg_op2vtk(op, outfile)
+    
     elif args.ftype == 'ionmix':
 
         outfile = os.path.join(basedir, filename_out)

@@ -1,4 +1,5 @@
 import opacplot2 as opp
+from opacplot2 import utils
 from opacplot2 import RADCONST as AR, KB
 import numpy as np
 from matplotlib import pyplot as plt
@@ -13,7 +14,7 @@ tvals = np.linspace(t1, t2, 1001)
 dens = 2.16
 
 # PLOT EELE:
-vals =  np.array([opp.interpDT(opimx.eele, opimx.dens, opimx.temps, 
+vals =  np.array([opp.utils.interpDT(opimx.eele, opimx.dens, opimx.temps, 
                                dens, t, bctmin=opp.BC_EXTRAP_ZERO, log=False)
                   for t in tvals])
 plt.plot(tvals, vals, "r", lw=2)
@@ -23,7 +24,7 @@ plt.xlabel("Electron Temperature (eV)")
 
 # PLOT CVEELE:
 plt.figure()
-vals =  np.array([opp.interpDT(opimx.eele, opimx.dens, opimx.temps, 
+vals =  np.array([opp.utils.interpDT(opimx.eele, opimx.dens, opimx.temps, 
                                dens, t, bctmin=opp.BC_EXTRAP_ZERO, log=False,
                                lookup=opp.INTERP_DFDT)
                   for t in tvals])

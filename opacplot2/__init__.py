@@ -1,8 +1,4 @@
-# opacplot file
-from .opp_file      import *
-
 # eos_ prefix
-from .eos_multi      import *
 from .eos_plotter    import *
 
 # opl_ prefix
@@ -25,26 +21,17 @@ from .opg_tabop     import *
 from .opg_tops      import *
 from .opg_yac       import *
 
-# For OSX Users: vtk is currrently very touchy. Check out the documentation
-# under ``opg_vtk.py`` for more information.
-# If you would like to use VTK, uncomment this line.
-# from .opg_vtk       import * 
-
 # plotting 
 from .opac_plotter  import *
 from .histogram     import *
 from .convert_opl   import *
-from .avgopac       import *
 from .constants     import *
-from .interp        import *
 
 # general stuff gets put into their own namespace
 from . import adapt
-from . import avgopac
 from . import constants
 from . import convert_opl
 from . import histogram
-from . import interp
 from . import presets
 from . import smooth
 from . import utils
