@@ -3,9 +3,9 @@ sudo: false
 matrix:
     include:
     - python: "3.5"
-      env: DEPS="numpy nose six pytables matplotlib"
+      env: DEPS="numpy nose six pytables matplotlib pytest"
     - python: "2.7"
-      env: DEPS="numpy nose six pytables matplotlib"
+      env: DEPS="numpy nose six pytables matplotlib pytest"
 
 install: 
     - wget http://repo.continuum.io/miniconda/Miniconda${TRAVIS_PYTHON_VERSION:0:1}-latest-Linux-x86_64.sh -O miniconda.sh
@@ -26,7 +26,7 @@ install:
 
 # command to run tests
 script: 
-    - python  -c "import opacplot2.tests as opt; opt.run_cli(coverage=True)"
+    - python -c "import opacplot2.tests as opt; opt.run_cli(coverage=True)"
 
 #after_success:
 #    coveralls
