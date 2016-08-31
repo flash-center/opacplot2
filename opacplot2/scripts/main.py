@@ -61,12 +61,12 @@ def main():
 
         # Merging ele and ion grids
         if args.tablenum in opp.presets.SESAME:
-            eos_data = opp.adapt.EosMergeGrids(eos_data_i,
+            eos_data = opp.utils.EosMergeGrids(eos_data_i,
                                     **opp.presets.SESAME[args.tablenum]['merge'])
             fracs = opp.presets.SESAME[args.tablenum]['fracs']
             print('found')
         else:
-            eos_data = opp.adapt.EosMergeGrids(eos_data_i,
+            eos_data = opp.utils.EosMergeGrids(eos_data_i,
                        filter_dens=lambda x: x>0,
                        filter_temps=lambda x: x>0)
 

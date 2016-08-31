@@ -8,7 +8,6 @@ import six
 
 import numpy as np
 from .constants import KELVIN_TO_EV, GPA_TO_ERGCC, MJKG_TO_ERGCC
-from .tests.suite import testsuite
 
 class OpgSesame:
     """
@@ -235,24 +234,3 @@ class OpgSesame:
             data[i] = float(word)
 
         return data
-
-# NOTE
-# OpgSesame is not a subclass of dict. Thus, its compatibility with the
-# tests/suite module is shaky. I believe it would require rewriting one of
-# either OpgSesame or tests/suite in order to make them compatible,
-# but further investigation is required. For now, we will make tests
-# specific to OpgSesame so they are compatible without rewriting either of them.
-# -JT
-
-#    test_keys=['total_dens', 'total_temps']
-#
-#    def run_testsuite(self, mode='short'):
-#        for attr in dir(self):
-#            if 'check_' in attr:
-#                getattr(self, attr)(mode)
-#        print('')
-#    
-#    @testsuite(test_keys, var='ionc_ntemp', mode='short')
-#    def check_ntemps(self, mode):
-#        """Check if ioncc_temp is correct."""
-#        return self.data[9999]['ioncc_ntemp']==op.data[9999]['total_temps'].__len__()

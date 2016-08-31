@@ -10,6 +10,7 @@ visualization/.ipynb_checkpoints
 .coverage
 opacplot2/opg_propaceos.py
 .old
+.cache
 
 doc/*
 !doc/_build/

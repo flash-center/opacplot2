@@ -27,9 +27,9 @@ from .histogram     import *
 from .convert_opl   import *
 from .constants     import *
 
+from .constants     import *
+
 # general stuff gets put into their own namespace
-from . import adapt
-from . import constants
 from . import convert_opl
 from . import histogram
 from . import presets
