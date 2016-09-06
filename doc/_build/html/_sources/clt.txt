@@ -44,7 +44,7 @@ Located in ``opacplot2.scripts.opac_hdf2table``.
 
 Usage::
 
-    opac_hdf2table [-h] [-t {multi,ionmix,ascii,vtk}] [-o OUTFILE] input_file
+    opac_hdf2table [-h] [-t {multi,ionmix,ascii}] [-o OUTFILE] input_file
 
 This will take a file, ``input_file`` of HDF5 format and convert it to a file of
 the type specified by ``-t``, with a name specified by ``-o``.

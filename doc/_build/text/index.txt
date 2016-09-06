@@ -28,19 +28,11 @@ Contents:
 
 * Testing Suite
 
-  * Automatic Testing Using "setup.py"
-
-  * Test Scripts
-
-  * Troubleshooting
+  * Running Tests
 
 * Plotting Capabilities
 
   * Configuring "matplotlib" to display inline
-
-  * "eos_plotter"
-
-  * "opg_vtk"
 
   * Troubleshooting "matplotlib" on OSX
 
@@ -54,7 +46,11 @@ Contents:
 
 * Utilities
 
-  * "interp"
+  * Interpolation
+
+  * Grid Structure
+
+  * Miscellaneous
 
 
 Indices and tables

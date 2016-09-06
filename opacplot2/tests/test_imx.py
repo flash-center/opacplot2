@@ -18,6 +18,7 @@ import unittest
 class test_imx(unittest.TestCase):
     BASE_DIR = os.path.join(os.path.dirname(__file__), 'data')
     reference_file =  os.path.join(BASE_DIR, 'imx_sample.cn4')
+    
     fields = ['numDens', 'temps',
               'eion', 'eele', 'pion', 'pele', 'zbar',
               'ngroups', 'opac_bounds',

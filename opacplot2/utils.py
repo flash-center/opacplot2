@@ -10,23 +10,9 @@ from .constants import INTERP_FUNC, INTERP_DFDD, INTERP_DFDT
 import os.path
 import opacplot2.opg_sesame
 
-
-def munge_h5filename(filename, h5filename):
-    """Gets an opacplot hdf5 filename from existing names.
-    
-    Parameters
-    ----------
-    filename : str
-        File name.
-    h5filename : str
-        HDF5 name.
-    """
-    if not isinstance(h5filename, type(str(encoding='utf-8'))):
-        if isinstance(filename, type(str(encoding='utf-8'))): 
-            h5filename = filename.rpartition(".")[0] + '.h5'
-        else:
-            h5filename = "opp.h5"
-    return h5filename
+import scipy as sp
+import scipy.interpolate
+import scipy.misc
 
 def randomize_ionmix(filename, outfilename):
     """Randomizes the data from an existing ionmix file and rewrites it 
@@ -56,7 +42,8 @@ def randomize_ionmix(filename, outfilename):
     with open(outfilename, 'w') as f:
         f.write("".join(newlines))
         
-def avgopac(energies_in, opacs_in, trad, ebnds, weight="constant", bound="error"):
+def avgopac(energies_in, opacs_in, trad, ebnds, 
+            weight="constant", bound="error"):
     """
     
     Parameters
@@ -65,11 +52,13 @@ def avgopac(energies_in, opacs_in, trad, ebnds, weight="constant", bound="error"
         
     opacs_in : 
         
-    trad, ebnds : 
+    trad :
+    
+    ebnds : 
         
-    weight="constant" : 
+    weight='constant' : 
         
-    bound="error" : 
+    bound='error' : 
         
     """
     try:
@@ -89,7 +78,8 @@ def avgopac(energies_in, opacs_in, trad, ebnds, weight="constant", bound="error"
     if bound == "error":
         for en in ebnds:
             if en < energies[0] or en > energies[-1]:
-                raise ValueError("Energy outside of range %f %f" % (en, energies[0]))
+                raise ValueError('Energy outside'
+                                 'of range {0} {1}'.format(en, energies[0]))
     elif bound == "continue":
         emin = np.min(ebnds)
         emax = np.max(ebnds)
@@ -144,106 +134,141 @@ def avgopac(energies_in, opacs_in, trad, ebnds, weight="constant", bound="error"
 
     for i in range(len(opavg)):
         numerator = quad(f, ebnds[i], ebnds[i+1], limit=500, epsrel=0.001)
-        denominator = quad(weight, ebnds[i], ebnds[i+1], limit=500, epsrel=1.0e-06)
+        denominator = quad(weight, ebnds[i],
+                           ebnds[i+1], limit=500, 
+                           epsrel=1.0e-06)
         opavg[i] = numerator[0]/denominator[0]
 
     return opavg
 
-def interpDT(arr, dens, temps, d, t, 
-             bcdmin=BC_BOUND, bcdmax=BC_BOUND, 
-             bctmin=BC_BOUND, bctmax=BC_BOUND, 
-             log = False, lookup=INTERP_FUNC):
-
-    # Do some error checking:
-    # TODO
+def interpDT(arr, dens, temps,
+             bcdmin=BC_BOUND, bctmin=BC_BOUND, 
+             lookup=INTERP_FUNC):
+    """
+    Depending on the choice for lookup, this function returns an interpolation
+    function for values in arr, the density derivative of arr, or the
+    temperature derivative of arr.
     
-    # Adjust for logarithmic lookup:
-    if log == True:
-        d     = np.log10(d)
-        t     = np.log10(t)
-        dens  = np.log10(dens)
-        temps = np.log10(temps)
+    What ``interpDT()`` returns is dependent upon the ``lookup`` and 
+    ``bcdmin``/``bctmin`` arguments:
+             
+        ``INTERP_FUNC`` will return an interpolation function for any
+        density/temperature point within the range.
+
+        ``INTERP_DFDD`` will return a function for the density derivative
+        at any density/temperature point within the range.
+
+        ``INTERP_DFDT`` will return a function for the temperature derivative
+        at any density/temperature point within the range.
+             
+        ``BC_BOUND`` is the default setting. If an input density/temp is smaller 
+        than the minimum value in the ``dens`` (or ``temps``) array, then it
+        will automatically be set to this minimum value.
+
+        ``BC_EXTRAP_ZERO`` will insert zero points into the ``arr`` and either
+        ``dens`` or ``temps`` for ``bcdmin``, ``bctmin`` respectively.
+             
+    Parameters
+    ----------
+    arr : numpy.ndarray
+        Data array.
+    dens : numpy.ndarray
+        Density array.
+    temps : numpy.ndarray
+        Temperature array.
+    bcdmin : int
+        Boundary conditions for density.
+    bctmin : int
+        Boundary conditions for temperature.
+    lookup : int
+        Type of function to return.
+             
+    Examples
+    --------
+    In order to find a function that interpolates between dens/temp points
+    for an IONMIX file that we had previously opened as ``imx``,
+    we could use::
         
-    # First, find the temperature/density cell we are in.
-    # The opacity will be computed using densities:
-    #   dens[jd-1], dens[jd]
-    # and temperatures:
-    #   temp[jt-1], temp[jt]
-
-    jd = np.searchsorted(dens, d)
-
-    if jd == 0 and bcdmin != BC_EXTRAP_ZERO: 
-        d = dens[0]
-        jd += 1
-
-    if jd == len(dens): 
-        jd = jd - 1
-        d = dens[-1]
-
-    d1 = 0.0 if jd == 0 else dens[jd-1]
-    d2 = dens[jd]
-
-    jt = np.searchsorted(temps, t)
-    if jt == 0 and bctmin != BC_EXTRAP_ZERO: 
-        t = temps[0]
-        jt += 1
-
-    if jt == len(temps): 
-        jt = jt - 1
-        t = temps[-1]
-
-    t1 = 0.0 if jt == 0 else temps[jt-1]
-    t2 = temps[jt]
-
-    if jt == 0 and log == True:
-        t2 = 10**t2
-        t = 10**t
-
-    f1 = 0.0 if jt == 0 or jd == 0 else arr[jd-1,jt-1]
-    f2 = 0.0 if jt == 0 else arr[jd  ,jt-1]
-    f3 = 0.0 if jd == 0 else arr[jd-1,jt  ]
-    f4 = arr[jd  ,jt  ]
-
+        >>> import opacplot2 as opp
+        >>> f = opp.utils.interpDT(imx.pion, imx.dens, imx.temps,
+        ...                        bcdmin=BC_EXTRAP_ZERO,
+        ...                        bctmin=BC_EXTRAP_ZERO,
+        ...                        lookup=INTERP_FUNC)
+        >>> print(f(0,0)) # We added points at zero.
+        0
+        >>> print(f(123, 456)) # Density of 123 and temperature of 456.
+        1234.5678 # Resulting ion pressure at this dens/temp.
+    """
+   
+    # Adjust for extrapolation to zero.
+    if bcdmin == BC_EXTRAP_ZERO and dens[0] != 0:
+        # Density arrays should be 1D.
+        dens = np.insert(dens, 0, 0)
+        arr = np.insert(arr, 0, 0, axis=0)
+    
+    if bctmin == BC_EXTRAP_ZERO and temps[0] != 0:
+        # Temp arrays should be 1D.
+        temps = np.insert(temps, 0, 0)
+        arr = np.insert(arr, 0, 0, axis=1)
+    
+    # "When on a regular grid with x.size = m and y.size = n,
+    # if z.ndim ==2, then z must have shape (n, m)."
+    # arr will have shape (dens.size, temps.size), so we must transpose it.
+    f = sp.interpolate.interp2d(dens, temps, arr.T)
+    
     if lookup == INTERP_FUNC:
-
-        # Now that the surrounding temperatures/densities have been
-        # identified, the interpolation coefficients can be computed.
-        # c1 -> weight for dens[jd-1] and temp[jt-1]
-        # c2 -> weight for dens[jd]   and temp[jt-1]
-        # c3 -> weight for dens[jd-1] and temp[jt]
-        # c4 -> weight for dens[jd]   and temp[jt]
-    
-        delta = (d-d1)/(d2-d1)
-        tau   = (t-t1)/(t2-t1)
+        def interp_func(func):
+            def wrapper(d, t):
+                # Deal with data being out of range.
+                # Adjust for lower bounds.
+                if d < dens[0]:
+                    d = dens[0]
+                if t < temps[0]:
+                    t = temps[0]
+                # Adjust for upper bounds.
+                if d > dens[-1]:
+                    d = dens[-1]
+                if t > temps[-1]:
+                    t = temps[-1]
+                return func(d,t)
+            return wrapper
         
-        c1 = (delta-1.0)*(tau-1.0)
-        c2 = delta*(1-tau)
-        c3 = tau*(1-delta)
-        c4 = delta * tau
-
-        # Compute the interpolated opacity:
-        return c1 * f1 + c2 * f2 + c3 * f3 + c4 * f4
-
+        # Return the wrapper of f that takes care of data being out of range.
+        return interp_func(f)
+    
     if lookup == INTERP_DFDD:
-        # Interpolate along d1 and d2:  
-        fa = (f3-f1) * (t-t1)/(t2-t1) + f1
-        fb = (f4-f2) * (t-t1)/(t2-t1) + f2        
-
-        ans = (fb-fa)/(d2-d1)
-        if log == True and jd != 0: ans = ans/(10**d * math.log(10.0))
-
-        return ans
-
+        def df_dd(func):
+            # Input to df_dd(func) will be a (dens, temp) point.
+            def outter_wrap(dens, temp):
+                # Fix temp point but let dens point range.
+                def inner_wrap(x):
+                    return func(x, temp)
+                
+                return sp.misc.derivative(
+                            inner_wrap, 
+                            dens, # Evaluate derivative at dens point.
+                            dx=(dens*1e-12))
+            
+            return outter_wrap
+        
+        return df_dd(f)
+    
     if lookup == INTERP_DFDT:
-        fa = (f2-f1) * (d-d1)/(d2-d1) + f1
-        fb = (f4-f3) * (d-d1)/(d2-d1) + f3
-
-        ans = (fb-fa)/(t2-t1)
-        if log == True and jt != 0: ans = ans/(10**t * math.log(10.0))
-
-        # print( d,t, fa, fb, t2, t1, ans)
-
-        return ans
+        def df_dt(func):
+            # Input to df_dt(func) will be a (dens, temp) point.
+            def outter_wrap(dens, temp):
+                # Fix temp point but let temps point range.
+                def inner_wrap(x):
+                    return func(dens, x)
+                    
+                return sp.misc.derivative(
+                            inner_wrap, 
+                            temp, # Evaluate derivative at temp point.
+                            dx=(temp*1e-12))
+                            
+            return outter_wrap
+        
+        return df_dt(f)
     
     raise ValueError("lookup must be INTERP_FUNC, INTERP_DFDD, or INTERP_DFDT")
     
@@ -283,7 +308,8 @@ class EosMergeGrids(dict):
     
     Examples
     --------
-    >>> eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii", opp.OpgSesame.SINGLE,verbose=False)
+    >>> eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii", 
+                                   opp.OpgSesame.SINGLE,verbose=False)
     >>> eos_data  = eos_sesame.data[3720]  # Aluminum
     >>> eos_data_filtered = EosMergeGrids(eos_data,
             intersect=['ele', 'ioncc'],   # Merge ele and ioncc grids
@@ -301,7 +327,9 @@ class EosMergeGrids(dict):
         for key in ['dens', 'temps']:
             i_grids[key] = eos_data['_'.join((intersect[0],key))]
             for el in intersect[1:]:
-                i_grids[key] = np.intersect1d(i_grids[key], eos_data['_'.join((el,key))])
+                i_grids[key] = np.intersect1d(
+                                    i_grids[key], 
+                                    eos_data['_'.join((el,key))])
 
         # Defining indexes we want to keep.
         mask = {}
@@ -309,7 +337,9 @@ class EosMergeGrids(dict):
             for var in ['dens', 'temps']:
                key = species + '_' + var
                # mask based on the intersection of 'ele' and 'ion' grids
-               mask[key] = np.in1d(eos_data[key], i_grids[var], assume_unique=True)
+               mask[key] = np.in1d(eos_data[key], 
+                                   i_grids[var], 
+                                   assume_unique=True)
                # mask from user provided parameters
                mask[key] = mask[key]*user_filter[var](eos_data[key])
         self.mask = mask

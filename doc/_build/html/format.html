@@ -158,8 +158,7 @@
 <dd><dl class="method">
 <dt id="opacplot2.OpgHdf5.force_eval">
 <code class="descname">force_eval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgHdf5.force_eval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the while table into memory.
-Warning that can</p>
+<dd><p>Load the whole table into memory.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -647,7 +646,8 @@ Defaut: (lamdba x: x&gt;0.) i.e. don&#8217;t remove anything.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> &#8211; A dictionary with the same keys a eos_data.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> &#8211; A dictionary with the same keys as eos_data. The species specified by
+<code class="docutils literal"><span class="pre">intersect</span></code> will have equal temperature and density grids.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
@@ -655,7 +655,7 @@ Defaut: (lamdba x: x&gt;0.) i.e. don&#8217;t remove anything.</li>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Example</p>
+<p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eos_sesame</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgSesame</span><span class="p">(</span><span class="s2">&quot;../sesame/xsesame_ascii&quot;</span><span class="p">,</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgSesame</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">eos_data</span>  <span class="o">=</span> <span class="n">eos_sesame</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">3720</span><span class="p">]</span>  <span class="c1"># Aluminum</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">eos_data_filtered</span> <span class="o">=</span> <span class="n">EosMergeGrids</span><span class="p">(</span><span class="n">eos_data</span><span class="p">,</span>

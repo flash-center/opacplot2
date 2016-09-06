@@ -87,19 +87,6 @@
 <li class="toctree-l1"><a class="reference internal" href="test.html">Testing Suite</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Plotting Capabilities</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#configuring-matplotlib-to-display-inline">Configuring <code class="docutils literal"><span class="pre">matplotlib</span></code> to display inline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#eos-plotter"><code class="docutils literal"><span class="pre">eos_plotter</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#plot-zbar"><code class="docutils literal"><span class="pre">plot_zbar()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#plot-eos-grid"><code class="docutils literal"><span class="pre">plot_eos_grid()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#plot-eos-field"><code class="docutils literal"><span class="pre">plot_eos_field()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#plot-diff-mg-opac"><code class="docutils literal"><span class="pre">plot_diff_mg_opac()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#plot-2d-map"><code class="docutils literal"><span class="pre">plot_2D_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1"><code class="docutils literal"><span class="pre">plot_Zbar()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#opg-vtk"><code class="docutils literal"><span class="pre">opg_vtk</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#troubleshooting-matplotlib-on-osx">Troubleshooting <code class="docutils literal"><span class="pre">matplotlib</span></code> on OSX</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#for-double-implementation-errors">For Double Implementation Errors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#for-framework-errors">For Framework Errors</a></li>
@@ -178,89 +165,6 @@ in conjunction with <a class="reference external" href="http://jupyter.org/qtcon
 </ol>
 <p>At any point during your Python session on <code class="docutils literal"><span class="pre">qtconsole</span></code>, you can view what your
 current plots look like by typing the name of your figure.</p>
-</div>
-<div class="section" id="eos-plotter">
-<h2><code class="docutils literal"><span class="pre">eos_plotter</span></code><a class="headerlink" href="#eos-plotter" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="plot-zbar">
-<h3><code class="docutils literal"><span class="pre">plot_zbar()</span></code><a class="headerlink" href="#plot-zbar" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
-<dt id="plot_zbar">
-<code class="descname">plot_zbar</code><span class="sig-paren">(</span><em>denss</em>, <em>temps</em>, <em>zbar</em>, <em>fig</em>, <em>log=True</em>, <em>subplot_number=111</em><span class="sig-paren">)</span><a class="headerlink" href="#plot_zbar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
-<div class="section" id="plot-eos-grid">
-<h3><code class="docutils literal"><span class="pre">plot_eos_grid()</span></code><a class="headerlink" href="#plot-eos-grid" title="Permalink to this headline">¶</a></h3>
-<p>Usage:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">plot_eos_grid</span><span class="p">(</span><span class="n">tdata</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="plot-eos-field">
-<h3><code class="docutils literal"><span class="pre">plot_eos_field()</span></code><a class="headerlink" href="#plot-eos-field" title="Permalink to this headline">¶</a></h3>
-<p>Usage:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">plot_eos_field</span><span class="p">(</span><span class="n">eos_data</span><span class="p">,</span> <span class="n">species</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">grad</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="plot-diff-mg-opac">
-<h3><code class="docutils literal"><span class="pre">plot_diff_mg_opac()</span></code><a class="headerlink" href="#plot-diff-mg-opac" title="Permalink to this headline">¶</a></h3>
-<p>Usage:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">plot_diff_mg_opac</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">op_list</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="plot-2d-map">
-<h3><code class="docutils literal"><span class="pre">plot_2D_map()</span></code><a class="headerlink" href="#plot-2d-map" title="Permalink to this headline">¶</a></h3>
-<p>Usage:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">plot_2D_map</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">temp_val</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="id1">
-<h3><code class="docutils literal"><span class="pre">plot_Zbar()</span></code><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p>Usage:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">plot_Zbar</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="opg-vtk">
-<h2><code class="docutils literal"><span class="pre">opg_vtk</span></code><a class="headerlink" href="#opg-vtk" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="troubleshooting">
-<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h3>
-<p>For OSX Users: VTK is currrently very touchy with its Python library.
-If you are receiving a lot of errors on OSX,
-here are at least three possible methods you can try:</p>
-<ol class="arabic">
-<li><p class="first">Use Anaconda Python 2.7. Install <code class="docutils literal"><span class="pre">vtk</span></code> using the <code class="docutils literal"><span class="pre">conda</span></code> installer:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">vtk</span>
-</pre></div>
-</div>
-<p>If you have Anaconda Python 3.5 installed, this will throw an error and you
-will not be able to install it. You may create a conda virtual environment using
-Python 2.7 with the command:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">ENVNAME</span> <span class="n">python</span><span class="o">=</span><span class="mf">2.7</span> <span class="n">anaconda</span>
-</pre></div>
-</div>
-<p>and then activate it with <code class="docutils literal"><span class="pre">source</span> <span class="pre">activate</span> <span class="pre">ENVNAME</span></code>. For more information
-about Anaconda Python, see <a class="reference external" href="https://www.continuum.io">here</a>.</p>
-</li>
-<li><p class="first">Use system Python.</p>
-</li>
-<li><p class="first">Use brew Python 3.5 and build vtk from source with Python3 using brew. This can be accomplished
-with:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">brew</span> <span class="n">install</span> <span class="n">vtk</span> <span class="o">--</span><span class="k">with</span><span class="o">-</span><span class="n">python3</span> <span class="o">--</span><span class="n">without</span><span class="o">-</span><span class="n">python</span>
-</pre></div>
-</div>
-</li>
-</ol>
-<p>Furthermore, if you are not planning on using VTK, simply comment this line out in
-<code class="docutils literal"><span class="pre">opacplot2.__init__.py</span></code>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.opg_vtk</span>       <span class="k">import</span> <span class="o">*</span>
-</pre></div>
-</div>
-</div>
 </div>
 <div class="section" id="troubleshooting-matplotlib-on-osx">
 <h2>Troubleshooting <code class="docutils literal"><span class="pre">matplotlib</span></code> on OSX<a class="headerlink" href="#troubleshooting-matplotlib-on-osx" title="Permalink to this headline">¶</a></h2>
