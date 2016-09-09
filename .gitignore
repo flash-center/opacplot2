@@ -11,6 +11,7 @@ visualization/.ipynb_checkpoints
 opacplot2/opg_propaceos.py
 .old
 .cache
+to-do.txt
 
 doc/*
 !doc/_build/

@@ -14,6 +14,8 @@ import scipy as sp
 import scipy.interpolate
 import scipy.misc
 
+import copy
+
 def randomize_ionmix(filename, outfilename):
     """Randomizes the data from an existing ionmix file and rewrites it 
     to the outfile.
@@ -41,105 +43,6 @@ def randomize_ionmix(filename, outfilename):
 
     with open(outfilename, 'w') as f:
         f.write("".join(newlines))
-        
-def avgopac(energies_in, opacs_in, trad, ebnds, 
-            weight="constant", bound="error"):
-    """
-    
-    Parameters
-    ----------
-    energies_in : 
-        
-    opacs_in : 
-        
-    trad :
-    
-    ebnds : 
-        
-    weight='constant' : 
-        
-    bound='error' : 
-        
-    """
-    try:
-        from scipy.integrate import quad
-    except ImportError:
-        print('Error: Scipy not installed, cannot caclulate opacity integrals!')
-        raise
-    except:
-        raise
-    # Check for errors:
-
-    # Make sure that none of the energy group boundaries is outside of
-    # the energy range for this opacity:
-    energies = energies_in.copy()
-    opacs = opacs_in.copy()
-
-    if bound == "error":
-        for en in ebnds:
-            if en < energies[0] or en > energies[-1]:
-                raise ValueError('Energy outside'
-                                 'of range {0} {1}'.format(en, energies[0]))
-    elif bound == "continue":
-        emin = np.min(ebnds)
-        emax = np.max(ebnds)
-
-        energies = np.empty(len(energies)+2)
-        energies[0] = emin
-        energies[1:-1] = energies_in[:]
-        energies[-1] = emax
-        
-        opacs = np.empty(len(opacs)+2)
-        opacs[0] = opacs_in[0]
-        opacs[1:-1] = opacs_in[:]
-        opacs[-1] = opacs_in[-1]
-                    
-    else:
-        raise ValueError("Illegal boundary treatment")
-    
-    def op(en):
-
-        idx = energies.searchsorted(en)
-        # The energy is between index idx and idx-1
-        
-        de = energies[idx] - energies[idx-1]
-        do = opacs[idx] - opacs[idx-1]
-
-        ans = (en-energies[idx-1]) * do/de + opacs[idx-1]
-        return ans
-    
-    def weight_constant(en):
-        return 1.0
-
-    def weight_planck(en):
-        x = en/trad
-        if x > 700.0: return 1.0
-        return en**3/(1-exp(-x)) * exp(-x)
-
-    # def weight_rosseland(en):
-        
-        
-
-    # Choose the weight function:
-    f = lambda en: weight(en)*op(en)
-    if weight == "constant":
-        weight = weight_constant
-    elif weight == "planck":
-        weight = weight_planck
-    elif weight == "rosseland":
-        weight = weight_rossland
-        f = lambda en: weight(en)/op(en)
-
-    opavg = np.empty(len(ebnds)-1)
-
-    for i in range(len(opavg)):
-        numerator = quad(f, ebnds[i], ebnds[i+1], limit=500, epsrel=0.001)
-        denominator = quad(weight, ebnds[i],
-                           ebnds[i+1], limit=500, 
-                           epsrel=1.0e-06)
-        opavg[i] = numerator[0]/denominator[0]
-
-    return opavg
 
 def interpDT(arr, dens, temps,
              bcdmin=BC_BOUND, bctmin=BC_BOUND, 
@@ -382,4 +285,202 @@ class EosMergeGrids(dict):
             # reproduce a normal dict's behaviour
             return dict.__getitem__(self, key)    
 
+################################################################################
+# Functions and classes below this have not been adequately tested.            #
+################################################################################
+        
+def avgopac(energies_in, opacs_in, trad, ebnds, 
+            weight="constant", bound="error"):
+    """
+    
+    Parameters
+    ----------
+    energies_in : 
+        
+    opacs_in : 
+        
+    trad :
+    
+    ebnds : 
+        
+    weight='constant' : 
+        
+    bound='error' : 
+        
+    """
+    try:
+        from scipy.integrate import quad
+    except ImportError:
+        print('Error: Scipy not installed, cannot caclulate opacity integrals!')
+        raise
+    except:
+        raise
+    # Check for errors:
 
+    # Make sure that none of the energy group boundaries is outside of
+    # the energy range for this opacity:
+    energies = energies_in.copy()
+    opacs = opacs_in.copy()
+
+    if bound == "error":
+        for en in ebnds:
+            if en < energies[0] or en > energies[-1]:
+                raise ValueError('Energy outside'
+                                 'of range {0} {1}'.format(en, energies[0]))
+    elif bound == "continue":
+        emin = np.min(ebnds)
+        emax = np.max(ebnds)
+
+        energies = np.empty(len(energies)+2)
+        energies[0] = emin
+        energies[1:-1] = energies_in[:]
+        energies[-1] = emax
+        
+        opacs = np.empty(len(opacs)+2)
+        opacs[0] = opacs_in[0]
+        opacs[1:-1] = opacs_in[:]
+        opacs[-1] = opacs_in[-1]
+                    
+    else:
+        raise ValueError("Illegal boundary treatment")
+    
+    def op(en):
+
+        idx = energies.searchsorted(en)
+        # The energy is between index idx and idx-1
+        
+        de = energies[idx] - energies[idx-1]
+        do = opacs[idx] - opacs[idx-1]
+
+        ans = (en-energies[idx-1]) * do/de + opacs[idx-1]
+        return ans
+    
+    def weight_constant(en):
+        return 1.0
+
+    def weight_planck(en):
+        x = en/trad
+        if x > 700.0: return 1.0
+        return en**3/(1-exp(-x)) * exp(-x)
+
+    # def weight_rosseland(en):
+        
+        
+
+    # Choose the weight function:
+    f = lambda en: weight(en)*op(en)
+    if weight == "constant":
+        weight = weight_constant
+    elif weight == "planck":
+        weight = weight_planck
+    elif weight == "rosseland":
+        weight = weight_rossland
+        f = lambda en: weight(en)/op(en)
+
+    opavg = np.empty(len(ebnds)-1)
+
+    for i in range(len(opavg)):
+        numerator = quad(f, ebnds[i], ebnds[i+1], limit=500, epsrel=0.001)
+        denominator = quad(weight, ebnds[i],
+                           ebnds[i+1], limit=500, 
+                           epsrel=1.0e-06)
+        opavg[i] = numerator[0]/denominator[0]
+
+    return opavg
+
+def ensure_monotonicity(dens, temp, table_in, axis='dens'):
+    table = copy.deepcopy(table_in)
+    if axis == "dens":
+        X = dens
+        Y = temp
+    elif axis== "temp":
+        X = temp
+        Y = dens
+        table = table.T
+    print("Assuring monotonicity", end='')
+    for y_idx in range(1,len(Y)):
+
+        for x_idx in range(1,len(X)):
+            df = table[x_idx, y_idx] - table[x_idx-1, y_idx]
+            if df<0.0:
+                print('.', end='')
+                table[x_idx, y_idx] = table[x_idx-1, y_idx] + 1e-9
+    print('')
+    if axis == "temp":
+        table = table.T
+   
+    return table
+
+class CheckEosConsistency:
+    def __init__(self, eos):
+        self.fail = 0
+        self.num_tests = 0
+        self.eos = eos
+        self.check_pos()
+        self.check_sound_speed()
+        self.check_heat_capacity()
+        if not self.fail:
+            print('Sucess: passed {0}/{0} tests !'.format(self.num_tests))
+        else:
+            print('Failure: {0}/{1} tests failed!'.format(self.fail, self.num_tests))
+
+    def check_pos(self):
+        res = True
+        for spec in ['ele', 'ioncc']:
+            for tab_name in ['pres', 'eint']:
+                tab = self.eos['_'.join([spec, tab_name])]
+                self.num_tests += 1
+                if np.any(tab < 0):
+                    print("{0}_{1} table has negative values".format(spec, tab_name))
+                    bad_idx = np.nonzero(tab<0)
+                    print('        dens             temp           {0}_{1}'.format(spec, tab_name))
+                    print(np.array([self.eos[spec+'_dens'][bad_idx[0]],
+                                   self.eos[spec+'_temps'][bad_idx[1]],
+                                   self.eos['_'.join([spec, tab_name])][bad_idx]]).T)
+                    self.fail +=1 
+        return res
+                    
+    def check_sound_speed(self):
+        self._check_deriv('ioncc_pres', "dens")
+        self._check_deriv('ele_pres', "dens")
+    def check_heat_capacity(self):
+        self._check_deriv('ioncc_eint', "temp")
+        self._check_deriv('ele_eint', "temp")
+    def _check_deriv(self, tab_name, axis):
+        tab = self.eos[tab_name]
+        ax_idx = {'dens': 0, 'temp': 1}[axis]
+        diff = np.diff(tab, axis=ax_idx)
+        self.num_tests += 1
+        if np.any(diff<0):
+            print('d{{{0}}}/d{{{1}}} has negative values'.format(tab_name, axis))
+            self.fail +=1 
+
+def eint_offset(table):
+    if np.any(table<0):
+        print("Ensuring eint is positive. Adding offset of {0:.3e}".format(-table.min()))
+        table = table + np.abs(table.min()) + 1e-9
+    return table
+
+def interp_isochores_1d(eos, table='ele', ref_grid='ioncc'):
+    #from scipy.interpolate import interp1d
+    eosi = copy.deepcopy(eos)
+    temp_mask = np.array([temp_el not in eos[table+'_temps']\
+                        for temp_el in eos[ref_grid+'_temps']], dtype='bool')
+
+    eos[table+'_temps'] = eos[ref_grid+'_temps']
+    eos[table+'_pres'] = np.zeros((len(eos[table+'_dens']), len(eos[table+'_temps'])))
+
+    eos[table+'_eint'] = np.zeros(eos[table+'_pres'].shape)
+
+    for dens_idx  in range(len(eos[table+'_dens'])):
+        for par in ['pres', 'eint']:
+            # copy values that are on the same grid
+            eos[table+'_'+par][dens_idx, ~temp_mask] =  eosi[table+'_'+par][dens_idx, :]
+
+            # interpolate the couple of values that are not there
+            #itp = interp1d(eosi[table+'_temps'], eosi[table+'_'+par][dens_idx])
+            #eos[table+'_'+par][dens_idx, temp_mask] =  itp(eos[table+'_temps'][temp_mask])
+            eos[table+'_'+par][dens_idx, temp_mask] =  np.interp(eos[table+'_temps'][temp_mask],
+                                                        eosi[table+'_temps'],
+                                                        eosi[table+'_'+par][dens_idx])
+    return eos

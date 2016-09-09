@@ -566,6 +566,8 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
        Planck absorption opacity. Only used for tabulated EoS in *FLASH*.
     planck_emiss=None : numpy.ndarray
        Planck emission opacity. Only used for tabulated EoS in *FLASH*.
+    sele=None : numpy.ndarray
+        Electron entropy.
     
     Examples
     --------

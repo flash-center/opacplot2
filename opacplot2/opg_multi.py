@@ -390,6 +390,77 @@ class OpgMulti(dict):
             setattr(f.root._v_attrs,attr, self[attr])
         f.close()
 
+    def toEosDict(self, Znum=None, Anum=None, Xnum=None):
+        """
+        This method creates a dictionary with keys that are common among
+        the various EoS table formats.
+        """
+        # Decide if we need Znum, and Xnum, calculate Anum if it is not given.
+        if Znum is None:
+            if 'Znum' in self:
+                Znum = self['Znum']
+            else:
+                raise ValueError('Znum Varray should be provided!')
+        if type(Znum) is int:
+            Znum = [Znum]
+        self['Znum'] = np.array(Znum, dtype='int')
+        if Anum is None:
+            self['Anum'] = np.array([ptab.elements[el].mass for el in self['Znum']])
+        else:
+            self['Anum'] = np.array(Anum)
+        self['Zsymb'] = np.array([ptab.elements[el].symbol for el in self['Znum']], dtype='|S2')
+        if Xnum is None:
+            if len(Znum) == 1:
+                self['Xnum'] = np.array([1.0])
+            else:
+                raise ValueError('Xnum array should be provided')
+        else:
+            self['Xnum'] = np.array(Xnum)
+        
+        # Setting more attributes.
+        self['Abar'] = np.sum(self['Xnum']*self['Anum'])
+        self['Zmax'] = np.sum(self['Xnum']*self['Znum'])
+        self['idens'] = self['dens']*NA/self['Abar']
+        
+        # Calculate Planck Mean Emissivity. Set it equal to Planck Opacity if
+        # we don't have the correct data.
+        if "eps_mg" in self:
+            self['emp_mg'] = self['opp_mg']*self['eps_mg']
+        else:
+            print('Warning: looks like this is LTE opacity, no eps file found!')
+            print('Setting planck emissivity to be the same as planck opacity...')
+            self['emp_mg'] = self['opp_mg'].copy()
+            
+        # Filter out values that are too low to write to IONMIX format.
+        # A three digit exponent is currently not compatible. 
+        # TODO fix OpacIonmix.writeIonmixFile() to write logarithmic data
+        # to IONMIX.
+        low_val_idxs = self['emp_mg'] < 1.0e-99
+        self['emp_mg'][low_val_idxs] = 1.0e-99 # Set them to zero.
+        
+        # To translate the MULTI keys to a common EoS dictionary format.
+        names_dict = {'idens': 'idens',
+                      'temp': 'temp',
+                      'dens' : 'dens',
+                      'zbar': 'Zf_DT',
+                      'opp_mg': 'opp_mg',
+                      'opr_mg': 'opr_mg',
+                      'Znum': 'Znum',
+                      'Anum': 'Anum',
+                      'Xnum': 'Xnum',
+                      'groups': 'groups',
+                      'Abar': 'Abar',
+                      'Zmax': 'Zmax',
+                      'emp_mg': 'emp_mg'}
+        
+        # Initialize eos_dict.
+        eos_dict = {}
+        
+        # Translate keys.
+        for prp_key, eos_key in sorted(six.iteritems(names_dict)):
+            eos_dict[eos_key] = self[prp_key]
+        
+        return eos_dict
 
     @staticmethod
     def _write_vector(f, X):

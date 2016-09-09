@@ -24,12 +24,7 @@ if __name__ == "__main__":
             ],
 
           entry_points = {
-                    'console_scripts': ['opacplot2 = opacplot2.scripts.main:main',
-                                        'opac_table2hdf = opacplot2.scripts.opac_table2hdf:opac_table2hdf',
-                                        'opac_hdf2table = opacplot2.scripts.opac_hdf2table:opac_hdf2table',
-                                        'opacdump = opacplot2.scripts.main:opacdump',
-                                        'opac_diff = opacplot2.scripts.opac_diff:opac_diff',
-                                        'opac_checkhdf = opacplot2.scripts.main:opac_checkhdf',
+                    'console_scripts': ['opac-convert = opacplot2.scripts.opac_convert:convert_tables'
                                         ],
                         }
           )

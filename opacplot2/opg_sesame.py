@@ -6,8 +6,13 @@ from __future__ import print_function
 from io import open
 import six
 
+import opacplot2 as opp
+import opacplot2.utils
+
 import numpy as np
 from .constants import KELVIN_TO_EV, GPA_TO_ERGCC, MJKG_TO_ERGCC
+
+import periodictable as ptab
 
 class OpgSesame:
     """
@@ -51,7 +56,7 @@ class OpgSesame:
     SINGLE = 1
     DOUBLE = 2
 
-    CHAR_LINE_LEN = 80    
+    CHAR_LINE_LEN = 80
     WORDS_PER_LINE = 5
 
     def __init__(self, filename, precision, verbose=False):
@@ -234,3 +239,80 @@ class OpgSesame:
             data[i] = float(word)
 
         return data
+        
+    def toEosDict(self, Znum=None, Anum=None, Xnum=None):
+        # You can get the hedp module from here:
+        # https://github.com/luli/hedp
+        from hedp import eos
+        
+        # Select the last table (newest) table available.
+        opp_ses_data = self.data[sorted(self.data.keys())[-1]]
+
+        # Sesame has extra data points in it, so we must merge them down. We are
+        # merging the default grids ioncc_ and ele_.
+        # We also filter temps >.5 to avoid problems with the solver, per
+        # http://flash.uchicago.edu/pipermail/flash-users/2015-April/001689.html
+        opp_ses_data = opp.utils.EosMergeGrids(opp_ses_data, 
+                                               filter_dens=lambda x: (x>0),
+                                               filter_temps=lambda x: (x>.5))
+
+        # Converting density to ion number density.
+        opp_ses_data['idens'] = (opp.NA * opp_ses_data['ele_dens'] 
+                                            / opp_ses_data['abar'])
+
+        
+        # Adjust for Znum and Xnum.
+        if Znum is None:
+            if 'Znum' in opp_ses_data:
+                Znum = opp_ses_data['Znum']
+            else:
+                raise ValueError('Znum Varray should be provided!')
+        if type(Znum) is int:
+            Znum = [Znum]
+        opp_ses_data['Znum'] = np.array(Znum, dtype='int')
+        if Anum is None:
+            opp_ses_data['Anum'] = np.array([ptab.elements[el].mass for el in opp_ses_data['Znum']])
+        else:
+            opp_ses_data['Anum'] = np.array(Anum)
+        opp_ses_data['Zsymb'] = np.array([ptab.elements[el].symbol for el in opp_ses_data['Znum']], dtype='|S2')
+        if Xnum is None:
+            if len(Znum) == 1:
+                opp_ses_data['Xnum'] = np.array([1.0])
+            else:
+                raise ValueError('Xnum array should be provided')
+        else:
+            opp_ses_data['Xnum'] = np.array(Xnum)
+            
+        
+        # Calculate zbar using thomas_fermi_ionization.
+        dens_arr, temp_arr = np.meshgrid(opp_ses_data['ele_dens'], 
+                                         opp_ses_data['ele_temps'])
+        zbar = eos.thomas_fermi_ionization(dens_arr, temp_arr,  opp_ses_data['Znum'], opp_ses_data['abar']).T
+        opp_ses_data['zbar'] = zbar
+
+        # Translating SESAME names to common dictionary format.
+        names_dict = {'idens':'idens',
+                      'ele_temps':'temp', # We merged ele_ and ioncc_ dens &
+                                          # temp grids.
+                      'ele_dens':'dens',
+                      'zbar':'Zf_DT',
+                      'total_eint':'Ut_DT', # But not their energies.
+                      'ele_eint':'Uec_DT',
+                      'ioncc_eint':'Ui_DT',
+                      'ioncc_pres':'Pi_DT',
+                      'ele_pres':'Pec_DT',
+                      'Znum':'Znum',
+                      'Xnum':'Xnum',
+                      'bulkmod':'BulkMod',
+                      'abar':'Abar', 
+                      'zmax':'Zmax'
+                      }
+ 
+        # Initialize dictionary.
+        eos_dict = {}
+    
+        # Creating the tables.             
+        for ses_key, eos_key in sorted(names_dict.items()):
+            eos_dict[eos_key] = opp_ses_data[ses_key]
+        
+        return eos_dict
