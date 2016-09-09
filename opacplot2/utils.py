@@ -189,7 +189,7 @@ class EosMergeGrids(dict):
     eos_data : dict 
         Dictionary contraining the EoS data.
     intersect : list 
-        The resulting temperature [eV] and density [g/cm⁻³]
+        The resulting temperature [eV] and density [g/cm^(-3)]
         grids will be computed as an intersection of grids of all the
         species given in this list. Default: ['ele', 'ioncc']
     filter_dens : function
