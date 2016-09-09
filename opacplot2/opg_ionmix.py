@@ -1,10 +1,14 @@
-from StringIO import StringIO
+from __future__ import absolute_import
+from __future__ import print_function
+
+from io import StringIO
+import sys
 import numpy as np
 import re 
 import math
 
-from opl_grid import OplGrid
-from constants import ERG_TO_JOULE
+from .opl_grid import OplGrid
+from .constants import ERG_TO_JOULE
 
 class OpacIonmix:
     """
@@ -24,7 +28,7 @@ class OpacIonmix:
         self.man  = man
         self.hassele = hassele
         self.verb = verbose
-        if verbose: print "Reading IONMIX file \"%s\"\n" % (fn)
+        if verbose: print("Reading IONMIX file \"%s\"\n" % (fn))
 
         f = open(fn,'r')
 
@@ -60,7 +64,14 @@ class OpacIonmix:
 
         # Read the rest of the file, remove all of the white space,
         # and store the string in self.data:
-        self.data = StringIO(re.sub(r'\s', '', f.read()))
+        txt  = re.sub(r'\s', '', f.read())
+        if sys.version < '3':
+            # converting to unicode if needed for python2
+            import codecs
+            def u(x):
+                return codecs.unicode_escape_decode(x)[0]
+            txt = u(txt)
+        self.data = StringIO(txt)
                         
         if self.man == True:
             # For files where temperatures/densities are manually
@@ -71,13 +82,13 @@ class OpacIonmix:
         self.dens = self.numDens * self.mpi
             
         if self.verb: 
-            print "  Number of temperatures: %i" % self.ntemp
+            print("  Number of temperatures: %i" % self.ntemp)
             for i in range(0, self.ntemp):
-                print "%6i%27.16e" % (i, self.temps[i])
+                print("%6i%27.16e" % (i, self.temps[i]))
 
-            print "\n  Number of densities: %i" % self.ndens
+            print("\n  Number of densities: %i" % self.ndens)
             for i in range(0, self.ndens):
-                print "%6i%21.12e%27.16e" % (i, self.dens[i], self.numDens[i])
+                print("%6i%21.12e%27.16e" % (i, self.dens[i], self.numDens[i]))
 
         self.read_eos()
         self.read_opac()
@@ -135,9 +146,9 @@ class OpacIonmix:
         self.opac_bounds = self.get_block(ng+1)
 
         if self.verb: 
-            print "\n  Number of Energy Groups: %i" % self.ngroups
+            print("\n  Number of Energy Groups: %i" % self.ngroups)
             for i in range(0, self.ngroups+1):
-                print "%6i%15.6e" % (i, self.opac_bounds[i])
+                print("%6i%15.6e" % (i, self.opac_bounds[i]))
 
 
         self.rosseland     = np.empty((nd,nt,ng))
@@ -149,9 +160,9 @@ class OpacIonmix:
         arr_pe = self.get_block(nd*nt*ng)
 
         i = 0
-        for g in xrange(ng):
-            for d in xrange(nd):
-                for t in xrange(nt):
+        for g in range(ng):
+            for d in range(nd):
+                for t in range(nt):
                     self.rosseland[d,t,g]     = arr_ro[i]
                     self.planck_absorb[d,t,g] = arr_pa[i]
                     self.planck_emiss[d,t,g]  = arr_pe[i]
@@ -170,11 +181,11 @@ class OpacIonmix:
                        lambda jd, jt: self.rosseland[jd,jt,:])
 
     def write(self, fn, zvals, fracs, twot=None, man=None):
-        if twot == None: twot = self.twot
+        if twot is None: twot = self.twot
         if twot == True and self.twot == False:
             raise ValueError("Error: Cannot write two-temperature data")
 
-        if man == None: man = self.man
+        if man is None: man = self.man
         if man == False and self.man == True:
             raise ValueError("Error: Cannot write manual temp/dens points")
 
@@ -211,7 +222,7 @@ class OpacIonmix:
 
         def write_block(var):
             count = 0
-            for n in xrange(len(var)):
+            for n in range(len(var)):
                 count += 1
 
                 f.write("%s" % convert(var[n]))
@@ -224,9 +235,9 @@ class OpacIonmix:
 
         def write_opac_block(var):
             count = 0
-            for g in xrange(self.ngroups):
-                for jd in xrange(self.ndens):
-                    for jt in xrange(self.ntemp):
+            for g in range(self.ngroups):
+                for jd in range(self.ndens):
+                    for jt in range(self.ntemp):
                         count += 1
 
                         f.write("%s" % convert(var[jd,jt,g]))
@@ -362,24 +373,36 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
                     sele=None):
     ndens, ntemps = len(numDens), len(temps)
 
-    if  zbar == None:  zbar = np.zeros((ndens,ntemps))
-    if  dzdt == None:  dzdt = np.zeros((ndens,ntemps))
-    if  pion == None:  pion = np.zeros((ndens,ntemps))
-    if  pele == None:  pele = np.zeros((ndens,ntemps))
-    if dpidt == None: dpidt = np.zeros((ndens,ntemps))
-    if dpedt == None: dpedt = np.zeros((ndens,ntemps))
-    if  eion == None:  eion = np.zeros((ndens,ntemps))
-    if  eele == None:  eele = np.zeros((ndens,ntemps))
-    if cvion == None: cvion = np.zeros((ndens,ntemps))
-    if cvele == None: cvele = np.zeros((ndens,ntemps))
-    if deidn == None: deidn = np.zeros((ndens,ntemps))
-    if deedn == None: deedn = np.zeros((ndens,ntemps))
+    if  zbar is None:  zbar = np.zeros((ndens,ntemps))
+    if  dzdt is None:  dzdt = np.zeros((ndens,ntemps))
+    if  pion is None:  pion = np.zeros((ndens,ntemps))
+    if  pele is None:  pele = np.zeros((ndens,ntemps))
+    if dpidt is None: dpidt = np.zeros((ndens,ntemps))
+    if dpedt is None: dpedt = np.zeros((ndens,ntemps))
+    if  eion is None:  eion = np.zeros((ndens,ntemps))
+    if  eele is None:  eele = np.zeros((ndens,ntemps))
+    if cvion is None: cvion = np.zeros((ndens,ntemps))
+    if cvele is None: cvele = np.zeros((ndens,ntemps))
+    if deidn is None: deidn = np.zeros((ndens,ntemps))
+    if deedn is None: deedn = np.zeros((ndens,ntemps))
 
-    if ngroups       == None: ngroups = 1
-    if opac_bounds   == None: opac_bounds = (0.0,1.0)
-    if rosseland     == None: rosseland = np.zeros((ndens,ntemps,ngroups))
-    if planck_absorb == None: planck_absorb = np.zeros((ndens,ntemps,ngroups))
-    if planck_emiss  == None: planck_emiss = np.zeros((ndens,ntemps,ngroups))
+    if ngroups       is None: ngroups = 1
+    if opac_bounds   is None: opac_bounds = (0.0,1.0)
+    if rosseland     is None: rosseland = np.zeros((ndens,ntemps,ngroups))
+    if planck_absorb is None: planck_absorb = np.zeros((ndens,ntemps,ngroups))
+    if planck_emiss  is None: planck_emiss = np.zeros((ndens,ntemps,ngroups))
+
+    for tab in ["zbar", "dzdt", "pion", "pele", "dpidt", "dpedt", "eion",
+            "eele", "cvion", "cvele", "deidn", "deedn"]:
+        ctab = locals()[tab]
+        if ctab.shape != (ndens, ntemps):
+            raise ValueError('Table {0} has shape {1}, expected {2}!'.format(
+                tab, str(ctab.shape), str((ndens, ntemps))))
+    for tab in ['rosseland', 'planck_absorb', 'planck_emiss']: 
+        ctab = locals()[tab]
+        if ctab.shape != (ndens, ntemps, ngroups):
+            raise ValueError('Table {0} has shape {1}, expected {2}!'.format(
+                tab, str(ctab.shape), str((ndens, ntemps, ngroups))))
 
     # Write the header:
     f = open(fn,'w')
@@ -414,7 +437,7 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
 
     def write_block(var):
         count = 0
-        for n in xrange(len(var)):
+        for n in range(len(var)):
             count += 1
 
             f.write("%s" % convert(var[n]))
@@ -427,9 +450,9 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
 
     def write_opac_block(var):
         count = 0
-        for g in xrange(ngroups):
-            for jd in xrange(ndens):
-                for jt in xrange(ntemps):
+        for g in range(ngroups):
+            for jd in range(ndens):
+                for jt in range(ntemps):
                     count += 1
 
                     f.write("%s" % convert(var[jd,jt,g]))

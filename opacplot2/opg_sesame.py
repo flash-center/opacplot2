@@ -1,5 +1,13 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+#from __future__ import unicode_literals
+
+from io import open
+import six
+
 import numpy as np
-from constants import KELVIN_TO_EV, GPA_TO_ERGCC, MJKG_TO_ERGCC
+from .constants import KELVIN_TO_EV, GPA_TO_ERGCC, MJKG_TO_ERGCC
 
 
 class OpgSesame:
@@ -15,7 +23,7 @@ class OpgSesame:
 
     def __init__(self, filename, precision, verbose=False):
         self.verbose = verbose
-        self.fhand = open(filename)
+        self.fhand = open(filename, encoding='utf-8')
         if(precision == self.SINGLE):
            self.entry_len = 15
         elif(precision == self.DOUBLE):
@@ -63,7 +71,7 @@ class OpgSesame:
             if not matid in self.data: self.data[matid] = {}
 
             if self.verbose and (recid > 104):
-                print "Material = %8i  Record = %8i  Entries = %8i" % (matid, recid, nentries)
+                print("Material = %8i  Record = %8i  Entries = %8i" % (matid, recid, nentries))
 
             if not recid in self.fdict:
                 raise ValueError("No handling function for record %d" % recid)
@@ -72,8 +80,8 @@ class OpgSesame:
 
     def parseComment(self, nentries, matid, recid):
 
-        nlines = (nentries-1) / self.CHAR_LINE_LEN + 1
-        nchar = nentries + nlines        
+        nlines = (nentries-1) // self.CHAR_LINE_LEN + 1
+        nchar = nentries + nlines
         return self.fhand.read(nchar)
 
     def parseInfo(self, nentries, matid, recid):
@@ -84,7 +92,7 @@ class OpgSesame:
         self.data[matid]["bulkmod"] = words[3]
         self.data[matid]["excoef"] = words[4]
 
-        if self.verbose: print "  zbar = %g  abar = %g  rho0 = %g" % (words[0],words[1],words[2])
+        if self.verbose: print("  zbar = %g  abar = %g  rho0 = %g" % (words[0],words[1],words[2]))
 
         return self.data
 
@@ -116,9 +124,9 @@ class OpgSesame:
             dens = self.data[matid]["total_dens"]
             temps = self.data[matid]["total_temps"]
 
-            print "ndens   = %13i ntemp    = %13i" % (ndens, ntemp)
-            print "dens[0] = %13.6e  dens[-1] = %13.6e" % (dens[0], dens[-1])
-            print "temp[0] = %13.6e  temp[-1] = %13.6e" % (temps[0], temps[-1])
+            print("ndens   = %13i ntemp    = %13i" % (ndens, ntemp))
+            print("dens[0] = %13.6e  dens[-1] = %13.6e" % (dens[0], dens[-1]))
+            print("temp[0] = %13.6e  temp[-1] = %13.6e" % (temps[0], temps[-1]))
 
 
         # Read pressure array (in GPa and convert to ergs/cc):
@@ -179,15 +187,15 @@ class OpgSesame:
         words = self.readEntries(nentries) 
    
     def readEntries(self,nentries):
-        nlines = (nentries-1) / self.WORDS_PER_LINE + 1
+        nlines = (nentries-1) // self.WORDS_PER_LINE + 1
 
         data = np.empty(nentries)
 
         string = ""
-        for i in xrange(nlines):
+        for i in range(nlines):
             string += self.fhand.readline()[:self.WORDS_PER_LINE*self.entry_len]
 
-        for i in xrange(nentries):
+        for i in range(nentries):
             word = string[self.entry_len*i:self.entry_len*(i+1)]
             if word[-4] == '-': word = word[:-4] + "E" + word[-4:]
             data[i] = float(word)

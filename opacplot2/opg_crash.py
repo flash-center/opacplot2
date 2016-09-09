@@ -1,4 +1,7 @@
-from opl_list import OplList
+from __future__ import absolute_import
+from __future__ import print_function
+
+from .opl_list import OplList
 import numpy as np
 
 class OpacCrash:
@@ -26,11 +29,11 @@ class OpacCrash:
             self.rosseland[n,:] = row[2+len(self.energies)-1:] * self.m2okg_to_cm2og
 
         if verbose == True:
-            print "\nNumber of Opacities =", len(self.dens)
+            print("\nNumber of Opacities =", len(self.dens))
 
-            print "\nNumber of Energy Groups =", len(self.energies)
+            print("\nNumber of Energy Groups =", len(self.energies))
             for i,x in enumerate(self.energies):
-                print "%6i  %15.6e" % (i,x)
+                print("%6i  %15.6e" % (i,x))
 
     def oplPlanck(self):
         return OplList(len(self.dens), 

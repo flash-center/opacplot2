@@ -1,6 +1,6 @@
-from constants import JOULE_TO_ERG
-from StringIO import StringIO
-from opl_grid import OplGrid
+from .constants import JOULE_TO_ERG
+from io import StringIO
+from .opl_grid import OplGrid
 
 import numpy as np
 # from util import readword
@@ -58,7 +58,7 @@ class OpacYac:
         self.mpi = mpi
         self.verb = verbose
 
-        if verbose: print "Reading UW EOS file \"%s\"\n" % (fn)
+        if verbose: print("Reading UW EOS file \"%s\"\n" % (fn))
 
         self.nheader = 24
         self.parse()
@@ -70,11 +70,11 @@ class OpacYac:
             n = int(readword(self.data))
         vals = np.zeros(n)
 
-        if verbose: print "  Number of %s = %i" % (block_contents, n)
+        if verbose: print("  Number of %s = %i" % (block_contents, n))
         for i in range(n):
             vals[i] = float(readword(self.data))
-            if verbose: print "  %15.6e" % (vals[i])
-        if verbose: print ""
+            if verbose: print("  %15.6e" % (vals[i]))
+        if verbose: print("")
         return vals        
 
 
@@ -193,9 +193,9 @@ class OpacYac:
         self.rosseland = np.empty((ndopac, ntopac, self.ngroups))
 
         i = 0
-        for g in xrange(self.ngroups):
-            for d in xrange(ndopac):
-                for t in xrange(ntopac):
+        for g in range(self.ngroups):
+            for d in range(ndopac):
+                for t in range(ntopac):
                     # Read opacity and convert to units of 1/cm:
                     self.rosseland[d,t,g] = data[i]
                     i += 1
@@ -208,9 +208,9 @@ class OpacYac:
         self.planck_emiss = np.empty((ndopac, ntopac, self.ngroups))
 
         i = 0
-        for g in xrange(self.ngroups):
-            for d in xrange(ndopac):
-                for t in xrange(ntopac):
+        for g in range(self.ngroups):
+            for d in range(ndopac):
+                for t in range(ntopac):
                     # Read opacity and convert to units of 1/cm:
                     self.planck_emiss[d,t,g] = data[i]
                     i += 1
@@ -224,9 +224,9 @@ class OpacYac:
         self.planck_absorb = np.empty((ndopac, ntopac, self.ngroups))
 
         i = 0
-        for g in xrange(self.ngroups):
-            for d in xrange(ndopac):
-                for t in xrange(ntopac):
+        for g in range(self.ngroups):
+            for d in range(ndopac):
+                for t in range(ntopac):
                     # Read opacity and convert to units of 1/cm:
                     self.planck_absorb[d,t,g] = data[i]
                     i += 1

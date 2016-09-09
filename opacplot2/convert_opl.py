@@ -1,8 +1,8 @@
 import numpy as np
-from opl_grid import OplGrid
-from opl_list import OplList
-from opl_tempgrid import OplTempGrid
-from avgopac import avgopac
+from .opl_grid import OplGrid
+from .opl_list import OplList
+from .opl_tempgrid import OplTempGrid
+from .avgopac import avgopac
 
 def listToGrid(opllist, ndens, ntemps):
     
@@ -10,7 +10,7 @@ def listToGrid(opllist, ndens, ntemps):
     rho  = np.empty(opllist.nopacs)
     tele = np.empty(opllist.nopacs)
 
-    for n in xrange(opllist.nopacs):
+    for n in range(opllist.nopacs):
         rho[n], tele[n] = opllist.getDensTemp(n)
         # print "%15.6e%15.6e" % (rho[n],tele[n])
 
@@ -49,17 +49,17 @@ def listToTempGrid(opllist, ntemps):
     dt       = np.empty(opllist.nopacs-1)
     trads    = np.empty(ntemps)
 
-    for n in xrange(opllist.nopacs):
+    for n in range(opllist.nopacs):
         rhos[n], alltrads[n] = opllist.getDensTemp(n)
 
     alltrads.sort()
     
-    for n in xrange(opllist.nopacs-1): 
+    for n in range(opllist.nopacs-1): 
         dt[n] = alltrads[n+1] - alltrads[n]
     idxs = np.argsort(dt)
 
     trads[0] = alltrads[-1]
-    for n in xrange(1,ntemps):
+    for n in range(1,ntemps):
         i = -ntemps + n
         trads[n] = alltrads[idxs[i]]
 
@@ -68,9 +68,9 @@ def listToTempGrid(opllist, ntemps):
     # trads now contains a sorted list of the temperatures. For each
     # temperature, make a sorted list of densities.
     rhos = []
-    for i in xrange(ntemps):
+    for i in range(ntemps):
         current_rho = []
-        for n in xrange(opllist.nopacs):
+        for n in range(opllist.nopacs):
             rho, trad = opllist.getDensTemp(n)
             if abs(trad-trads[i])/trads[i] <= 1.0e-12:
                 current_rho.append(rho)
@@ -80,7 +80,7 @@ def listToTempGrid(opllist, ntemps):
 
     # Check to ensure same group structure used:
     energies = opllist.getEnergies(0)
-    for n in xrange(opllist.nopacs):
+    for n in range(opllist.nopacs):
         if len(energies) != len(opllist.getEnergies(n)):
             raise ValueError("Invalid group structure")
 
