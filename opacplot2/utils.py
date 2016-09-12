@@ -222,7 +222,7 @@ class EosMergeGrids(dict):
     """
     def __init__(self, eos_data, filter_dens=lambda x: x>=0.,
                  filter_temps=lambda x: x>=0., intersect=['ele', 'ioncc'],
-                 thresh=[]):
+                 thresh=[], qeos=False):
         
         user_filter = dict(temps=filter_temps, dens=filter_dens)
         self.origin = eos_data
@@ -238,7 +238,11 @@ class EosMergeGrids(dict):
 
         # Defining indexes we want to keep.
         mask = {}
-        for species in ['ele', 'ion', 'total', 'cc', 'ioncc']:
+        if qeos:
+            species_list = ['ele', 'ion', 'total']
+        else: 
+            species_list = ['ele', 'ion', 'total', 'cc', 'ioncc']
+        for species in species_list:
             for var in ['dens', 'temps']:
                key = species + '_' + var
                # mask based on the intersection of 'ele' and 'ion' grids

@@ -6,7 +6,7 @@ import textwrap
 def convert_tables():
     # Available formats.
     avail_output_formats = ['ionmix']
-    avail_input_formats = ['propaceos', 'multi', 'sesame']
+    avail_input_formats = ['propaceos', 'multi', 'sesame', 'sesame-qeos']
     
     # Creating the argument parser.
     parser = argparse.ArgumentParser(
@@ -45,6 +45,10 @@ def convert_tables():
     parser.add_argument('input_file',
                         action='store', type=str,
                         help='Input file.')
+    
+    parser.add_argument('--log',
+                        action='store', type=str,
+                        help='Logarithmic data keys.')
                         
     args = parser.parse_args()
     
@@ -66,12 +70,16 @@ def convert_tables():
     if args.Xfracs is not None:
         args.Xfracs = [float(num) for num in args.Xfracs.split(',')]
     
+    if args.log is not None:
+        args.log = [str(key) for key in args.log.split(',')]
+    
     if args.input is None:
         ext_dict = {'.prp':'propaceos',
                     '.eps':'multi',
                     '.opp':'multi',
                     '.opz':'multi',
                     '.opr':'multi',
+                    '.mexport':'sesame-qeos',
                     '.ses':'sesame'}
         _, ext = os.path.splitext(fn_in)
         if ext in ext_dict.keys():
@@ -88,17 +96,25 @@ def convert_tables():
         try:
             import opacplot2.opg_propaceos
             op = opp.opg_propaceos.OpgPropaceosAscii(path_in)
-            eos_dict = op.toEosDict()
+            eos_dict = op.toEosDict(log=args.log)
         except ImportError:
             print('Error: You do not have the opg_propaceos script.')
             
     elif args.input == 'multi':
         op = opp.OpgMulti.open_file(basedir, basename)
-        eos_dict = op.toEosDict(Znum=args.Znum, Xnum=args.Xfracs)
+        eos_dict = op.toEosDict(Znum=args.Znum, 
+                                Xnum=args.Xfracs, 
+                                log=args.log)
         
     elif args.input == 'sesame':
         op = opp.OpgSesame(path_in, opp.OpgSesame.SINGLE)
-        eos_dict = op.toEosDict(Znum=args.Znum, Xnum=args.Xfracs)
+        eos_dict = op.toEosDict(Znum=args.Znum, 
+                                Xnum=args.Xfracs,
+                                log=args.log)
+    elif args.input == 'sesame-qeos':
+        op = opp.OpgSesame(path_in, opp.OpgSesame.SINGLE)
+        eos_dict = op.toEosDict(Znum=args.Znum, Xnum=args.Xfracs, 
+                                qeos=True, log=args.log)
     
     if args.output=='ionmix':
         # These are the naming conventions translated to ionmix arguments.

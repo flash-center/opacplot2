@@ -390,7 +390,7 @@ class OpgMulti(dict):
             setattr(f.root._v_attrs,attr, self[attr])
         f.close()
 
-    def toEosDict(self, Znum=None, Anum=None, Xnum=None):
+    def toEosDict(self, Znum=None, Anum=None, Xnum=None, log=None):
         """
         This method creates a dictionary with keys that are common among
         the various EoS table formats.
@@ -435,8 +435,8 @@ class OpgMulti(dict):
         # A three digit exponent is currently not compatible. 
         # TODO fix OpacIonmix.writeIonmixFile() to write logarithmic data
         # to IONMIX.
-        low_val_idxs = self['emp_mg'] < 1.0e-99
-        self['emp_mg'][low_val_idxs] = 1.0e-99 # Set them to zero.
+        #low_val_idxs = self['emp_mg'] < 1.0e-99
+        #self['emp_mg'][low_val_idxs] = 1.0e-99 # Set them to zero.
         
         # To translate the MULTI keys to a common EoS dictionary format.
         names_dict = {'idens': 'idens',
@@ -457,8 +457,14 @@ class OpgMulti(dict):
         eos_dict = {}
         
         # Translate keys.
-        for prp_key, eos_key in sorted(six.iteritems(names_dict)):
-            eos_dict[eos_key] = self[prp_key]
+        for mul_key, eos_key in sorted(six.iteritems(names_dict)):
+            eos_dict[eos_key] = self[mul_key]
+            
+        # Handle the logarithmic data.
+        if log is not None:
+            for key in eos_dict.keys():
+                if key in log:
+                    eos_dict[key] = np.log10(eos_dict[key])
         
         return eos_dict
 
