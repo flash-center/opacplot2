@@ -73,6 +73,7 @@ def convert_tables():
     if args.log is not None:
         args.log = [str(key) for key in args.log.split(',')]
     
+    # Try to read from the input file extension.
     if args.input is None:
         ext_dict = {'.prp':'propaceos',
                     '.eps':'multi',
@@ -81,7 +82,12 @@ def convert_tables():
                     '.opr':'multi',
                     '.mexport':'sesame-qeos',
                     '.ses':'sesame'}
-        _, ext = os.path.splitext(fn_in)
+        # If the input file is compressed, choose the next extension.
+        if os.path.splitext(fn_in)[1] == '.gz':
+            _, ext = os.path.splitext(os.path.splitext(fn_in)[0])
+        else:
+            _, ext = os.path.splitext(fn_in)
+            
         if ext in ext_dict.keys():
             args.input = ext_dict[ext]
         else:
