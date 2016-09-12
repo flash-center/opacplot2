@@ -23,14 +23,35 @@ This module requires Python 2.7 or 3.5. The latest version can be installed with
 pip install git+https://github.com/luli/opacplot2.git
 ```
 
+### Dependencies
+
+`opacplot2`'s dependencies include:
+
+* numpy 
+* nose 
+* six 
+* pytables 
+* matplotlib 
+* scipy
+* hedp (https://github.com/luli/hedp)
+
+They can be installed as follows:
+
+```shell
+pip install numpy nose six pytables matplotlib scipy
+pip install git+https://github.com/luli/hedp
+```
+
 ## Documentation
 
 Full documentation can be found in the `doc/` directory (html or text).
 
 <a name="opac-convert"></a>
-## opac-convert
+# opac-convert
 
-Command line tool for converting EoS Table formats into the IONMIX format.
+Command line tool for converting EoS Table formats into the IONMIX format
+that comes with `opacplot2`.
+
 Its basic usage is shown below, but it also offers several command line
 options.
 Supported input file formats:
@@ -42,7 +63,7 @@ Supported input file formats:
 
 Currently the only supported output format is IONMIX.
 
-### Basic Usage
+## Basic Usage
 
 ```bash
 opac-convert [options] my-file.ext
@@ -55,7 +76,7 @@ Some files need additional information to write to IONMIX,
 such as atomic numbers. These you must specify with the command line options
 shown below.
 
-### Input
+## Input
 
 To specify the input filetype:
 
@@ -64,7 +85,7 @@ opac-convert --input {Propaceos, SESAME, MULTI} my-file.ext
 ```
 
 
-### Znum/Xfracs
+## Znum/Xfracs
 
 To specify the files atomic numbers, one may use `--Znum` with a comma-separated
 list of integers. If more than one atomic number is given, 
@@ -76,12 +97,12 @@ For example, take an EoS table for CH:
 opac-convert --Znum 1, 6 --Xfracs .5, .5 my-file.ext
 ```
 
-### Outname
+## Outname
 
 To specify the name of the resulting output file, use `--outname` with the
 desired name.
 
-### Logarithmic Data 
+## Logarithmic Data 
 
 If you would like to take the log of the data before you write it to the IONMIX
 file, use `--log` with a comma separated list of the data keys as shown below.
@@ -110,9 +131,9 @@ logarithmically:
 opac-convert --log emp_mg my-file.ext
 ```
 
-### Troubleshooting
+## Troubleshooting
 
-#### Invalid Literal for `int()`
+### Invalid Literal for `int()`
 
 This `--log` flag may be used for the following error: 
 
