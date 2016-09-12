@@ -1,6 +1,5 @@
-# documentation builder
-sphinx
-
+.cache
+.old
 .DS_Store
 build
 dist
