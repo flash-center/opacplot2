@@ -629,7 +629,8 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
     f.write("\n")
 
     # Write temperature/density grid and number of groups:
-    def convert(num):
+    # block argument is for error reporting purposes.
+    def convert(num, name):
         string_org = "%12.5E" % (num)
         negative = (string_org[0] == "-")
         lead = "-." if negative else "0."
@@ -638,8 +639,13 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
         # Deal with the exponent:
 
         # Check for zero:
-        if int(string_org[1] + string_org[3:8]) == 0:
-            return string + "+00"
+        try:
+            if int(string_org[1] + string_org[3:8]) == 0:
+                return string + "+00"
+        except ValueError:
+            raise ValueError('There was a problem writing the data in '
+                             'the {} block to IONMIX. Try writing it in '
+                             'log format.'.format(name))
 
         # Not zero:
         expo = int(string_org[9:]) + 1
@@ -650,12 +656,12 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
         string += "%02d" % abs(expo)
         return string
 
-    def write_block(var):
+    def write_block(var, name):
         count = 0
         for n in range(len(var)):
             count += 1
 
-            f.write("%s" % convert(var[n]))
+            f.write("%s" % convert(var[n], name))
 
             if count == 4:
                 count = 0
@@ -663,14 +669,14 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
 
         if count != 0: f.write("\n")
 
-    def write_opac_block(var):
+    def write_opac_block(var, name):
         count = 0
         for g in range(ngroups):
             for jd in range(ndens):
                 for jt in range(ntemps):
                     count += 1
 
-                    f.write("%s" % convert(var[jd,jt,g]))
+                    f.write("%s" % convert(var[jd,jt,g], name))
 
                     if count == 4:
                         count = 0
@@ -680,27 +686,28 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
 
     f.write("%12i\n" % ngroups)
 
-    write_block(temps)
-    write_block(numDens)
+    write_block(temps, 'temperature')
+    write_block(numDens, 'number density')
 
-    write_block(zbar.flatten())
+    write_block(zbar.flatten(), 'average ionization')
 
-    write_block(dzdt.flatten())
-    write_block(pion.flatten()*ERG_TO_JOULE)
-    write_block(pele.flatten()*ERG_TO_JOULE)
-    write_block(dpidt.flatten()*ERG_TO_JOULE)
-    write_block(dpedt.flatten()*ERG_TO_JOULE)
-    write_block(eion.flatten()*ERG_TO_JOULE)
-    write_block(eele.flatten()*ERG_TO_JOULE)
-    write_block(cvion.flatten()*ERG_TO_JOULE)
-    write_block(cvele.flatten()*ERG_TO_JOULE)
-    write_block(deidn.flatten()*ERG_TO_JOULE)
-    write_block(deedn.flatten()*ERG_TO_JOULE)
+    write_block(dzdt.flatten(), 'DZ_DT')
+    write_block(pion.flatten()*ERG_TO_JOULE, 'ion pressure')
+    write_block(pele.flatten()*ERG_TO_JOULE, 'electron pressure')
+    write_block(dpidt.flatten()*ERG_TO_JOULE, 'D(ion pressure)_DT')
+    write_block(dpedt.flatten()*ERG_TO_JOULE, 'D(electron pressure)_DT')
+    write_block(eion.flatten()*ERG_TO_JOULE, 'ion energy')
+    write_block(eele.flatten()*ERG_TO_JOULE, 'electron energy')
+    write_block(cvion.flatten()*ERG_TO_JOULE, 'ion CV')
+    write_block(cvele.flatten()*ERG_TO_JOULE, 'electron CV')
+    write_block(deidn.flatten()*ERG_TO_JOULE, 'D(ion energy)_DT')
+    write_block(deedn.flatten()*ERG_TO_JOULE, 'D(electron energy)_DT')
 
     # Check for electron entropy (if it is there):
-    if sele != None: write_block(sele.flatten()*ERG_TO_JOULE)
+    if sele != None: write_block(sele.flatten()*ERG_TO_JOULE, 
+                                 'electron entropy')
 
-    write_block(opac_bounds)
-    write_opac_block(rosseland)
-    write_opac_block(planck_absorb)
-    write_opac_block(planck_emiss)
+    write_block(opac_bounds, 'opacity bounds')
+    write_opac_block(rosseland, 'rosseland opacity')
+    write_opac_block(planck_absorb, 'planck absorption')
+    write_opac_block(planck_emiss, 'planck emissivity')
