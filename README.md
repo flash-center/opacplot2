@@ -58,7 +58,7 @@ Currently the only supported output format is IONMIX.
 ### Usage
 
 ```bash
-opac-convert [options] my-file.ext
+opac-convert [options] myfile.ext
 ```
 
 `opac-convert` will attempt to read your file extension and convert it to
@@ -72,8 +72,8 @@ shown below.
 ### Options
 
 | Option | Action |
-|:------:|--------|
-|-i, --input| Specify the input filetype. |
+|:-------|--------|
+|-i, --input| Specify the input filetype (`propaceos`, `sesame`, `multi`)|
 |--Znum| Comma separated list of atomic numbers.|
 |--Xfracs| Comma separated list of element fractions.|
 |--outname| Specify the output filename.|
@@ -109,7 +109,7 @@ been applied.
 |Ion internal energy|`Ui_DT`|
 |Electron internal energy|`Uec_DT`|
 |Opacity bounds|`groups`|
-|Rosseland mean opacity|rosseland|
+|Rosseland mean opacity|`rosseland`|
 |absorption Planck mean opacity|`planck_absorb`|
 |emission Planck mean opacity|`planck_emiss`|
 
@@ -125,7 +125,7 @@ opac-convert --log emp_mg my-file.ext
 
 #### Invalid Literal for `int()`
 
-This `--log` flag may be used to fix the following error: 
+The `--log` flag may be used to fix the following error: 
 
 ```bash
 ValueError: invalid literal for int() with base 10
