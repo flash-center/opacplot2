@@ -106,10 +106,10 @@ def read_format_ext(args, fn_in):
                       'input file type with --input.')
 
 class Formats_toEosDict(object):
-    '''
+    """
     Contains handling functions to convert different types of tables
     into a common EoS dictionary for IONMIX.
-    '''
+    """
     def __init__(self, args, basedir, basename, path_in):
         # Initialize the dictionary for handling functions.
         self.set_handle_dict()
@@ -124,7 +124,7 @@ class Formats_toEosDict(object):
         try:
             self.eos_dict = self.handle_dict[args.input]()
         except KeyError:
-            print('Must use valid format name.')
+            raise KeyError('Must use valid format name.')
             
     def set_handle_dict(self):
         self.handle_dict = {'propaceos' : self.propaceos_toEosDict,
@@ -139,9 +139,9 @@ class Formats_toEosDict(object):
             import opacplot2.opg_propaceos
             op = opp.opg_propaceos.OpgPropaceosAscii(self.path_in)
             eos_dict = op.toEosDict(log=self.args.log)
+            return eos_dict
         except ImportError:
-            print('Error: You do not have the opg_propaceos script.')
-        return eos_dict
+            raise ImportError('You do not have the opg_propaceos script.')
         
     def multi_toEosDict(self):
         op = opp.OpgMulti.open_file(self.basedir, self.basename)
@@ -164,9 +164,9 @@ class Formats_toEosDict(object):
         return eos_dict
 
 class EosDict_toIonmixFile(object):
-    '''
+    """
     Takes a common EoS dictionary and writes it to the correct output format.
-    '''
+    """
     def __init__(self, args, eos_dict):
         # Initialize the handling function dictionary.
         self.set_handle_dict()
