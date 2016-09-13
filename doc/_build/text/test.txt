@@ -1,0 +1,25 @@
+
+Testing Suite
+*************
+
+Use these to test if "opacplot2" is running correctly.
+
+
+Running Tests
+=============
+
+opacplot2.tests.run_cli(coverage=False)
+
+   Use this function to run "opacplot2"'s test suite on the command
+   line from the Python interpreter.
+
+   Parameters:
+      **coverage** (*bool*) -- Print a coverage report along with the
+      test output.
+
+   -[ Examples ]-
+
+   One can run the test suite from the interpreter with this:
+
+      >>> import opacplot2.tests as opt
+      >>> opt.run_cli(coverage=True)

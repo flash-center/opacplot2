@@ -1,0 +1,126 @@
+
+Utilities
+*********
+
+
+Interpolation
+=============
+
+opacplot2.utils.interpDT(arr, dens, temps, bcdmin=0, bctmin=0, lookup=0)
+
+   Depending on the choice for lookup, this function returns an
+   interpolation function for values in arr, the density derivative of
+   arr, or the temperature derivative of arr.
+
+   What "interpDT()" returns is dependent upon the "lookup" and
+   "bcdmin"/"bctmin" arguments:
+
+      "INTERP_FUNC" will return an interpolation function for any
+      density/temperature point within the range.
+
+      "INTERP_DFDD" will return a function for the density derivative
+      at any density/temperature point within the range.
+
+      "INTERP_DFDT" will return a function for the temperature
+      derivative at any density/temperature point within the range.
+
+      "BC_BOUND" is the default setting. If an input density/temp is
+      smaller than the minimum value in the "dens" (or "temps") array,
+      then it will automatically be set to this minimum value.
+
+      "BC_EXTRAP_ZERO" will insert zero points into the "arr" and
+      either "dens" or "temps" for "bcdmin", "bctmin" respectively.
+
+   Parameters:
+      * **arr** (*numpy.ndarray*) -- Data array.
+
+      * **dens** (*numpy.ndarray*) -- Density array.
+
+      * **temps** (*numpy.ndarray*) -- Temperature array.
+
+      * **bcdmin** (*int*) -- Boundary conditions for density.
+
+      * **bctmin** (*int*) -- Boundary conditions for temperature.
+
+      * **lookup** (*int*) -- Type of function to return.
+
+   -[ Examples ]-
+
+   In order to find a function that interpolates between dens/temp
+   points for an IONMIX file that we had previously opened as "imx",
+   we could use:
+
+      >>> import opacplot2 as opp
+      >>> f = opp.utils.interpDT(imx.pion, imx.dens, imx.temps,
+      ...                        bcdmin=BC_EXTRAP_ZERO,
+      ...                        bctmin=BC_EXTRAP_ZERO,
+      ...                        lookup=INTERP_FUNC)
+      >>> print(f(0,0)) # We added points at zero.
+      0
+      >>> print(f(123, 456))
+      1234.5678
+
+
+Grid Structure
+==============
+
+class opacplot2.utils.EosMergeGrids(eos_data, filter_dens=<function EosMergeGrids.<lambda>>, filter_temps=<function EosMergeGrids.<lambda>>, intersect=['ele', 'ioncc'], thresh=[])
+
+   This class provides filtering capabilities for the EoS temperature
+   and density grids.
+
+   For instance, SESAME tables may have some additional points in the
+   ion EoS table, compared to the electron EoS table, and as FLASH
+   requires the same density and temperature grid for all species, the
+   simplest solution is to remove those extra points.
+
+   Parameters:
+      * **eos_data** (*dict*) -- Dictionary contraining the EoS
+        data.
+
+      * **intersect** (*list*) -- The resulting temperature [eV] and
+        density [g/cm⁻³] grids will be computed as an intersection of
+        grids of all the species given in this list. Default: ['ele',
+        'ioncc']
+
+      * **filter_dens** (*function*) -- A function that takes a grid
+        of densities and returns a mask of points we don't wont to
+        keep. Defaut: (lamdba x: x>0.) i.e. don't remove anything.
+
+      * **filter_temps** (*function*) -- A function that takes a
+        grid of temperatures and returns a mask of points we don't
+        wont to keep. Defaut: (lamdba x: x>0.) i.e. don't remove
+        anything.
+
+      * **thresh** (*list*) -- Zero threshold on following keys
+
+   Returns:
+      **out** -- A dictionary with the same keys as eos_data. The
+      species specified by "intersect" will have equal temperature and
+      density grids.
+
+   Return type:
+      dict
+
+   -[ Examples ]-
+
+   >>> eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii",
+                                  opp.OpgSesame.SINGLE,verbose=False)
+   >>> eos_data  = eos_sesame.data[3720]  # Aluminum
+   >>> eos_data_filtered = EosMergeGrids(eos_data,
+           intersect=['ele', 'ioncc'],   # Merge ele and ioncc grids
+           filter_temps=lamda x: x>1.) # Remove temperatures below 1eV
+
+
+Miscellaneous
+=============
+
+opacplot2.utils.randomize_ionmix(filename, outfilename)
+
+   Randomizes the data from an existing ionmix file and rewrites it to
+   the outfile.
+
+   Parameters:
+      * **filename** (*str*) -- Name of file to randomize.
+
+      * **outfilename** (*str*) -- Name of output file.

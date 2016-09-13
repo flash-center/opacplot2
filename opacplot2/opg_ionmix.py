@@ -12,9 +12,127 @@ from .constants import ERG_TO_JOULE
 
 class OpacIonmix:
     """
-    Class to read in IONMIX EOS and Opacity Files
+    Class to read in IONMIX EOS and Opacity Files.
+    
+    The ``OpacIonmix`` class is used to read in an IONMIX file
+    and translate its information into object attributes.
+    All energies in this file are in Joules and must be converted to ergs.
+    Unlike other file classes, ``OpacIonmix`` does not store its data as a 
+    dictionary. Instead, it stores its data in class attributes.
+    
+    Parameters
+    ----------
+    fn: str
+        The name of the file to open.
+    mpi: str
+       The mass per ion.
 
-    All energies in this file are in Joules and must be converted to ergs
+    twot: bool
+       Flag for two-temperature data.
+
+    man: bool
+       Flag for manual temperature/density points.
+
+    hassele: bool
+       lag for electron entropy data.
+    
+    Attributes
+    ----------
+    fn : str
+        Filename.
+    mpi : float
+        Mass per ion.
+    twot : bool
+        Two-temperature data.
+    man  : bool
+        Manual temp/dens points.
+    hassele : bool
+        Has electron entropy data.
+    verb : bool
+        Verbose.
+    ntemp : int
+        Number of temperature points.
+    ndens : int
+        Number of density points.
+    numDens : numpy.ndarray
+        Number densitites.
+    temps : numpy.ndarray
+        Temperatures.
+    ngroups : numpy.ndarray
+        Number of groups
+    data : str
+        Data at the end of the IONMIX file.
+    dens : numpy.ndarray
+        Densities.   
+    ngroups : int
+        Number of groups.
+    zbar : numpy.ndarray
+        Average ionizations.
+    etot : numpy.ndarray
+        Total energy.
+        Only included in single-temperature data.
+    cvtot :  numpy.ndarray
+        Total C_v.
+        Only included in single-temperature data.
+    dedn :  numpy.ndarray
+        de/dn.
+        Only included in single-temperature data.
+    dzdt :  numpy.ndarray
+        dz/dt.
+        Only included in two-temperature data.
+    pion :  numpy.ndarray
+        Ion pressure.
+        Only included in two-temperature data.
+    pele :  numpy.ndarray
+        Electron pressure.
+        Only included in two-temperature data.
+    dpidt : numpy.ndarray
+        dp_i/dt.
+        Only included in two-temperature data.
+    dpedt : numpy.ndarray
+        dp_e/dt.
+        Only included in two-temperature data.
+    eion : numpy.ndarray
+        Ion energy.
+        Only included in two-temperature data.
+    eele : numpy.ndarray
+        Electron energy.
+        Only included in two-temperature data.
+    cvion : numpy.ndarray
+        C_v for ions.
+        Only included in two-temperature data.
+    cvele : numpy.ndarray
+        C_v for electrons.
+        Only included in two-temperature data.
+    deidn : numpy.ndarray
+        de_i/dn.
+        Only included in two-temperature data.
+    deedn : numpy.ndarray
+        de_e/dn.
+        Only included in two-temperature data.
+    opac_bounds : numpy.ndarray
+        Opacity boundaries.
+    rosseland : numpy.ndarray
+        Rosseland opacity.
+    planck_absorb : numpy.ndarray
+        Planck absorption.
+    planck_emiss : numpy.ndarray
+        Planck emissivity.
+    
+    Examples
+    --------
+    For a directory with the IONMIX file ``imx.cn4`` for Aluminum::
+
+       >>> import opacplot2 as opp
+       >>> op = opp.Opac_Ionmix('imx.cn4', 26.981539)
+       >>> print(op.zbar)
+       array([...]) # Array of average ionizations for dens/temp points.
+    
+    Notes
+    -----
+    If you receive a ``ValueError:
+    invalid literal for int() with base 10`` error,
+    setting ``man=True`` may help to fix this.
     """
 
     joules_to_ergs = 1.0e+07
@@ -100,6 +218,8 @@ class OpacIonmix:
         return arr
 
     def read_eos(self):
+        # Load the EoS data from the file.
+        
         nt = self.ntemp
         nd = self.ndens
         ng = self.ngroups
@@ -131,12 +251,12 @@ class OpacIonmix:
             self.sele  = self.get_block(nd*nt).reshape(nd,nt) * self.joules_to_ergs
 
     def read_opac(self):
-        """
-        Load the opacities from the file. The opacities are arranged
-        in the file so that temperature varies the fastest, then
-        density, and group number varies the slowest. Note, that this
-        is not the ordering of the arrays once they are loaded.
-        """
+        # Load the opacities from the file. 
+        # 
+        # The opacities are arranged
+        # in the file so that temperature varies the fastest, then
+        # density, and group number varies the slowest. Note, that this
+        # is not the ordering of the arrays once they are loaded.
 
         nt = self.ntemp
         nd = self.ndens
@@ -181,6 +301,31 @@ class OpacIonmix:
                        lambda jd, jt: self.rosseland[jd,jt,:])
 
     def write(self, fn, zvals, fracs, twot=None, man=None):
+        """
+        This method writes to an IONMIX file.
+        
+        Parameters
+        ----------
+        fn : str
+            Name of output file.
+        zvals : tuple
+            Atomic numbers.
+        fracs : tuple
+            Element fractions.
+        twot : bool
+            Flag for two-temperature data.
+        man : bool
+            Flag for manual temp/dens points.
+        
+        Examples
+        --------
+        In order to extend ``imx.cn4`` for Al to zero::
+        
+            >>> import opacplot2 as opp
+            >>> op = opp.OpacIonmix('imx.cn4', (13,), (1,))
+            >>> op.extendToZero() # Add temperature point at zero.
+            >>> op.write('imx-0.cn4', (13,), (1,))
+        """
         if twot is None: twot = self.twot
         if twot == True and self.twot == False:
             raise ValueError("Error: Cannot write two-temperature data")
@@ -288,7 +433,7 @@ class OpacIonmix:
 
     def extendToZero(self):
         """
-        This routine adds another temperature point at zero
+        This routine adds another temperature point at zero.
         """
 
         nd = self.ndens
@@ -371,6 +516,76 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
                     ngroups=None, opac_bounds=None,
                     rosseland=None, planck_absorb=None, planck_emiss=None,
                     sele=None):
+    """
+    ``opacplot2.writeIonmixFile()`` provides an explicit and flexible 
+    way to write IONMIX files.
+                    
+    Parameters
+    ----------
+    fn : str
+       Name of the file to write.
+    zvals : tuple 
+       Atomic numbers of elements to write to file.
+    fracs : tuple
+       Element  fractions.
+    numdens : numpy.ndarray
+        Number densities.
+    temps : numpy.ndarray
+        Temperature array.
+    zbar=None : numpy.ndarray
+       Average ionization. Only used for tabulated EoS in *FLASH*.
+    dzdt=None : numpy.ndarray
+       Temperature derivative of average ionization. Ignored by *FLASH*.
+    pion=None : numpy.ndarray
+       Ion pressure  Only used for tabulated EoS in *FLASH*.
+    pele=None : numpy.ndarray
+       Electron pressure. Only used for tabulated EoS in *FLASH*.
+    dpidt=None : numpy.ndarray
+       Temperature derivative of ion pressure. Ignored by *FLASH*.
+    dpedt=None : numpy.ndarray
+       Temperature derivative of electron pressure. Ignored by *FLASH*.
+    eion=None :  numpy.ndarray
+       Ion specific internal energy. Only used for tabulated EoS in *FLASH*.
+    eele=None :  numpy.ndarray
+       Electron specific internal energy. Only used for tabulated EoS in *FLASH*.
+    cvion=None : numpy.ndarray
+       Ion heat capacity at constant volume. Ignored by *FLASH*.
+    cvele=None : numpy.ndarray
+       Electron heat capacity at constant volume. Ignored by *FLASH*.
+    deidn=None : numpy.ndarray
+       Number derivative of ion energy. Ignored by *FLASH*.
+    deedn=None : numpy.ndarray
+       Number derivative of electron energy. Ignored by *FLASH*.
+    ngroups=None : int
+       Number of energy groups.
+    opac_bounds=None : numpy.ndarray
+        Energy group boundaries.
+    rosseland=None : numpy.ndarray
+       Rosseland opacities. Only used for tabulated EoS in *FLASH*.
+    planck_abs orb=None : numpy.ndarray
+       Planck absorption opacity. Only used for tabulated EoS in *FLASH*.
+    planck_emiss=None : numpy.ndarray
+       Planck emission opacity. Only used for tabulated EoS in *FLASH*.
+    sele=None : numpy.ndarray
+        Electron entropy.
+    
+    Examples
+    --------
+    Here we open an HDF5 file containing EoS and Opacity data and
+    write it to an IONMIX file::
+
+       >>> import opacplot2 as opp
+       >>> op = opp.OpgHdf5.open_file('/path/to/infile.h5')
+       >>> opp.writeIonmixFile('outfile.cn4',
+                       op['Znum'], op['Xnum'],
+                       numDens=op['idens'][:], temps=op['temp'][:],
+                       ngroups=op.Ng,
+                       opac_bounds=op['groups'][:],
+                       planck_absorb=op['opp_mg'][:],
+                       rosseland=op['opr_mg'][:],
+                       planck_emiss=op['emp_mg'][:])
+    """
+    
     ndens, ntemps = len(numDens), len(temps)
 
     if  zbar is None:  zbar = np.zeros((ndens,ntemps))
@@ -414,7 +629,8 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
     f.write("\n")
 
     # Write temperature/density grid and number of groups:
-    def convert(num):
+    # block argument is for error reporting purposes.
+    def convert(num, name):
         string_org = "%12.5E" % (num)
         negative = (string_org[0] == "-")
         lead = "-." if negative else "0."
@@ -423,8 +639,13 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
         # Deal with the exponent:
 
         # Check for zero:
-        if int(string_org[1] + string_org[3:8]) == 0:
-            return string + "+00"
+        try:
+            if int(string_org[1] + string_org[3:8]) == 0:
+                return string + "+00"
+        except ValueError:
+            raise ValueError('There was a problem writing the data in '
+                             'the {} block to IONMIX. Try writing it in '
+                             'log format.'.format(name))
 
         # Not zero:
         expo = int(string_org[9:]) + 1
@@ -435,12 +656,12 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
         string += "%02d" % abs(expo)
         return string
 
-    def write_block(var):
+    def write_block(var, name):
         count = 0
         for n in range(len(var)):
             count += 1
 
-            f.write("%s" % convert(var[n]))
+            f.write("%s" % convert(var[n], name))
 
             if count == 4:
                 count = 0
@@ -448,14 +669,14 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
 
         if count != 0: f.write("\n")
 
-    def write_opac_block(var):
+    def write_opac_block(var, name):
         count = 0
         for g in range(ngroups):
             for jd in range(ndens):
                 for jt in range(ntemps):
                     count += 1
 
-                    f.write("%s" % convert(var[jd,jt,g]))
+                    f.write("%s" % convert(var[jd,jt,g], name))
 
                     if count == 4:
                         count = 0
@@ -465,27 +686,28 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
 
     f.write("%12i\n" % ngroups)
 
-    write_block(temps)
-    write_block(numDens)
+    write_block(temps, 'temperature')
+    write_block(numDens, 'number density')
 
-    write_block(zbar.flatten())
+    write_block(zbar.flatten(), 'average ionization')
 
-    write_block(dzdt.flatten())
-    write_block(pion.flatten()*ERG_TO_JOULE)
-    write_block(pele.flatten()*ERG_TO_JOULE)
-    write_block(dpidt.flatten()*ERG_TO_JOULE)
-    write_block(dpedt.flatten()*ERG_TO_JOULE)
-    write_block(eion.flatten()*ERG_TO_JOULE)
-    write_block(eele.flatten()*ERG_TO_JOULE)
-    write_block(cvion.flatten()*ERG_TO_JOULE)
-    write_block(cvele.flatten()*ERG_TO_JOULE)
-    write_block(deidn.flatten()*ERG_TO_JOULE)
-    write_block(deedn.flatten()*ERG_TO_JOULE)
+    write_block(dzdt.flatten(), 'DZ_DT')
+    write_block(pion.flatten()*ERG_TO_JOULE, 'ion pressure')
+    write_block(pele.flatten()*ERG_TO_JOULE, 'electron pressure')
+    write_block(dpidt.flatten()*ERG_TO_JOULE, 'D(ion pressure)_DT')
+    write_block(dpedt.flatten()*ERG_TO_JOULE, 'D(electron pressure)_DT')
+    write_block(eion.flatten()*ERG_TO_JOULE, 'ion energy')
+    write_block(eele.flatten()*ERG_TO_JOULE, 'electron energy')
+    write_block(cvion.flatten()*ERG_TO_JOULE, 'ion CV')
+    write_block(cvele.flatten()*ERG_TO_JOULE, 'electron CV')
+    write_block(deidn.flatten()*ERG_TO_JOULE, 'D(ion energy)_DT')
+    write_block(deedn.flatten()*ERG_TO_JOULE, 'D(electron energy)_DT')
 
     # Check for electron entropy (if it is there):
-    if sele != None: write_block(sele.flatten()*ERG_TO_JOULE)
+    if sele != None: write_block(sele.flatten()*ERG_TO_JOULE, 
+                                 'electron entropy')
 
-    write_block(opac_bounds)
-    write_opac_block(rosseland)
-    write_opac_block(planck_absorb)
-    write_opac_block(planck_emiss)
+    write_block(opac_bounds, 'opacity bounds')
+    write_opac_block(rosseland, 'rosseland opacity')
+    write_opac_block(planck_absorb, 'planck absorption')
+    write_opac_block(planck_emiss, 'planck emissivity')

@@ -1,0 +1,671 @@
+
+File Format Functions and Classes
+*********************************
+
+
+Native HDF5
+===========
+
+class opacplot2.OpgHdf5
+
+   force_eval()
+
+      Load the whole table into memory.
+
+   classmethod open_file(filename, explicit_load=False)
+
+      Open an HDF5 file containing opacity data.
+
+      Parameters:
+         * **filename** (*str*) -- Name of file to open.
+
+         * **explicit_load** (*bool*) -- Option to load the whole
+           file to memory.
+
+      -[ Examples ]-
+
+      To open a file:
+
+         >>> import opacplot2 as opp
+         >>> op = opp.OpgHdf5.open_file('infile.h5')
+         >>> print(op.keys())
+         dict_keys(['Anum', ..., 'Znum']) # OpgHdf5 is a dictionary.
+         >>> print(op['Zf_DT'])
+         array([...]) # Array for average ionization.
+
+      -[ Notes ]-
+
+      Loading the entire file into memory can be potentially
+      dangerous. Use "explicit_load" with caution.
+
+   write2file(filename, **args)
+
+      Write to an HDF5 output file.
+
+      Parameters:
+         * **filename** (*str*) -- Name of output file.
+
+         * **args** (*dict*) -- Dictionary of data to write.
+
+
+Data Points
+-----------
+
+Depending on what kind of data has been written to an HDF5 file, each
+HDF5 file may vary widely. Despite this fact, listed below are the
+naming conventions "opacplot2" uses for HDF5 data points that are
+relevant to IONMIX. The abbreviations are keys unless otherwise stated
+to be an attribute to the "OpgHdf5" object.
+
+   +------------------------------+-----------------------------+
+   | "opacplot2" Abbr             | Physical Meaning            |
+   +==============================+=============================+
+   | "Znum"                       | Atomic numbers              |
+   +------------------------------+-----------------------------+
+   | "Xnum"                       | Element fractions           |
+   +------------------------------+-----------------------------+
+   | "idens"                      | Number densities            |
+   +------------------------------+-----------------------------+
+   | "temp"                       | Temperature array           |
+   +------------------------------+-----------------------------+
+   | "Ng" (attr)                  | Number of energy groups     |
+   +------------------------------+-----------------------------+
+   | "groups"                     | Energy group boundaries     |
+   +------------------------------+-----------------------------+
+   | "opp_mg"                     | Planck absorption           |
+   +------------------------------+-----------------------------+
+   | "opr_mg"                     | Rosseland opacities         |
+   +------------------------------+-----------------------------+
+   | "emp_mg"                     | Planck emissivity           |
+   +------------------------------+-----------------------------+
+
+For example, if we wanted to open up an HDF5 file named "input.h5" and
+write it to an IONMIX file named "output.cn4", we could write:
+
+   >>> import opacplot2 as opp
+   >>> op = OpgHdf5.open_file('input.h5')
+   >>> opp.writeIonmixFile(outfile,
+                    op['Znum'], op['Xnum'],
+                    numDens=op['idens'][:], temps=op['temp'][:],
+                    ngroups=op.Ng,
+                    opac_bounds=op['groups'][:],
+                    planck_absorb=op['opp_mg'][:],
+                    rosseland=op['opr_mg'][:],
+                    planck_emiss=op['emp_mg'][:])
+
+
+IONMIX (.cn4)
+=============
+
+class opacplot2.OpacIonmix(fn, mpi, twot=False, man=False, hassele=False, verbose=False)
+
+   Class to read in IONMIX EOS and Opacity Files.
+
+   The "OpacIonmix" class is used to read in an IONMIX file and
+   translate its information into object attributes. All energies in
+   this file are in Joules and must be converted to ergs. Unlike other
+   file classes, "OpacIonmix" does not store its data as a dictionary.
+   Instead, it stores its data in class attributes.
+
+   Parameters:
+      * **fn** (*str*) -- The name of the file to open.
+
+      * **mpi** (*str*) -- The mass per ion.
+
+      * **twot** (*bool*) -- Flag for two-temperature data.
+
+      * **man** (*bool*) -- Flag for manual temperature/density
+        points.
+
+      * **hassele** (*bool*) -- lag for electron entropy data.
+
+   fn
+
+      *str* -- Filename.
+
+   mpi
+
+      *float* -- Mass per ion.
+
+   twot
+
+      *bool* -- Two-temperature data.
+
+   man
+
+      *bool* -- Manual temp/dens points.
+
+   hassele
+
+      *bool* -- Has electron entropy data.
+
+   verb
+
+      *bool* -- Verbose.
+
+   ntemp
+
+      *int* -- Number of temperature points.
+
+   ndens
+
+      *int* -- Number of density points.
+
+   numDens
+
+      *numpy.ndarray* -- Number densitites.
+
+   temps
+
+      *numpy.ndarray* -- Temperatures.
+
+   ngroups
+
+      *numpy.ndarray* -- Number of groups
+
+   data
+
+      *str* -- Data at the end of the IONMIX file.
+
+   dens
+
+      *numpy.ndarray* -- Densities.
+
+   ngroups
+
+      *int* -- Number of groups.
+
+   zbar
+
+      *numpy.ndarray* -- Average ionizations.
+
+   etot
+
+      *numpy.ndarray* -- Total energy. Only included in single-
+      temperature data.
+
+   cvtot
+
+      *numpy.ndarray* -- Total C_v. Only included in single-
+      temperature data.
+
+   dedn
+
+      *numpy.ndarray* -- de/dn. Only included in single-temperature
+      data.
+
+   dzdt
+
+      *numpy.ndarray* -- dz/dt. Only included in two-temperature data.
+
+   pion
+
+      *numpy.ndarray* -- Ion pressure. Only included in two-
+      temperature data.
+
+   pele
+
+      *numpy.ndarray* -- Electron pressure. Only included in two-
+      temperature data.
+
+   dpidt
+
+      *numpy.ndarray* -- dp_i/dt. Only included in two-temperature
+      data.
+
+   dpedt
+
+      *numpy.ndarray* -- dp_e/dt. Only included in two-temperature
+      data.
+
+   eion
+
+      *numpy.ndarray* -- Ion energy. Only included in two-temperature
+      data.
+
+   eele
+
+      *numpy.ndarray* -- Electron energy. Only included in two-
+      temperature data.
+
+   cvion
+
+      *numpy.ndarray* -- C_v for ions. Only included in two-
+      temperature data.
+
+   cvele
+
+      *numpy.ndarray* -- C_v for electrons. Only included in two-
+      temperature data.
+
+   deidn
+
+      *numpy.ndarray* -- de_i/dn. Only included in two-temperature
+      data.
+
+   deedn
+
+      *numpy.ndarray* -- de_e/dn. Only included in two-temperature
+      data.
+
+   opac_bounds
+
+      *numpy.ndarray* -- Opacity boundaries.
+
+   rosseland
+
+      *numpy.ndarray* -- Rosseland opacity.
+
+   planck_absorb
+
+      *numpy.ndarray* -- Planck absorption.
+
+   planck_emiss
+
+      *numpy.ndarray* -- Planck emissivity.
+
+   -[ Examples ]-
+
+   For a directory with the IONMIX file "imx.cn4" for Aluminum:
+
+      >>> import opacplot2 as opp
+      >>> op = opp.Opac_Ionmix('imx.cn4', 26.981539)
+      >>> print(op.zbar)
+      array([...]) # Array of average ionizations for dens/temp points.
+
+   -[ Notes ]-
+
+   If you receive a "ValueError: invalid literal for int() with base
+   10" error, setting "man=True" may help to fix this.
+
+   extendToZero()
+
+      This routine adds another temperature point at zero.
+
+   write(fn, zvals, fracs, twot=None, man=None)
+
+      This method writes to an IONMIX file.
+
+      Parameters:
+         * **fn** (*str*) -- Name of output file.
+
+         * **zvals** (*tuple*) -- Atomic numbers.
+
+         * **fracs** (*tuple*) -- Element fractions.
+
+         * **twot** (*bool*) -- Flag for two-temperature data.
+
+         * **man** (*bool*) -- Flag for manual temp/dens points.
+
+      -[ Examples ]-
+
+      In order to extend "imx.cn4" for Al to zero:
+
+         >>> import opacplot2 as opp
+         >>> op = opp.OpacIonmix('imx.cn4', (13,), (1,))
+         >>> op.extendToZero() # Add temperature point at zero.
+         >>> op.write('imx-0.cn4', (13,), (1,))
+
+opacplot2.writeIonmixFile(fn, zvals, fracs, numDens, temps, zbar=None, dzdt=None, pion=None, pele=None, dpidt=None, dpedt=None, eion=None, eele=None, cvion=None, cvele=None, deidn=None, deedn=None, ngroups=None, opac_bounds=None, rosseland=None, planck_absorb=None, planck_emiss=None, sele=None)
+
+   "opacplot2.writeIonmixFile()" provides an explicit and flexible way
+   to write IONMIX files.
+
+   Parameters:
+      * **fn** (*str*) -- Name of the file to write.
+
+      * **zvals** (*tuple*) -- Atomic numbers of elements to write
+        to file.
+
+      * **fracs** (*tuple*) -- Element  fractions.
+
+      * **numdens** (*numpy.ndarray*) -- Number densities.
+
+      * **temps** (*numpy.ndarray*) -- Temperature array.
+
+      * **zbar=None** (*numpy.ndarray*) -- Average ionization. Only
+        used for tabulated EoS in *FLASH*.
+
+      * **dzdt=None** (*numpy.ndarray*) -- Temperature derivative of
+        average ionization. Ignored by *FLASH*.
+
+      * **pion=None** (*numpy.ndarray*) -- Ion pressure  Only used
+        for tabulated EoS in *FLASH*.
+
+      * **pele=None** (*numpy.ndarray*) -- Electron pressure. Only
+        used for tabulated EoS in *FLASH*.
+
+      * **dpidt=None** (*numpy.ndarray*) -- Temperature derivative
+        of ion pressure. Ignored by *FLASH*.
+
+      * **dpedt=None** (*numpy.ndarray*) -- Temperature derivative
+        of electron pressure. Ignored by *FLASH*.
+
+      * **eion=None** (*numpy.ndarray*) -- Ion specific internal
+        energy. Only used for tabulated EoS in *FLASH*.
+
+      * **eele=None** (*numpy.ndarray*) -- Electron specific
+        internal energy. Only used for tabulated EoS in *FLASH*.
+
+      * **cvion=None** (*numpy.ndarray*) -- Ion heat capacity at
+        constant volume. Ignored by *FLASH*.
+
+      * **cvele=None** (*numpy.ndarray*) -- Electron heat capacity
+        at constant volume. Ignored by *FLASH*.
+
+      * **deidn=None** (*numpy.ndarray*) -- Number derivative of ion
+        energy. Ignored by *FLASH*.
+
+      * **deedn=None** (*numpy.ndarray*) -- Number derivative of
+        electron energy. Ignored by *FLASH*.
+
+      * **ngroups=None** (*int*) -- Number of energy groups.
+
+      * **opac_bounds=None** (*numpy.ndarray*) -- Energy group
+        boundaries.
+
+      * **rosseland=None** (*numpy.ndarray*) -- Rosseland opacities.
+        Only used for tabulated EoS in *FLASH*.
+
+      * **orb=None** (*planck_abs*) -- Planck absorption opacity.
+        Only used for tabulated EoS in *FLASH*.
+
+      * **planck_emiss=None** (*numpy.ndarray*) -- Planck emission
+        opacity. Only used for tabulated EoS in *FLASH*.
+
+   -[ Examples ]-
+
+   Here we open an HDF5 file containing EoS and Opacity data and write
+   it to an IONMIX file:
+
+      >>> import opacplot2 as opp
+      >>> op = opp.OpgHdf5.open_file('/path/to/infile.h5')
+      >>> opp.writeIonmixFile('outfile.cn4',
+                      op['Znum'], op['Xnum'],
+                      numDens=op['idens'][:], temps=op['temp'][:],
+                      ngroups=op.Ng,
+                      opac_bounds=op['groups'][:],
+                      planck_absorb=op['opp_mg'][:],
+                      rosseland=op['opr_mg'][:],
+                      planck_emiss=op['emp_mg'][:])
+
+class opacplot2.adapt.EosMergeGrids(eos_data, filter_dens=<function EosMergeGrids.<lambda>>, filter_temps=<function EosMergeGrids.<lambda>>, intersect=['ele', 'ioncc'], thresh=[])
+
+   This class provides filtering capabilities for the EoS temperature
+   and density grids.
+
+   For instance, SESAME tables may have some additional points in the
+   ion EoS table, compared to the electron EoS table, and as FLASH
+   requires the same density and temperature grid for all species, the
+   simplest solution is to remove those extra points.
+
+   Parameters:
+      * **eos_data** (*dict*) -- Dictionary contraining the EoS
+        data.
+
+      * **intersect** (*list*) -- The resulting temperature [eV] and
+        density [g/cm⁻³] grids will be computed as an intersection of
+        grids of all the species given in this list. Default: ['ele',
+        'ioncc']
+
+      * **filter_dens** (*function*) -- A function that takes a grid
+        of densities and returns a mask of points we don't wont to
+        keep. Defaut: (lamdba x: x>0.) i.e. don't remove anything.
+
+      * **filter_temps** (*function*) -- A function that takes a
+        grid of temperatures and returns a mask of points we don't
+        wont to keep. Defaut: (lamdba x: x>0.) i.e. don't remove
+        anything.
+
+      * **thresh** (*list*) -- Zero threshold on following keys
+
+   Returns:
+      **out** -- A dictionary with the same keys a eos_data.
+
+   Return type:
+      dict
+
+   -[ Example ]-
+
+   >>> eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii", opp.OpgSesame.SINGLE,verbose=False)
+   >>> eos_data  = eos_sesame.data[3720]  # Aluminum
+   >>> eos_data_filtered = EosMergeGrids(eos_data,
+           intersect=['ele', 'ioncc'],   # Merge ele and ioncc grids
+           filter_temps=lamda x: x>1.) # Remove temperatures below 1eV
+
+
+MULTI (.opp, .opr, .eps)
+========================
+
+class opacplot2.OpgMulti(*cargs, **vargs)
+
+   Can be used either to parse or to write MULTIv5 tables.
+
+   "OpgMulti" is a subclass of "dict". Through "open_file()", it can
+   read EoS and opacity data from MULTI files. Then, the data can be
+   accessed through the key:value pairs of the "OpgMulti" instance.
+
+   -[ Examples ]-
+
+   If we are in a directory with the files "He_snp.eps.gz",
+   "He_snp.opp.gz", "He_snp.opr.gz", and "He_snp.opz.gz", then the
+   following would read their data into an "OpgMulti" object:
+
+      >>> import opacplot2 as opp
+      >>> op = opp.OpgMulti.open_file('/path/to/current/dir', 'He_snp')
+
+   classmethod open_file(folder, base_name, verbose=True)
+
+      Parse MULTI format from a file.
+
+      Parameters:
+         * **str** (*folder*) -- Name of directory containing MULTI
+           files.
+
+         * **base_name** (*str*) -- Base name of MULTI files.
+
+         * **verbose** (*bool*) -- Verbose option.
+
+      Returns:
+         Dictionary containing EoS and/or opacity data.
+
+      Return type:
+         OpgMulti
+
+   write(prefix, fmin=None, fmax=None)
+
+      Write multigroup opacities to files specified by a prefix.
+
+      Parameters:
+         * **prefix** (*str*) -- Prefix to append to files that are
+           written.
+
+         * **fmin** (*float*) -- Minimum value for opacities to
+           write.
+
+         * **fmax** (*float*) -- Maximum value for opacities to
+           write.
+
+      -[ Examples ]-
+
+      After filling an instance of "OpgMulti" with EoS/opacity data,
+      one could call:
+
+         >>> op_multi.write('multi_')
+
+      to write data files containing multigroup opacities specified by
+      the 'multi_' prefix.
+
+   write2hdf(filename, Znum=None, Anum=None, Xnum=None)
+
+      Convert to HDF5 parameters.
+
+      Parameters:
+         * **filename** (*str*) -- Output filename.
+
+         * **Znum** (*tuple*) -- Atomic numbers of elements.
+
+         * **Anum** (*tuple*) -- Atomic masses of elements.
+
+         * **Xnum** (*tuple*) -- Fractions of elements.
+
+      -[ Examples ]-
+
+      The atomic number and relative fractions must be given if they
+      are not already parsed into an instance of "OpgMulti". If they
+      are not, "write2hdf" will raise a "ValueError".
+
+      If we were in the same directory as the previous example, the
+      following would write an HDF5 file with data from our MULTI
+      files:
+
+         >>> import opacplot2 as opp
+         >>> op = opp.OpgMulti.open_file('/path/to/current/dir', 'He_snp')
+         >>> op.write2hdf('outfile.h5')
+
+opacplot2.get_related_multi_tables(folder, base_name, verbose=False)
+
+   Get all related multi Tables defined by a folder and a base name.
+
+   Parameters:
+      * **folder** (*str*) -- Folder containing the tables.
+
+      * **base_name** (*str*) -- Base name of the table.
+
+      * **verbose** (*bool*) -- Flag for verbose option.
+
+
+SESAME ASCII (.ses)
+===================
+
+class opacplot2.OpgSesame(filename, precision, verbose=False)
+
+   This class is responsible for loading all SESAME formatted data
+   files.
+
+   "OpgSesame" reads in a SESAME file. Each key:value pair of the
+   "data" attribute corresponds to a table ID and its data from the
+   file, respectively.
+
+   Parameters:
+      * **fn** (*str*) -- Name of file to open.
+
+      * **precision** (*int*) -- "opacplot2.OpgSesame.SINGLE" for
+        entry lengths of 15 or "opacplot2.OpgSesame.Double" for entry
+        lengths of 22.
+
+      * **verbose** (*bool*) -- Verbose option.
+
+   data
+
+      *dict* -- Dictionary of material IDs included in the SESAME
+      file.
+
+   -[ Examples ]-
+
+   The "opacplot2.OpgSesame.data" dictionary will hold the EoS data
+   for the table referenced by "table_id". For example, if we are in a
+   directory with the file "sesame.ses":
+
+      >>> import opacplot2 as opp
+      >>> op = opp.OpgSesame('sesame.ses', opp.OpgSesame.SINGLE)
+      >>> print(op.data.keys())
+      dict_keys([..., 13719]) # Table ID numbers; Aluminum.
+      >>> data = op.data[13719]
+      >>> print(sorted(data.keys()))
+      dict_keys(['abar',...,'zmax']) # Dictionary containing EoS data.
+
+Note: There are currently no handling functions for 500 series
+  entries in the SESAME tables.
+
+
+Data Prefixes
+-------------
+
+From Los Alamos National Laboratory, each SESAME table has five
+different parts of their EoS tables:
+
+   +-------------+-------------------------------------------+--------------------------+
+   | Table #     | Data Type                                 | "opacplot2" prefix       |
+   +=============+===========================================+==========================+
+   | Table 301   | TotalEOS(304+305+306)                     | "total_"                 |
+   +-------------+-------------------------------------------+--------------------------+
+   | Table 303   | Ion EOS Plus Cold Curve (305 + 306)       | "ioncc_"                 |
+   +-------------+-------------------------------------------+--------------------------+
+   | Table 304   | Electron EOS                              | "ele_"                   |
+   +-------------+-------------------------------------------+--------------------------+
+   | Table 305   | Ion EOS (Including Zero Point)            | "ion_"                   |
+   +-------------+-------------------------------------------+--------------------------+
+   | Table 306   | Cold Curve (No Zero Point)                | "cc_"                    |
+   +-------------+-------------------------------------------+--------------------------+
+
+If we wanted to print out all of the EoS data for the electrons:
+
+   >>> import opacplot2 as opp
+   >>> op = opp.OpgSesame('sesame.ses', opp.OpgSesame.SINGLE)
+   >>> data = op.data[13719]
+   >>> for key in data.keys(): # Table ID for aluminum.
+   ...     if 'cc_' == key[:3]:
+   ...         print(key+':')
+   ...         print(data[key])
+
+
+Data Points
+-----------
+
+There are several top-level data points that are not included in a
+specific curve of the SESAME tables:
+
+   +----------------------------+------------------------------+
+   | "opacplot2" Abbr.          | Phys. Meaning                |
+   +============================+==============================+
+   | "abar"                     | Mean Atomic Mass             |
+   +----------------------------+------------------------------+
+   | "bulkmod"                  | Bulk Modulus                 |
+   +----------------------------+------------------------------+
+   | "excoef"                   | Exchange Coefficient         |
+   +----------------------------+------------------------------+
+   | "rho0"                     | Normal Density               |
+   +----------------------------+------------------------------+
+   | "zmax"                     | Mean Atomic number           |
+   +----------------------------+------------------------------+
+
+Furthermore, each table (301, ..., 305) prefixes these data points:
+
+   +-------------------------------+---------------------------------+
+   | "opacplot2" Abbr.             | Phys. Meaning                   |
+   +===============================+=================================+
+   | "dens"                        | Density                         |
+   +-------------------------------+---------------------------------+
+   | "eint"                        | Energy                          |
+   +-------------------------------+---------------------------------+
+   | "ndens"                       | Number of Densities             |
+   +-------------------------------+---------------------------------+
+   | "ntemp"                       | Number of Temperatures          |
+   +-------------------------------+---------------------------------+
+   | "pres"                        | Pressures                       |
+   +-------------------------------+---------------------------------+
+   | "temps"                       | Temperatures                    |
+   +-------------------------------+---------------------------------+
+
+From the example in the previous section, if we wanted to print out
+the density array of electrons, we would simply type:
+
+   >>> print(data['ele_dens'])
+   array([...]) # Electron density array.
+
+
+TOPS
+====
+
+
+INFERNO
+=======
+
+
+PROPACEOS ASCII (.prp)
+======================
+
+Warning: Handling for Propaceos EoS tables is not publicly
+  distributed with "opacplot2" and so its documentation will not be
+  presented here.

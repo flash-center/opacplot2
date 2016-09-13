@@ -5,27 +5,39 @@ import numpy as np
 from matplotlib import pyplot as plt
 plt.rcParams.update({'text.usetex': True})
 
-def plot_zbar(denss, temps, zbar, zmax, fig):
-    ax = fig.add_subplot(111)
+def plot_zbar(denss, temps, zbar, fig, log=True, subplot_number=111):
+    ax = fig.add_subplot(subplot_number)
     x,y = np.meshgrid(denss, temps)
-
+    
+    # Contour the plot and grab its colorset.
     cs = ax.contourf(x,y, zbar.T, 256)
-    cb = plt.colorbar(cs, ticks=matplotlib.ticker.MaxNLocator(nbins=15))
+    
+    # Create a colorbar based on the contourset from earlier.
+    # This will be put on its own axes.
+    cb = fig.colorbar(cs, ticks=matplotlib.ticker.MaxNLocator(nbins=15))
     cb.set_label("Average Ionization")
-
-    cb2 = plt.contour(x, y, zbar.T,
-           colors='k', opacity=0.5, linewidths=0.4,
-           locator=matplotlib.ticker.MaxNLocator(nbins=15))
+    
+    # Create a line contour.
+    cb2 = ax.contour(x, y, zbar.T,
+               colors='k', opacity=0.5, linewidths=0.4,
+               locator=matplotlib.ticker.MaxNLocator(nbins=15))
 
     plt.clabel(cb2,fontsize=6, inline=False, inline_spacing=1, fmt='%1.0f',
-               rightside_up=True, use_clabeltext=False)
+                   rightside_up=True, use_clabeltext=False)
 
-    ax.loglog()
+    
+    # Put the graph axes into logarithmic scales.
+    if log==True:
+        ax.loglog()
+        
     ax.set_xlim((denss[0], denss[-1]))
     ax.set_ylim((temps[0], temps[-1]))
-    plt.xlabel(r'$\rho$ [g.cm$^{-3}$]')
-    plt.ylabel(r'$T$ [eV]')
-    return ax
+    
+    ax.set_xlabel(r'$\rho$ [g.cm$^{-3}$]')
+    ax.set_ylabel(r'$T$ [eV]')
+    
+    # Return the plot's axes and its colorbar's axes.
+    return ax, cb
 
 def plot_eos_grid(tdata, var):
     """
@@ -58,6 +70,8 @@ def plot_eos_grid(tdata, var):
         plt.title(r'Density grids: $\rho$ [g.cm$^{-3}$]')
     else:
         plt.title(r'Temperature grids: $T$ [eV]')
+    
+    return fig
 
 def plot_eos_field(eos_data, species, parameter, grad=None):
     if grad is True:
@@ -120,7 +134,7 @@ def plot_eos_field(eos_data, species, parameter, grad=None):
         cs = plt.contourf(rho,T, np.log10(Z), 256)
         plt.title(r'{0} EoS - $\frac{{\partial {1}}}{{\partial {2}}} {3}$'.format(
                    species_label, var_title[None], grad_label[grad], var_title[grad]))
-    cb2 = plt.contour(rho, T, np.log10(Z),
+    contour(rho, T, np.log10(Z),
            colors='k', opacity=0.5, linewidths=0.4,
            locator=matplotlib.ticker.MaxNLocator(nbins=15))
     plt.clabel(cb2,fontsize=6, inline=False, inline_spacing=1, fmt='%1.0f',
@@ -139,7 +153,7 @@ def plot_diff_mg_opac(fig, op_list, idx=None):
     plt.rcParams.update({'text.usetex': True})
     ax = [plt.subplot(2,2,i) for i in range(1, 5)] 
     groups = op_list[0]['groups']
-    plt.suptitle('Multigroup opacity comparaison: {0:.2e} g.cm$^{{-2}}$, {1:.3f} eV'.format(
+    plt.suptitle('Multigroup opacity comparison: {0:.2e} g.cm$^{{-2}}$, {1:.3f} eV'.format(
                         op_list[0]['rho'][idx[0]], op_list[0]['temp'][idx[1]]))
     for var_idx, var in enumerate(['opp_mg', 'opr_mg', 'eps_mg']):
         for op in op_list:

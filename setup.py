@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 if __name__ == "__main__":
     setup(name="opacplot2",
-          version='0.9.0',
+          version='1.0.0',
           description='Package for reading, manipulating, and plotting EOS and Opacity data',
           author='Milad',
           author_email='milad@flash.uchicago.edu',
@@ -24,12 +24,7 @@ if __name__ == "__main__":
             ],
 
           entry_points = {
-                    'console_scripts': ['opacplot2 = opacplot2.scripts:main',
-                                        'opac_table2hdf = opacplot2.scripts.opac_table2hdf:opac_table2hdf',
-                                        'opac_hdf2table = opacplot2.scripts.opac_hdf2table:opac_hdf2table',
-                                        'opacdump = opacplot2.scripts.main:opacdump',
-                                        'opacdiff = opacplot2.scripts.opac_diff:opac_diff',
-                                        'opac_checkhdf = opacplot2.scripts.main:opac_checkhdf',
+                    'console_scripts': ['opac-convert = opacplot2.scripts.opac_convert:convert_tables'
                                         ],
                         }
           )

@@ -25,10 +25,14 @@ def get_related_multi_tables(folder, base_name, verbose=False):
     """
     Get all related multi Tables defined by a folder and a base name.
 
-    Parameters:
-    -----------
-      - folder [str]: folder containing the tables
-      - base_name [str]: base name of the table
+    Parameters
+    ----------
+    folder : str 
+        Folder containing the tables.
+    base_name : str 
+        Base name of the table.
+    verbose : bool
+        Flag for verbose option.
     """
     patrn = re.compile((r'{0}'+MULTI_EXT_FMT).format(base_name), re.IGNORECASE)
     folder = os.path.abspath(folder)
@@ -56,13 +60,20 @@ SMALL_FLOAT_LOG = -4.42627399E+02
 
 class OpgMulti(dict):
     """
-    Can be used either to parse or to write MULIv5 tables.
+    Can be used either to parse or to write MULTIv5 tables.
+    
+    ``OpgMulti`` is a subclass of ``dict``. Through ``open_file()``, it can
+    read EoS and opacity data from MULTI files. Then, the data can be accessed
+    through the key:value pairs of the ``OpgMulti`` instance.
+    
+    Examples
+    --------
+    If we are in a directory with the files ``He_snp.eps.gz``, ``He_snp.opp.gz``,
+    ``He_snp.opr.gz``, and ``He_snp.opz.gz``, then the following would read their data
+    into an ``OpgMulti`` object::
 
-    Parameters:
-
-     * table - two use cases are possible
-       1. (folder, base_name) 
-       2. dict
+       >>> import opacplot2 as opp
+       >>> op = opp.OpgMulti.open_file('/path/to/current/dir', 'He_snp')
     """
 
     def __init__(self, *cargs, **vargs):
@@ -74,15 +85,21 @@ class OpgMulti(dict):
     @classmethod
     def open_file(cls, folder, base_name, verbose=True):
         """
-        Parse MULTI format from a file
-        Parameters:
-        -----------
-          - folder
-          - base name
+        Parse MULTI format from a file.
+        
+        Parameters
+        ----------
+        folder   str
+            Name of directory containing MULTI files.
+        base_name : str
+            Base name of MULTI files.
+        verbose : bool
+            Verbose option.
 
-        Returns:
-        --------
-          OpgMulti
+        Returns
+        -------
+        OpgMulti
+            Dictionary containing EoS and/or opacity data.
         """
         op = cls()
         table =  get_related_multi_tables(folder, base_name)
@@ -107,8 +124,9 @@ class OpgMulti(dict):
     def _parse(self, path, tabletype):
         """
         Parse MULTIv5 opacity/ionization file
-        Parameters:
-        -----------
+        
+        Parameters
+        ----------
           - path [str]: path to the file
           - tabletype [str]: table type, one of ('opp', 'opr', 'eps', 'opz')
 
@@ -203,7 +221,28 @@ class OpgMulti(dict):
 
     def write(self, prefix, fmin=None, fmax=None):
         """
-        Write multigroup opacities to files specified by a prefix
+        Write multigroup opacities to files specified by a prefix.
+        
+        Parameters
+        ----------
+        prefix : str
+            Prefix to append to files that are written.
+
+        fmin : float
+            Minimum value for opacities to write.
+
+        fmax : float
+            Maximum value for opacities to write.
+        
+        Examples
+        --------
+        After filling an instance of ``OpgMulti`` with EoS/opacity data,
+        one could call::
+
+            >>> op_multi.write('multi_')
+
+        to write data files containing multigroup opacities specified by the 
+        'multi\_' prefix.
         """
         for key in ['eps_mg', 'temp', 'dens', 'opp_mg', 'opr_mg', 'emp_mg']:
             if key in self:
@@ -267,8 +306,31 @@ class OpgMulti(dict):
 
 
     def write2hdf(self, filename, Znum=None, Anum=None, Xnum=None):
-        """ Convert to hdf5
+        """ Convert to HDF5 parameters.
+        
         Parameters
+        ----------
+        filename : str
+           Output filename.
+        Znum : tuple
+           Atomic numbers of elements.
+        Anum : tuple
+           Atomic masses of elements.
+        Xnum : tuple
+           Fractions of elements.
+        
+        Examples
+        --------
+        The atomic number and relative fractions
+        must be given if they are not already parsed into an instance of ``OpgMulti``.
+        If they are not, ``write2hdf`` will raise a ``ValueError``.
+
+        If we were in the same directory as the previous example, the following would
+        write an HDF5 file with data from our MULTI files::
+
+           >>> import opacplot2 as opp
+           >>> op = opp.OpgMulti.open_file('/path/to/current/dir', 'He_snp')
+           >>> op.write2hdf('outfile.h5')
         """
         import tables
         h5filters = tables.Filters(complib='blosc', complevel=7, shuffle=True,
@@ -279,7 +341,7 @@ class OpgMulti(dict):
             if "Znum" in self:
                 Znum = self['Znum']
             else:
-                raise ValueError('Znum Varray should be providied!')
+                raise ValueError('Znum Varray should be provided!')
         if type(Znum) is int:
             Znum = [Znum]
         self['Znum'] = np.array(Znum, dtype='int')
@@ -328,6 +390,83 @@ class OpgMulti(dict):
             setattr(f.root._v_attrs,attr, self[attr])
         f.close()
 
+    def toEosDict(self, Znum=None, Anum=None, Xnum=None, log=None):
+        """
+        This method creates a dictionary with keys that are common among
+        the various EoS table formats.
+        """
+        # Decide if we need Znum, and Xnum, calculate Anum if it is not given.
+        if Znum is None:
+            if 'Znum' in self:
+                Znum = self['Znum']
+            else:
+                raise ValueError('Znum Varray should be provided!')
+        if type(Znum) is int:
+            Znum = [Znum]
+        self['Znum'] = np.array(Znum, dtype='int')
+        if Anum is None:
+            self['Anum'] = np.array([ptab.elements[el].mass for el in self['Znum']])
+        else:
+            self['Anum'] = np.array(Anum)
+        self['Zsymb'] = np.array([ptab.elements[el].symbol for el in self['Znum']], dtype='|S2')
+        if Xnum is None:
+            if len(Znum) == 1:
+                self['Xnum'] = np.array([1.0])
+            else:
+                raise ValueError('Xnum array should be provided')
+        else:
+            self['Xnum'] = np.array(Xnum)
+        
+        # Setting more attributes.
+        self['Abar'] = np.sum(self['Xnum']*self['Anum'])
+        self['Zmax'] = np.sum(self['Xnum']*self['Znum'])
+        self['idens'] = self['dens']*NA/self['Abar']
+        
+        # Calculate Planck Mean Emissivity. Set it equal to Planck Opacity if
+        # we don't have the correct data.
+        if "eps_mg" in self:
+            self['emp_mg'] = self['opp_mg']*self['eps_mg']
+        else:
+            print('Warning: looks like this is LTE opacity, no eps file found!')
+            print('Setting planck emissivity to be the same as planck opacity...')
+            self['emp_mg'] = self['opp_mg'].copy()
+            
+        # Filter out values that are too low to write to IONMIX format.
+        # A three digit exponent is currently not compatible. 
+        # TODO fix OpacIonmix.writeIonmixFile() to write logarithmic data
+        # to IONMIX.
+        #low_val_idxs = self['emp_mg'] < 1.0e-99
+        #self['emp_mg'][low_val_idxs] = 1.0e-99 # Set them to zero.
+        
+        # To translate the MULTI keys to a common EoS dictionary format.
+        names_dict = {'idens': 'idens',
+                      'temp': 'temp',
+                      'dens' : 'dens',
+                      'zbar': 'Zf_DT',
+                      'opp_mg': 'opp_mg',
+                      'opr_mg': 'opr_mg',
+                      'Znum': 'Znum',
+                      'Anum': 'Anum',
+                      'Xnum': 'Xnum',
+                      'groups': 'groups',
+                      'Abar': 'Abar',
+                      'Zmax': 'Zmax',
+                      'emp_mg': 'emp_mg'}
+        
+        # Initialize eos_dict.
+        eos_dict = {}
+        
+        # Translate keys.
+        for mul_key, eos_key in sorted(six.iteritems(names_dict)):
+            eos_dict[eos_key] = self[mul_key]
+            
+        # Handle the logarithmic data.
+        if log is not None:
+            for key in eos_dict.keys():
+                if key in log:
+                    eos_dict[key] = np.log10(eos_dict[key])
+        
+        return eos_dict
 
     @staticmethod
     def _write_vector(f, X):

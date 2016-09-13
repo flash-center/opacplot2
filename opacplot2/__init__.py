@@ -1,22 +1,28 @@
-from .opl_grid import *
-from .opl_list import *
+"""Package for manipulating Equation of State (EoS) and Opacity data.
+"""
 
-from .opg_tops    import *
-from .opg_ionmix  import *
-from .opg_tabop   import *
-from .opg_inferno import *
-from .opg_crash   import *
-from .opg_yac     import *
-from .opg_sesame  import *
+__version__ = '1.0.0'
 
-from .opac_plotter import *
-from .histogram import *
-from .convert_opl import *
-from .avgopac import *
-from .constants import *
-from .interp import *
-from . import adapt
-from . import presets
+# eos_ prefix
+from .eos_plotter   import *
 
+# opg_ prefix
+from .opg_hdf5      import *
+from .opg_ionmix    import *
+from .opg_multi     import *
+# The Propaceos module is not distributed. More details can be found in
+# opg_propaceos-note.py.
+#from .opg_propaceos import *
+from .opg_qeos      import *
+from .opg_sesame    import *
+from .opg_tabop     import *
 
-__version__ = '0.9.0'
+# plotting 
+from .opac_plotter  import *
+from .histogram     import *
+
+# Constants.
+from .constants     import *
+
+# Utilities.
+from . import utils

@@ -5,7 +5,14 @@ build
 dist
 opacplot2.egg-info
 visualization/*.ipynb
+visualization/.ipynb_checkpoints
 *.swp
 *pyc
 *cn4
 .coverage
+opacplot2/opg_propaceos.py
+.old
+.cache
+to-do.txt
+doc/*
+!doc/_build/

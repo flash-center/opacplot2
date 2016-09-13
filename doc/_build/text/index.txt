@@ -1,0 +1,63 @@
+
+Welcome to Opacplot2's documentation!
+*************************************
+
+Contents:
+
+* Introduction
+
+  * Read/Write/Write2hdf
+
+  * Installation
+
+* File Format Functions and Classes
+
+  * Native HDF5
+
+  * IONMIX (.cn4)
+
+  * MULTI (.opp, .opr, .eps)
+
+  * SESAME ASCII (.ses)
+
+  * TOPS
+
+  * INFERNO
+
+  * PROPACEOS ASCII (.prp)
+
+* Testing Suite
+
+  * Running Tests
+
+* Plotting Capabilities
+
+  * Configuring "matplotlib" to display inline
+
+  * Troubleshooting "matplotlib" on OSX
+
+* Command Line Tools
+
+  * "opac_table2hdf"
+
+  * "opac_hdf2table"
+
+  * Other Tools
+
+* Utilities
+
+  * Interpolation
+
+  * Grid Structure
+
+  * Miscellaneous
+
+
+Indices and tables
+******************
+
+* Index
+
+* Module Index
+
+* Search Page
