@@ -119,9 +119,9 @@ been applied.
 |Ion internal energy|`Ui_DT`|
 |Electron internal energy|`Uec_DT`|
 |Opacity bounds|`groups`|
-|Rosseland mean opacity|`rosseland`|
-|absorption Planck mean opacity|`planck_absorb`|
-|emission Planck mean opacity|`planck_emiss`|
+|Rosseland mean opacity|`opr_mg`|
+|absorption Planck mean opacity|`opp_mg`|
+|emission Planck mean opacity|`emp_emg`|
 
 
 For example, in order to specify that the emission Planck Mean Opacity be written
