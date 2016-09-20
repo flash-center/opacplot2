@@ -5,7 +5,7 @@ matrix:
     - python: "3.5"
       env: DEPS="numpy nose six pytables matplotlib pytest pytest-cov scipy"
     - python: "2.7"
-      env: DEPS="numpy nose six pytables matplotlib pytest pytest-cov scipy"
+      env: DEPS="numpy nose six pytables matplotlib pytest pytest-cov scipy enum34"
 
 install: 
     - wget http://repo.continuum.io/miniconda/Miniconda${TRAVIS_PYTHON_VERSION:0:1}-latest-Linux-x86_64.sh -O miniconda.sh
