@@ -1,7 +1,6 @@
 import opacplot2 as opp
 import argparse
 import os.path
-import textwrap
 
 def get_input_data():
     # Available formats.
@@ -151,6 +150,7 @@ class Formats_toEosDict(object):
         return eos_dict
         
     def sesame_toEosDict(self):
+        # TODO Add options for single vs double
         op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
         eos_dict = op.toEosDict(Znum=self.args.Znum, 
                                 Xnum=self.args.Xfracs,
@@ -158,6 +158,7 @@ class Formats_toEosDict(object):
         return eos_dict
         
     def sesame_qeos_toEosDict(self):
+        # TODO Add options for single vs double
         op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
         eos_dict = op.toEosDict(Znum=self.args.Znum, Xnum=self.args.Xfracs, 
                                 qeos=True, log=self.args.log)

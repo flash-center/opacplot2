@@ -63,8 +63,8 @@ class test_imx(unittest.TestCase):
                                                verbose=False)
 
             for key in self.fields:
-                np.testing.assert_allclose(getattr(self.eos_data, key), 
-                                           getattr(self.eos_data_new, key))
+                np.testing.assert_array_equal(getattr(self.eos_data, key), 
+                                              getattr(self.eos_data_new, key))
 
         except:
             raise

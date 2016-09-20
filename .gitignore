@@ -16,3 +16,4 @@ opacplot2/opg_propaceos.py
 to-do.txt
 doc/*
 !doc/_build/
+misc

@@ -25,7 +25,7 @@ class OpacIonmix:
     fn: str
         The name of the file to open.
     mpi: str
-       The mass per ion.
+       The mass per ion **in grams**.
 
     twot: bool
        Flag for two-temperature data.
@@ -629,7 +629,7 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
     f.write("\n")
 
     # Write temperature/density grid and number of groups:
-    # block argument is for error reporting purposes.
+    # name argument is for error reporting purposes.
     def convert(num, name):
         string_org = "%12.5E" % (num)
         negative = (string_org[0] == "-")

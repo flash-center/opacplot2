@@ -24,7 +24,7 @@ if __name__ == "__main__":
             ],
 
           entry_points = {
-                    'console_scripts': ['opac-convert = opacplot2.scripts.opac_convert:convert_tables'
-                                        ],
+                    'console_scripts': ['opac-convert = opacplot2.scripts.opac_convert:convert_tables',
+                                        'opac-error = opacplot2.scriplts.opac_error:check_error'],
                         }
           )

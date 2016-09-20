@@ -430,13 +430,6 @@ class OpgMulti(dict):
             print('Warning: looks like this is LTE opacity, no eps file found!')
             print('Setting planck emissivity to be the same as planck opacity...')
             self['emp_mg'] = self['opp_mg'].copy()
-            
-        # Filter out values that are too low to write to IONMIX format.
-        # A three digit exponent is currently not compatible. 
-        # TODO fix OpacIonmix.writeIonmixFile() to write logarithmic data
-        # to IONMIX.
-        #low_val_idxs = self['emp_mg'] < 1.0e-99
-        #self['emp_mg'][low_val_idxs] = 1.0e-99 # Set them to zero.
         
         # To translate the MULTI keys to a common EoS dictionary format.
         names_dict = {'idens': 'idens',
