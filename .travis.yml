@@ -14,6 +14,7 @@ install:
     - export PATH=/home/travis/miniconda${TRAVIS_PYTHON_VERSION:0:1}/bin:$PATH
     # See: https://groups.google.com/a/continuum.io/forum/#!topic/conda/RSFENqovnro
     - conda update --yes --no-deps conda
+    - pip install enum34
     - conda config --set always_yes yes --set changeps1 no
     # Learned the hard way: miniconda is not always up-to-date with conda.
     - conda update --yes conda

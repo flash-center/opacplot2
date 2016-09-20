@@ -1,6 +1,6 @@
 # opacplot2
 
-[![Build Status](https://travis-ci.org/jtlaune/opacplot2.svg?branch=master)](https://travis-ci.org/jtlaune/opacplot2)
+[![Build Status](https://travis-ci.org/flash-center/opacplot2.svg?branch=master)](https://travis-ci.org/flash-center/opacplot2)
 
 Python package for manipulating Equation of State (EoS) and Opacity data.
 
