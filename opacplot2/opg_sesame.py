@@ -242,7 +242,8 @@ class OpgSesame:
         
     def toEosDict(self, Znum=None, Anum=None, 
                   Xnum=None, qeos=False, log=None,
-                  filter_dens=0., filter_temps=0.):
+                  filter_dens=0., filter_temps=0.,
+                  tabnum=None):
         # For SESAME, we need the hedp package to calculate zbar.
         try:
             from hedp import eos
@@ -250,8 +251,14 @@ class OpgSesame:
             raise ImportError('You need the hedp module. You can get it here: '
                               'https://github.com/luli/hedp.')
         
-        # Select the last table (newest) table available.
-        opp_ses_data = self.data[sorted(self.data.keys())[-1]]
+        if tabnum is None:
+            # Select the last table (newest) table available.
+            opp_ses_data = self.data[sorted(self.data.keys())[-1]]
+        else:
+            try:
+                opp_ses_data = self.data[tabnum]
+            except KeyError:
+                raise KeyError('Invalid table number!')
 
         # Sesame has extra data points in it, so we must merge them down. We are
         # merging the default grids ioncc_ and ele_.
@@ -277,7 +284,7 @@ class OpgSesame:
                                 qeos=True)
 
         # Converting density to ion number density.
-        opp_ses_data['idens'] = (opp.NA * opp_ses_data['ele_dens'] 
+        opp_ses_data['idens'] = ((opp.NA * opp_ses_data['ele_dens'])
                                             / opp_ses_data['abar'])
 
         

@@ -48,6 +48,10 @@ def get_input_data():
     parser.add_argument('--log',
                         action='store', type=str,
                         help='Logarithmic data keys.')
+    
+    parser.add_argument('--tabnum',
+                        action='store', type=str,
+                        help='Specify the SESAME table number.')
                         
     args = parser.parse_args()
     
@@ -72,6 +76,13 @@ def get_input_data():
         args.Xfracs = [float(num) for num in args.Xfracs.split(',')]
     if args.log is not None:
         args.log = [str(key) for key in args.log.split(',')]
+    
+    # Convert tabnum into int.
+    if args.tabnum is not None:
+        try:
+            args.tabnum = int(args.tabnum)
+        except ValueError:
+            raise ValueError('Please provide a valid SESAME table number.')
     
     input_data = {'args' : args,
                   'basename' : basename,
@@ -150,18 +161,33 @@ class Formats_toEosDict(object):
         return eos_dict
         
     def sesame_toEosDict(self):
-        # TODO Add options for single vs double
-        op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
-        eos_dict = op.toEosDict(Znum=self.args.Znum, 
-                                Xnum=self.args.Xfracs,
-                                log=self.args.log)
+        try:
+            op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
+        except ValueError:
+            op = opp.OpgSesame(self.path_in, opp.OpgSesame.DOUBLE)
+        if self.args.tabnum is not None:
+            eos_dict = op.toEosDict(Znum=self.args.Znum, 
+                                    Xnum=self.args.Xfracs,
+                                    log=self.args.log,
+                                    tabnum=self.args.tabnum)
+        else:
+            eos_dict = op.toEosDict(Znum=self.args.Znum, 
+                                    Xnum=self.args.Xfracs,
+                                    log=self.args.log)
         return eos_dict
         
     def sesame_qeos_toEosDict(self):
-        # TODO Add options for single vs double
-        op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
-        eos_dict = op.toEosDict(Znum=self.args.Znum, Xnum=self.args.Xfracs, 
-                                qeos=True, log=self.args.log)
+        try:
+            op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
+        except ValueError:
+            op = opp.OpgSesame(self.path_in, opp.OpgSesame.DOUBLE)
+        if self.args.tabnum is not None:
+            eos_dict = op.toEosDict(Znum=self.args.Znum, Xnum=self.args.Xfracs, 
+                                    qeos=True, log=self.args.log,
+                                    tabnum=self.args.tabnum)
+        else:
+            eos_dict = op.toEosDict(Znum=self.args.Znum, Xnum=self.args.Xfracs, 
+                                    qeos=True, log=self.args.log)
         return eos_dict
 
 class EosDict_toIonmixFile(object):
