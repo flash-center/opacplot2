@@ -220,6 +220,7 @@ class Formats_Read(object):
         opacplot2.
     """
     
+    # Names dictionaries.
     # Convert "common dictionary style" keys -> Format keys
     propaceos_names_dict = {'idens' : 'nion',
                             'temp' : 'temp',
@@ -438,7 +439,7 @@ class Formats_Read(object):
         # We must merge ion_ and ele_ grids for qeos-sesame data.
         # Then we can calculate zbar using hedp module.
         op.data[table_key] = opp.utils.EosMergeGrids(
-                            op.data[table_key], intersect=['ele', 'ion'],
+                            op.data[table_key], intersect=['ele', 'ioncc'],
                             filter_dens=lambda x: (x>self.filters[0]),
                             filter_temps=lambda x: (x>self.filters[1]),
                             qeos=False)
@@ -606,12 +607,13 @@ def compare_eos(eos_1, eos_2, verbose=False,
         
     # Union of all "common dictionary format" keys to do a full error report.
     # Not including 'idens', 'dens', 'temp', 'groups', 'opp_mg', 'opp_int',
-    # 'opr_int',  'emp_mg', 'opr_mg', 'emp_int',
+    # 'opr_int',  'emp_mg', 'opr_mg', 'emp_int', 'Abar','Zmax', 'Ut_DT', 
+    # 'Znum', 'BulkMod', 
     # (aka no opacity data currently).
     # TODO add opacity comparison capabilities.
-    keys = ['Pec_DT', 'Zf_DT', 'Abar', 'Xnum', 'Anum',
+    keys = ['Pec_DT', 'Zf_DT', 'Xnum', 'Anum',
             'Zsymb', 'Pi_DT', 'Uec_DT', 'ElemNum', 'Anum_prp',
-            'Zmax', 'Ut_DT', 'Znum', 'BulkMod', 'Ui_DT']
+            'Ui_DT']
     
     shared_keys = [key for key in keys
                    if key in eos_1.common_keys
@@ -635,7 +637,7 @@ def compare_eos(eos_1, eos_2, verbose=False,
     temp_1 = get_eos_array(eos_1, 'temp').arr
     dens_2 = get_eos_array(eos_2, 'idens').arr
     temp_2 = get_eos_array(eos_2, 'temp').arr
-    
+        
     # These will be used for the interpolator function `griddata`.
     d_interp_1, t_interp_1 = np.meshgrid(dens_1, temp_1)
     d_interp_2, t_interp_2 = np.meshgrid(dens_2, temp_2)
@@ -671,7 +673,7 @@ def compare_eos(eos_1, eos_2, verbose=False,
         # Get the data.
         data_1 = get_eos_array(eos_1, key).arr
         data_2 = get_eos_array(eos_2, key).arr
-        
+
         # Use interpolation to account for mismatched grid sizes.
         # `rescale=True` to account for the orders of magnitude difference
         # in the dens/temp grids.
@@ -692,23 +694,11 @@ def compare_eos(eos_1, eos_2, verbose=False,
                                 rescale=True,
                                 method='linear')
         
-        # DEBUG
-        #print(D_new.shape, T_new.shape)
-        
         interp_data_1 = interp_data_1.reshape(D_new.shape[0], D_new.shape[1])
         interp_data_2 = interp_data_2.reshape(D_new.shape[0], D_new.shape[1])
         interp_data_1 = interp_data_1.T
         interp_data_2 = interp_data_2.T
-        
-        # DEBUG
-        #np.set_printoptions(threshold=np.inf)
-        #print(interp_data_1, '\n\n\n', data_1)
-        #print(np.allclose(interp_data_1,interp_data_2))
-                
-        # DEBUG
-        #err_1_sqr = np.square((interp_data_1 - interp_data_2))
-        #err_2_sqr = np.square((interp_data_1 - interp_data_2))
-                
+                   
         err_1_sqr = np.square((interp_data_1 - interp_data_2)/interp_data_1)
         err_2_sqr = np.square((interp_data_1 - interp_data_2)/interp_data_2)
         
@@ -719,31 +709,34 @@ def compare_eos(eos_1, eos_2, verbose=False,
         err_1_abs = np.sqrt(np.max(err_1_sqr))
         err_2_abs = np.sqrt(np.max(err_2_sqr))
         err_abs = max(err_1_abs, err_2_abs)
-        
-        # DEBUG
-        #np.savetxt('{}.txt'.format(key), np.sqrt(err_1_sqr))
-        
+                
         if plot:
+            titles = {'Zf_DT':'Average Ionization',
+                      'Pec_DT':'Electron Pressure',
+                      'Pi_DT':'Ion Pressure',
+                      'Uec_DT':'Electron Energy',
+                      'Ui_DT':'Ion Energy'}
+            
+            
             fig = plt.figure()
             ax = fig.add_subplot(111)
             x, y = np.meshgrid(d, t)
             cs = ax.contourf(x, y, np.sqrt(err_1_sqr).T, 256)
             cb = fig.colorbar(cs, ticks=matplotlib.ticker.MaxNLocator(nbins=15))
-            cb.set_label(key)
+            cb.set_label('% Error')
             if not lin_grid:
                 ax.loglog()
             ax.set_xlim((d[0], d[-1]))
             ax.set_ylim((t[0], t[-1]))
             ax.set_xlabel('rho [g.cm^(-3)]')
             ax.set_ylabel('T [eV]')
-            ax.set_title('{}'.format(key))
+            ax.set_title('{} % Error'.format(titles[key]))
             cb2 = ax.contour(x, y, np.sqrt(err_1_sqr).T,
                        colors='k', opacity=0.5, linewidths=0.4,
                        locator=matplotlib.ticker.MaxNLocator(nbins=15))
             plt.clabel(cb2,fontsize=6, inline=False, inline_spacing=1,
                        fmt='%1.0f', rightside_up=True, use_clabeltext=False)
-            fig.tight_layout()
-            fig.suptitle('% Error SESAME-QEOS -> IONMIX')
+            fig.suptitle('{} vs. {}'.format(fn_1, fn_2))
             fig.subplots_adjust(top=0.85)
             fig.savefig('{}.png'.format(key+'_err'))
         
@@ -765,7 +758,7 @@ def check_error():
         read_format_ext(input_data['args'],
                         input_data['fn_1'],
                         input_data['fn_2'])
-    
+        
     eos_1 = Formats_Read(input_data['args'].filetypes[0],
                          input_data['basedir_1'],
                          input_data['basename_1'],
