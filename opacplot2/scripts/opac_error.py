@@ -729,11 +729,14 @@ def compare_eos(eos_1, eos_2, verbose=False,
             ax.set_xlabel('rho [g.cm^(-3)]')
             ax.set_ylabel('T [eV]')
             ax.set_title('{} % Error'.format(titles[key]))
-            cb2 = ax.contour(x, y, np.sqrt(err_1_sqr).T,
-                       colors='k', opacity=0.5, linewidths=0.4,
-                       locator=matplotlib.ticker.MaxNLocator(nbins=15))
-            plt.clabel(cb2,fontsize=6, inline=False, inline_spacing=1,
-                       fmt='%1.0f', rightside_up=True, use_clabeltext=False)
+            try:
+                cb2 = ax.contour(x, y, np.sqrt(err_1_sqr).T,
+                           colors='k', opacity=0.5, linewidths=0.4,
+                           locator=matplotlib.ticker.MaxNLocator(nbins=15))
+                plt.clabel(cb2,fontsize=6, inline=False, inline_spacing=1,
+                           fmt='%1.0f', rightside_up=True, use_clabeltext=False)
+            except ValueError: # Raised if ticker is empty I believe. - JT
+                pass
             fig.suptitle('{} vs. {}'.format(fn_1, fn_2))
             fig.subplots_adjust(top=0.85)
             fig.savefig('{}.png'.format(key+'_err'))
