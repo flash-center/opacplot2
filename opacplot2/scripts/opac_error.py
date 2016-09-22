@@ -608,12 +608,10 @@ def compare_eos(eos_1, eos_2, verbose=False,
     # Union of all "common dictionary format" keys to do a full error report.
     # Not including 'idens', 'dens', 'temp', 'groups', 'opp_mg', 'opp_int',
     # 'opr_int',  'emp_mg', 'opr_mg', 'emp_int', 'Abar','Zmax', 'Ut_DT', 
-    # 'Znum', 'BulkMod', 
+    # 'Znum', 'BulkMod', 'Xnum', 'Anum', 'Zsymb',  'ElemNum', 'Anum_prp'.
     # (aka no opacity data currently).
     # TODO add opacity comparison capabilities.
-    keys = ['Pec_DT', 'Zf_DT', 'Xnum', 'Anum',
-            'Zsymb', 'Pi_DT', 'Uec_DT', 'ElemNum', 'Anum_prp',
-            'Ui_DT']
+    keys = ['Pec_DT', 'Zf_DT', 'Pi_DT', 'Uec_DT', 'Ui_DT']
     
     shared_keys = [key for key in keys
                    if key in eos_1.common_keys
