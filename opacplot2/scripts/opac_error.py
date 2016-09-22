@@ -635,9 +635,19 @@ def compare_eos(eos_1, eos_2, verbose=False,
     temp_1 = get_eos_array(eos_1, 'temp').arr
     dens_2 = get_eos_array(eos_2, 'idens').arr
     temp_2 = get_eos_array(eos_2, 'temp').arr
-        
+    
+    # These will be used for the interpolator function `griddata`.
+    d_interp_1, t_interp_1 = np.meshgrid(dens_1, temp_1)
+    d_interp_2, t_interp_2 = np.meshgrid(dens_2, temp_2)
+    
+    # Creating a new grid to interpolate onto.
     d = opp.utils.intersect_1D_sorted_arr(dens_1, dens_2)
     t = opp.utils.intersect_1D_sorted_arr(temp_1, temp_2)
+    D_new, T_new = np.meshgrid(d,t)
+    
+    # These will be used for the interpolator function `griddata`.
+    d_interp_1, t_interp_1 = np.meshgrid(dens_1, temp_1)
+    d_interp_2, t_interp_2 = np.meshgrid(dens_2, temp_2)
     
     if (d is None) or (t is None):
         raise Warning('Density and temperature arrays must have some overlap!')
@@ -663,41 +673,37 @@ def compare_eos(eos_1, eos_2, verbose=False,
         data_2 = get_eos_array(eos_2, key).arr
         
         # Use interpolation to account for mismatched grid sizes.
-        # Use bounds_error=True for debugging purposes.
-        d_interp_1, t_interp_1 = np.meshgrid(dens_1, temp_1)
-        d_interp_2, t_interp_2 = np.meshgrid(dens_2, temp_2)
-        interp_1 = sp.interpolate.interp2d(d_interp_1, t_interp_1, data_1.T,
-                                           kind='linear', bounds_error=True)
-        interp_2 = sp.interpolate.interp2d(d_interp_2, t_interp_2, data_2.T,
-                                           kind='linear', bounds_error=True)
+        # `rescale=True` to account for the orders of magnitude difference
+        # in the dens/temp grids.
+        # `scipy.interpolate.interp2d` was not giving accurate interpolation.
+        # I believe this is due to the orders of magnitude difference also,
+        # which `griddata` can easily fix. - JT
+        # Additionally, `griddata` is much faster than using an interpolator
+        # function to fill an empty grid.
+        interp_data_1 = sp.interpolate.griddata(
+                                (d_interp_1.flatten(), t_interp_1.flatten()),
+                                data_1.T.flatten(),
+                                (D_new.flatten(), T_new.flatten()), 
+                                rescale=True, 
+                                method='linear')
+        interp_data_2 = sp.interpolate.griddata(
+                                (d_interp_2.flatten(), t_interp_2.flatten()),
+                                data_2.T.flatten(),(D_new.flatten(), T_new.flatten()),
+                                rescale=True,
+                                method='linear')
         
-        # Create skeletons for interpolated grids.
-        interp_data_1 = np.zeros((len(d), len(t)))
-        interp_data_2 = np.zeros((len(d), len(t)))
+        # DEBUG
+        #print(D_new.shape, T_new.shape)
         
-        # Fill in the values with our interpolator functions.
-        for i in range(len(d)):
-            for j in range(len(t)):
-                interp_data_1[i][j] = interp_1(d[i],t[j])
-                interp_data_2[i][j] = interp_2(d[i],t[j])
+        interp_data_1 = interp_data_1.reshape(D_new.shape[0], D_new.shape[1])
+        interp_data_2 = interp_data_2.reshape(D_new.shape[0], D_new.shape[1])
+        interp_data_1 = interp_data_1.T
+        interp_data_2 = interp_data_2.T
         
-        # Fill in the values with our interpolator functions.
-        #for i in range(len(d)):
-        #    for j in range(len(t)):
-        #        # Don't interpolate if we already have the values.
-        #        if (d[i] in dens_1) and (t[j] in temp_1):
-        #            d_idx = np.where(dens_1==d[i])[0][0]
-        #            t_idx = np.where(temp_1==t[j])[0][0]
-        #            interp_data_1[i][j] = data_1[d_idx][t_idx]
-        #        # Interpolate if not.
-        #        else:
-        #            interp_data_1[i][j] = interp_1(d[i],t[j])
-        #        if (d[i] in dens_2) and (t[j] in temp_2):
-        #            d_idx = np.where(dens_2==d[i])[0][0]
-        #            t_idx = np.where(temp_2==t[j])[0][0]
-        #            interp_data_2[i][j] = data_2[d_idx][t_idx]
-        #        else:
-        #            interp_data_2[i][j] = interp_2(d[i],t[j])
+        # DEBUG
+        #np.set_printoptions(threshold=np.inf)
+        #print(interp_data_1, '\n\n\n', data_1)
+        #print(np.allclose(interp_data_1,interp_data_2))
                 
         # DEBUG
         #err_1_sqr = np.square((interp_data_1 - interp_data_2))
@@ -713,6 +719,9 @@ def compare_eos(eos_1, eos_2, verbose=False,
         err_1_abs = np.sqrt(np.max(err_1_sqr))
         err_2_abs = np.sqrt(np.max(err_2_sqr))
         err_abs = max(err_1_abs, err_2_abs)
+        
+        # DEBUG
+        #np.savetxt('{}.txt'.format(key), np.sqrt(err_1_sqr))
         
         if plot:
             fig = plt.figure()
