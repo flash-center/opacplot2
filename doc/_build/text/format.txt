@@ -3,97 +3,6 @@ File Format Functions and Classes
 *********************************
 
 
-Native HDF5
-===========
-
-class opacplot2.OpgHdf5
-
-   force_eval()
-
-      Load the whole table into memory.
-
-   classmethod open_file(filename, explicit_load=False)
-
-      Open an HDF5 file containing opacity data.
-
-      Parameters:
-         * **filename** (*str*) -- Name of file to open.
-
-         * **explicit_load** (*bool*) -- Option to load the whole
-           file to memory.
-
-      -[ Examples ]-
-
-      To open a file:
-
-         >>> import opacplot2 as opp
-         >>> op = opp.OpgHdf5.open_file('infile.h5')
-         >>> print(op.keys())
-         dict_keys(['Anum', ..., 'Znum']) # OpgHdf5 is a dictionary.
-         >>> print(op['Zf_DT'])
-         array([...]) # Array for average ionization.
-
-      -[ Notes ]-
-
-      Loading the entire file into memory can be potentially
-      dangerous. Use "explicit_load" with caution.
-
-   write2file(filename, **args)
-
-      Write to an HDF5 output file.
-
-      Parameters:
-         * **filename** (*str*) -- Name of output file.
-
-         * **args** (*dict*) -- Dictionary of data to write.
-
-
-Data Points
------------
-
-Depending on what kind of data has been written to an HDF5 file, each
-HDF5 file may vary widely. Despite this fact, listed below are the
-naming conventions "opacplot2" uses for HDF5 data points that are
-relevant to IONMIX. The abbreviations are keys unless otherwise stated
-to be an attribute to the "OpgHdf5" object.
-
-   +------------------------------+-----------------------------+
-   | "opacplot2" Abbr             | Physical Meaning            |
-   +==============================+=============================+
-   | "Znum"                       | Atomic numbers              |
-   +------------------------------+-----------------------------+
-   | "Xnum"                       | Element fractions           |
-   +------------------------------+-----------------------------+
-   | "idens"                      | Number densities            |
-   +------------------------------+-----------------------------+
-   | "temp"                       | Temperature array           |
-   +------------------------------+-----------------------------+
-   | "Ng" (attr)                  | Number of energy groups     |
-   +------------------------------+-----------------------------+
-   | "groups"                     | Energy group boundaries     |
-   +------------------------------+-----------------------------+
-   | "opp_mg"                     | Planck absorption           |
-   +------------------------------+-----------------------------+
-   | "opr_mg"                     | Rosseland opacities         |
-   +------------------------------+-----------------------------+
-   | "emp_mg"                     | Planck emissivity           |
-   +------------------------------+-----------------------------+
-
-For example, if we wanted to open up an HDF5 file named "input.h5" and
-write it to an IONMIX file named "output.cn4", we could write:
-
-   >>> import opacplot2 as opp
-   >>> op = OpgHdf5.open_file('input.h5')
-   >>> opp.writeIonmixFile(outfile,
-                    op['Znum'], op['Xnum'],
-                    numDens=op['idens'][:], temps=op['temp'][:],
-                    ngroups=op.Ng,
-                    opac_bounds=op['groups'][:],
-                    planck_absorb=op['opp_mg'][:],
-                    rosseland=op['opr_mg'][:],
-                    planck_emiss=op['emp_mg'][:])
-
-
 IONMIX (.cn4)
 =============
 
@@ -110,7 +19,7 @@ class opacplot2.OpacIonmix(fn, mpi, twot=False, man=False, hassele=False, verbos
    Parameters:
       * **fn** (*str*) -- The name of the file to open.
 
-      * **mpi** (*str*) -- The mass per ion.
+      * **mpi** (*str*) -- The mass per ion **in grams**.
 
       * **twot** (*bool*) -- Flag for two-temperature data.
 
@@ -373,6 +282,8 @@ opacplot2.writeIonmixFile(fn, zvals, fracs, numDens, temps, zbar=None, dzdt=None
       * **planck_emiss=None** (*numpy.ndarray*) -- Planck emission
         opacity. Only used for tabulated EoS in *FLASH*.
 
+      * **sele=None** (*numpy.ndarray*) -- Electron entropy.
+
    -[ Examples ]-
 
    Here we open an HDF5 file containing EoS and Opacity data and write
@@ -420,12 +331,14 @@ class opacplot2.adapt.EosMergeGrids(eos_data, filter_dens=<function EosMergeGrid
       * **thresh** (*list*) -- Zero threshold on following keys
 
    Returns:
-      **out** -- A dictionary with the same keys a eos_data.
+      **out** -- A dictionary with the same keys as eos_data. The
+      species specified by "intersect" will have equal temperature and
+      density grids.
 
    Return type:
       dict
 
-   -[ Example ]-
+   -[ Examples ]-
 
    >>> eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii", opp.OpgSesame.SINGLE,verbose=False)
    >>> eos_data  = eos_sesame.data[3720]  # Aluminum
@@ -471,6 +384,11 @@ class opacplot2.OpgMulti(*cargs, **vargs)
 
       Return type:
          OpgMulti
+
+   toEosDict(Znum=None, Anum=None, Xnum=None, log=None)
+
+      This method creates a dictionary with keys that are common among
+      the various EoS table formats.
 
    write(prefix, fmin=None, fmax=None)
 
@@ -655,17 +573,100 @@ the density array of electrons, we would simply type:
    array([...]) # Electron density array.
 
 
-TOPS
-====
-
-
-INFERNO
-=======
-
-
 PROPACEOS ASCII (.prp)
 ======================
 
 Warning: Handling for Propaceos EoS tables is not publicly
   distributed with "opacplot2" and so its documentation will not be
   presented here.
+
+
+HDF5
+====
+
+class opacplot2.OpgHdf5
+
+   force_eval()
+
+      Load the whole table into memory.
+
+   classmethod open_file(filename, explicit_load=False)
+
+      Open an HDF5 file containing opacity data.
+
+      Parameters:
+         * **filename** (*str*) -- Name of file to open.
+
+         * **explicit_load** (*bool*) -- Option to load the whole
+           file to memory.
+
+      -[ Examples ]-
+
+      To open a file:
+
+         >>> import opacplot2 as opp
+         >>> op = opp.OpgHdf5.open_file('infile.h5')
+         >>> print(op.keys())
+         dict_keys(['Anum', ..., 'Znum']) # OpgHdf5 is a dictionary.
+         >>> print(op['Zf_DT'])
+         array([...]) # Array for average ionization.
+
+      -[ Notes ]-
+
+      Loading the entire file into memory can be potentially
+      dangerous. Use "explicit_load" with caution.
+
+   write2file(filename, **args)
+
+      Write to an HDF5 output file.
+
+      Parameters:
+         * **filename** (*str*) -- Name of output file.
+
+         * **args** (*dict*) -- Dictionary of data to write.
+
+
+Data Points
+-----------
+
+Depending on what kind of data has been written to an HDF5 file, each
+HDF5 file may vary widely. Despite this fact, listed below are the
+naming conventions "opacplot2" uses for HDF5 data points that are
+relevant to IONMIX. The abbreviations are keys unless otherwise stated
+to be an attribute to the "OpgHdf5" object.
+
+   +------------------------------+-----------------------------+
+   | "opacplot2" Abbr             | Physical Meaning            |
+   +==============================+=============================+
+   | "Znum"                       | Atomic numbers              |
+   +------------------------------+-----------------------------+
+   | "Xnum"                       | Element fractions           |
+   +------------------------------+-----------------------------+
+   | "idens"                      | Number densities            |
+   +------------------------------+-----------------------------+
+   | "temp"                       | Temperature array           |
+   +------------------------------+-----------------------------+
+   | "Ng" (attr)                  | Number of energy groups     |
+   +------------------------------+-----------------------------+
+   | "groups"                     | Energy group boundaries     |
+   +------------------------------+-----------------------------+
+   | "opp_mg"                     | Planck absorption           |
+   +------------------------------+-----------------------------+
+   | "opr_mg"                     | Rosseland opacities         |
+   +------------------------------+-----------------------------+
+   | "emp_mg"                     | Planck emissivity           |
+   +------------------------------+-----------------------------+
+
+For example, if we wanted to open up an HDF5 file named "input.h5" and
+write it to an IONMIX file named "output.cn4", we could write:
+
+   >>> import opacplot2 as opp
+   >>> op = OpgHdf5.open_file('input.h5')
+   >>> opp.writeIonmixFile(outfile,
+                    op['Znum'], op['Xnum'],
+                    numDens=op['idens'][:], temps=op['temp'][:],
+                    ngroups=op.Ng,
+                    opac_bounds=op['groups'][:],
+                    planck_absorb=op['opp_mg'][:],
+                    rosseland=op['opr_mg'][:],
+                    planck_emiss=op['emp_mg'][:])

@@ -57,14 +57,43 @@ opacplot2.utils.interpDT(arr, dens, temps, bcdmin=0, bctmin=0, lookup=0)
       ...                        lookup=INTERP_FUNC)
       >>> print(f(0,0)) # We added points at zero.
       0
-      >>> print(f(123, 456))
-      1234.5678
+      >>> print(f(123, 456)) # Density of 123 and temperature of 456.
+      1234.5678 # Resulting ion pressure at this dens/temp.
+
+opacplot2.utils.intersect_1D_sorted_arr(arr_1, arr_2)
+
+   Function to return the venn diagram of two sorted 1D arrays.
+
+   In other words, this function will return the union of all values
+   from both arrays that are within the intersection of their ranges.
+   This may be used for interpolation schemes.
+
+   Parameters:
+      * **arr_1** (*numpy.ndarray*) -- 1D sorted array number 1.
+
+      * **arr_2** (*numpy.ndarray*) -- 1D sorted array number 2.
+
+   Returns:
+      An array that is the venn diagram of the two input arrays.
+
+   Return type:
+      numpy.ndarray
+
+   -[ Examples ]-
+
+   >>> import numpy as np
+   >>> import opacplot2 as opp
+   >>> a = np.array([1,2,3,4,5])
+   >>> b = np.array([3.5,4.5,5.5,6])
+   >>> c = opp.utils.intersect_1D_sorted_arr(a,b)
+   >>> print(c)
+   [3.5 4 4.5 5]
 
 
 Grid Structure
 ==============
 
-class opacplot2.utils.EosMergeGrids(eos_data, filter_dens=<function EosMergeGrids.<lambda>>, filter_temps=<function EosMergeGrids.<lambda>>, intersect=['ele', 'ioncc'], thresh=[])
+class opacplot2.utils.EosMergeGrids(eos_data, filter_dens=<function EosMergeGrids.<lambda>>, filter_temps=<function EosMergeGrids.<lambda>>, intersect=['ele', 'ioncc'], thresh=[], qeos=False)
 
    This class provides filtering capabilities for the EoS temperature
    and density grids.
@@ -79,9 +108,9 @@ class opacplot2.utils.EosMergeGrids(eos_data, filter_dens=<function EosMergeGrid
         data.
 
       * **intersect** (*list*) -- The resulting temperature [eV] and
-        density [g/cm⁻³] grids will be computed as an intersection of
-        grids of all the species given in this list. Default: ['ele',
-        'ioncc']
+        density [g/cm^(-3)] grids will be computed as an intersection
+        of grids of all the species given in this list. Default:
+        ['ele', 'ioncc']
 
       * **filter_dens** (*function*) -- A function that takes a grid
         of densities and returns a mask of points we don't wont to

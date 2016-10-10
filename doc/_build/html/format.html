@@ -84,20 +84,18 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">File Format Functions and Classes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#native-hdf5">Native HDF5</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#data-points">Data Points</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#ionmix-cn4">IONMIX (.cn4)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#multi-opp-opr-eps">MULTI (.opp, .opr, .eps)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sesame-ascii-ses">SESAME ASCII (.ses)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#data-prefixes">Data Prefixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-points">Data Points</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#propaceos-ascii-prp">PROPACEOS ASCII (.prp)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hdf5">HDF5</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">Data Points</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#tops">TOPS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#inferno">INFERNO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#propaceos-ascii-prp">PROPACEOS ASCII (.prp)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="test.html">Testing Suite</a></li>
@@ -150,133 +148,6 @@
             
   <div class="section" id="file-format-functions-and-classes">
 <h1>File Format Functions and Classes<a class="headerlink" href="#file-format-functions-and-classes" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="native-hdf5">
-<h2>Native HDF5<a class="headerlink" href="#native-hdf5" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="opacplot2.OpgHdf5">
-<em class="property">class </em><code class="descclassname">opacplot2.</code><code class="descname">OpgHdf5</code><a class="headerlink" href="#opacplot2.OpgHdf5" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="opacplot2.OpgHdf5.force_eval">
-<code class="descname">force_eval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgHdf5.force_eval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the whole table into memory.</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="opacplot2.OpgHdf5.open_file">
-<em class="property">classmethod </em><code class="descname">open_file</code><span class="sig-paren">(</span><em>filename</em>, <em>explicit_load=False</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgHdf5.open_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open an HDF5 file containing opacity data.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<em>str</em>) &#8211; Name of file to open.</li>
-<li><strong>explicit_load</strong> (<em>bool</em>) &#8211; Option to load the whole file to memory.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<p>To open a file:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgHdf5</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;infile.h5&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-<span class="go">dict_keys([&#39;Anum&#39;, ..., &#39;Znum&#39;]) # OpgHdf5 is a dictionary.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;Zf_DT&#39;</span><span class="p">])</span>
-<span class="go">array([...]) # Array for average ionization.</span>
-</pre></div>
-</div>
-<p class="rubric">Notes</p>
-<p>Loading the entire file into memory can be potentially dangerous. Use
-<code class="docutils literal"><span class="pre">explicit_load</span></code> with caution.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="opacplot2.OpgHdf5.write2file">
-<code class="descname">write2file</code><span class="sig-paren">(</span><em>filename</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgHdf5.write2file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write to an HDF5 output file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<em>str</em>) &#8211; Name of output file.</li>
-<li><strong>args</strong> (<em>dict</em>) &#8211; Dictionary of data to write.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<div class="section" id="data-points">
-<h3>Data Points<a class="headerlink" href="#data-points" title="Permalink to this headline">¶</a></h3>
-<p>Depending on what kind of data has been written to an HDF5 file, each HDF5
-file may vary widely. Despite this fact, listed below are the naming conventions
-<code class="docutils literal"><span class="pre">opacplot2</span></code> uses for HDF5 data points that are relevant to IONMIX. The
-abbreviations are keys unless otherwise stated to be an attribute to the
-<code class="docutils literal"><span class="pre">OpgHdf5</span></code> object.</p>
-<blockquote>
-<div><table border="1" class="docutils">
-<colgroup>
-<col width="51%" />
-<col width="49%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head"><code class="docutils literal"><span class="pre">opacplot2</span></code> Abbr</th>
-<th class="head">Physical Meaning</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">Znum</span></code></td>
-<td>Atomic numbers</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">Xnum</span></code></td>
-<td>Element fractions</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">idens</span></code></td>
-<td>Number densities</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">temp</span></code></td>
-<td>Temperature array</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">Ng</span></code> (attr)</td>
-<td>Number of energy groups</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">groups</span></code></td>
-<td>Energy group boundaries</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">opp_mg</span></code></td>
-<td>Planck absorption</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">opr_mg</span></code></td>
-<td>Rosseland opacities</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">emp_mg</span></code></td>
-<td>Planck emissivity</td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-<p>For example, if we wanted to open up an HDF5 file named <code class="docutils literal"><span class="pre">input.h5</span></code> and write it to an IONMIX file
-named <code class="docutils literal"><span class="pre">output.cn4</span></code>, we could write:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">OpgHdf5</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;input.h5&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">opp</span><span class="o">.</span><span class="n">writeIonmixFile</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span>
-<span class="go">                 op[&#39;Znum&#39;], op[&#39;Xnum&#39;],</span>
-<span class="go">                 numDens=op[&#39;idens&#39;][:], temps=op[&#39;temp&#39;][:],</span>
-<span class="go">                 ngroups=op.Ng,</span>
-<span class="go">                 opac_bounds=op[&#39;groups&#39;][:],</span>
-<span class="go">                 planck_absorb=op[&#39;opp_mg&#39;][:],</span>
-<span class="go">                 rosseland=op[&#39;opr_mg&#39;][:],</span>
-<span class="go">                 planck_emiss=op[&#39;emp_mg&#39;][:])</span>
-</pre></div>
-</div>
-</div>
-</div>
 <div class="section" id="ionmix-cn4">
 <span id="opg-ionmix"></span><h2>IONMIX (.cn4)<a class="headerlink" href="#ionmix-cn4" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -896,8 +767,8 @@ electrons:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id1">
-<h3>Data Points<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="data-points">
+<h3>Data Points<a class="headerlink" href="#data-points" title="Permalink to this headline">¶</a></h3>
 <p>There are several top-level data points that are not included in a specific
 curve of the SESAME tables:</p>
 <blockquote>
@@ -972,17 +843,138 @@ density array of electrons, we would simply type:</p>
 </div>
 </div>
 </div>
-<div class="section" id="tops">
-<h2>TOPS<a class="headerlink" href="#tops" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="inferno">
-<h2>INFERNO<a class="headerlink" href="#inferno" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="propaceos-ascii-prp">
 <h2>PROPACEOS ASCII (.prp)<a class="headerlink" href="#propaceos-ascii-prp" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">Handling for Propaceos EoS tables is not publicly distributed with <code class="docutils literal"><span class="pre">opacplot2</span></code> and so its documentation will not be presented here.</p>
+</div>
+</div>
+<div class="section" id="hdf5">
+<h2>HDF5<a class="headerlink" href="#hdf5" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="opacplot2.OpgHdf5">
+<em class="property">class </em><code class="descclassname">opacplot2.</code><code class="descname">OpgHdf5</code><a class="headerlink" href="#opacplot2.OpgHdf5" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="opacplot2.OpgHdf5.force_eval">
+<code class="descname">force_eval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgHdf5.force_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the whole table into memory.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="opacplot2.OpgHdf5.open_file">
+<em class="property">classmethod </em><code class="descname">open_file</code><span class="sig-paren">(</span><em>filename</em>, <em>explicit_load=False</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgHdf5.open_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open an HDF5 file containing opacity data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; Name of file to open.</li>
+<li><strong>explicit_load</strong> (<em>bool</em>) &#8211; Option to load the whole file to memory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>To open a file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">opp</span><span class="o">.</span><span class="n">OpgHdf5</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;infile.h5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="go">dict_keys([&#39;Anum&#39;, ..., &#39;Znum&#39;]) # OpgHdf5 is a dictionary.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;Zf_DT&#39;</span><span class="p">])</span>
+<span class="go">array([...]) # Array for average ionization.</span>
+</pre></div>
+</div>
+<p class="rubric">Notes</p>
+<p>Loading the entire file into memory can be potentially dangerous. Use
+<code class="docutils literal"><span class="pre">explicit_load</span></code> with caution.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="opacplot2.OpgHdf5.write2file">
+<code class="descname">write2file</code><span class="sig-paren">(</span><em>filename</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgHdf5.write2file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write to an HDF5 output file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; Name of output file.</li>
+<li><strong>args</strong> (<em>dict</em>) &#8211; Dictionary of data to write.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="id1">
+<h3>Data Points<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Depending on what kind of data has been written to an HDF5 file, each HDF5
+file may vary widely. Despite this fact, listed below are the naming conventions
+<code class="docutils literal"><span class="pre">opacplot2</span></code> uses for HDF5 data points that are relevant to IONMIX. The
+abbreviations are keys unless otherwise stated to be an attribute to the
+<code class="docutils literal"><span class="pre">OpgHdf5</span></code> object.</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="51%" />
+<col width="49%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><code class="docutils literal"><span class="pre">opacplot2</span></code> Abbr</th>
+<th class="head">Physical Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">Znum</span></code></td>
+<td>Atomic numbers</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">Xnum</span></code></td>
+<td>Element fractions</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">idens</span></code></td>
+<td>Number densities</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">temp</span></code></td>
+<td>Temperature array</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">Ng</span></code> (attr)</td>
+<td>Number of energy groups</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">groups</span></code></td>
+<td>Energy group boundaries</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">opp_mg</span></code></td>
+<td>Planck absorption</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">opr_mg</span></code></td>
+<td>Rosseland opacities</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">emp_mg</span></code></td>
+<td>Planck emissivity</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>For example, if we wanted to open up an HDF5 file named <code class="docutils literal"><span class="pre">input.h5</span></code> and write it to an IONMIX file
+named <code class="docutils literal"><span class="pre">output.cn4</span></code>, we could write:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opacplot2</span> <span class="k">as</span> <span class="nn">opp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">OpgHdf5</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s1">&#39;input.h5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opp</span><span class="o">.</span><span class="n">writeIonmixFile</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span>
+<span class="go">                 op[&#39;Znum&#39;], op[&#39;Xnum&#39;],</span>
+<span class="go">                 numDens=op[&#39;idens&#39;][:], temps=op[&#39;temp&#39;][:],</span>
+<span class="go">                 ngroups=op.Ng,</span>
+<span class="go">                 opac_bounds=op[&#39;groups&#39;][:],</span>
+<span class="go">                 planck_absorb=op[&#39;opp_mg&#39;][:],</span>
+<span class="go">                 rosseland=op[&#39;opr_mg&#39;][:],</span>
+<span class="go">                 planck_emiss=op[&#39;emp_mg&#39;][:])</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>

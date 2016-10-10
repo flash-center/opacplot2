@@ -292,6 +292,35 @@ class EosMergeGrids(dict):
             return dict.__getitem__(self, key)    
 
 def intersect_1D_sorted_arr(arr_1, arr_2):
+    """
+    Function to return the venn diagram of two sorted 1D arrays.
+    
+    In other words, this function will return the union of all values from
+    both arrays that are within the intersection of their ranges. This may be
+    used for interpolation schemes.
+    
+    Parameters
+    ----------
+    arr_1 : numpy.ndarray 
+        1D sorted array number 1.
+    arr_2 : numpy.ndarray 
+        1D sorted array number 2.
+    
+    Returns
+    -------
+    numpy.ndarray
+        An array that is the venn diagram of the two input arrays.
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import opacplot2 as opp
+    >>> a = np.array([1,2,3,4,5])
+    >>> b = np.array([3.5,4.5,5.5,6])
+    >>> c = opp.utils.intersect_1D_sorted_arr(a,b)
+    >>> print(c)
+    [3.5 4 4.5 5]
+    """
     # Check for some overlap.
     if (arr_1[-1] < arr_2[0]) or (arr_2[-1] < arr_1[0]):
         return None
@@ -320,7 +349,8 @@ def intersect_1D_sorted_arr(arr_1, arr_2):
     return np.unique(merged_arr)
 
 ################################################################################
-# Functions and classes below this have not been adequately tested.            #
+# Functions and classes below this have not been adequately tested nor         #
+# documented.                                                                  #
 ################################################################################
         
 def avgopac(energies_in, opacs_in, trad, ebnds, 

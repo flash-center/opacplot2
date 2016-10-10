@@ -3,99 +3,186 @@
 Command Line Tools
 ##################
 
-Opacplot2 supports a number of Opacity/EoS table formats that are listed in the
-:ref:`introduction`.
+opac-convert
+************
 
-It is possible to directly convert between two table formats with a suitable
-Python script. A more systematic way consist in converting the source file to
-the HDF5 format which is then converted to the output format::
+Command line tool for converting EoS Table formats into the IONMIX format
+that comes with ``opacplot2``.
 
-    input table -> HDF5 EoS/Opacity format  ->  output table
+Supported input file formats:
 
-Convenience scripts exist to perform this function, installed as:
-``opac_table2hdf`` and ``opac_hdf2table``.
+* Propaceos (not distributed, contact jtlaune at uchicago dot edu.)
+* SESAME (.ses)
+* QEOS SESAME (.mexport)
+* MULTI (.opp, .opr, .opz, .eps)
 
-After installation of ``opacplot2``, these two scripts will be placed in the
-system's path and can be called using ``opac_table2hdf`` and similarly
-``opac_hdf2table``.
-
-
-``opac_table2hdf``
-******************
-
-Located in ``opacplot2.scripts.opac_table2hdf``.
+Currently the only supported output format is IONMIX.
 
 Usage::
 
-    opac_table2hdf [-h] [-t {multi,ionmix,hdf5,propaceos}] [-o OUTNAME] [--Znum ZNUM] [--Xnum XNUM] input_file
-
-This will take a file, ``input_file`` of the type specified by the ``-t`` tag
-and convert it to an HDF5 file with a name specified by the ``-o`` tag.
-
-In general, one will have to specify the atomic numbers and material fractions
-by using ``--Znum`` and ``--Xnum``, respectively. These are comma separated
-lists.
+   opac-convert [options] myfile.ext
 
 
-``opac_hdf2table``
-******************
+``opac-convert`` will attempt to read your file extension and convert it to
+IONMIX accordingly.
+If it is unable to read the extension, you can use the input flag to specify
+your filetype.
+Some files need additional information to write to IONMIX,
+such as atomic numbers. These you must specify with the command line options
+shown below.
 
-Located in ``opacplot2.scripts.opac_hdf2table``.
+Options
+=======
+
++-------------------------------+------------------------------------------------------------------+
+| Option                        | Action                                                           |
++===============================+==================================================================+
+|-i, --input                    | Specify the input filetype (``propaceos``, ``sesame``, ``multi``)|
++-------------------------------+------------------------------------------------------------------+
+|--Znum                         | Comma separated list of atomic numbers.                          |
++-------------------------------+------------------------------------------------------------------+
+|--Xfracs                       | Comma separated list of element fractions.                       |
++-------------------------------+------------------------------------------------------------------+
+|--outname                      | Specify the output filename.                                     |
++-------------------------------+------------------------------------------------------------------+
+|--log                          | Comma separated list of logarithmic data.                        |
++-------------------------------+------------------------------------------------------------------+
+|--tabnum                       | SESAME table number (defaults to last).                          |
++-------------------------------+------------------------------------------------------------------+
+
+Example
+=======
+
+To specify the files atomic numbers, one may use ``--Znum`` with a comma separated
+list of integers. If more than one atomic number is given,
+one must also specify the element fractions with ``--Xfracs``.
+For example, take a SESAME table for CH named ``myfile.ses``::
+
+   opac-convert --Znum 1, 6 --Xfracs .5, .5 myfile.ses
+
+This will convert ``myfile.ses`` to an IONMIX file named ``myfile.cn4``.
+
+Logarithmic Data
+================
+
+If you would like to take the log of the data before you write it to the IONMIX
+file, use ``--log`` with a comma separated list of the data keys as shown below.
+Each key specified will be written to IONMIX after the base 10 logarithm has
+been applied.
+
++-------------------------------+-----------------------------+
+| Data                          | Key                         |
++===============================+=============================+
+|Ion number density             |``idens``                    |
++-------------------------------+-----------------------------+
+|Temperatures                   |``temps``                    |
++-------------------------------+-----------------------------+
+|Average ionization             |``Zf_DT``                    |
++-------------------------------+-----------------------------+
+|Ion pressure                   |``Pi_DT``                    |
++-------------------------------+-----------------------------+
+|Electron pressure              |``Pec_DT``                   |
++-------------------------------+-----------------------------+
+|Ion internal energy            |``Ui_DT``                    |
++-------------------------------+-----------------------------+
+|Electron internal energy       |``Uec_DT``                   |
++-------------------------------+-----------------------------+
+|Opacity bounds                 |``groups``                   |
++-------------------------------+-----------------------------+
+|Rosseland mean opacity         |``opr_mg``                   |
++-------------------------------+-----------------------------+
+|absorption Planck mean opacity |``opp_mg``                   |
++-------------------------------+-----------------------------+
+|emission Planck mean opacity   |``emp_emg``                  |
++-------------------------------+-----------------------------+
+
+
+For example, in order to specify that the emission Planck Mean Opacity be written
+logarithmically::
+
+   opac-convert --log emp_mg my-file.ext
+
+Troubleshooting
+===============
+
+Invalid Literal for ``int()``
+
+The ``--log`` flag may be used to fix the following error::
+
+   ValueError: invalid literal for int() with base 10
+
+This error arises when the exponent for the data is more than 2 digits long,
+which IONMIX does not support.
+What that usually means is that the data was originally
+stored logarithmically and must be written back to IONMIX as logarithmic data.
+
+opac-error
+**********
+
+Command line tool for comparing two EoS/Opacity tables.
+
+Supported input file formats:
+
+* Propaceos (not distributed, contact jtlaune at uchicago dot edu.)
+* SESAME (.ses)
+* QEOS SESAME (.mexport)
+* IONMIX
 
 Usage::
 
-    opac_hdf2table [-h] [-t {multi,ionmix,ascii}] [-o OUTFILE] input_file
-
-This will take a file, ``input_file`` of HDF5 format and convert it to a file of
-the type specified by ``-t``, with a name specified by ``-o``.
-
-Other Tools
-***********
-
-``opacplot2``
-=============
-
-**Has not been tested!**
-
-Located in ``opacplot2.scripts.main``.
-
-This script is used to automate EoS/opacity tables generation for *FLASH* from the
-SESAME database.
-
-Usage::
-
-    opacplot2 [-h] [-d DBDIR] [-t DBTYPE] -n TABLENUM [-o OUT]
-
-where::
-
-    -d DBDIR, --dbdir DBDIR             Path to the database. Default: current directory.
-
-    -t DBTYPE, --dbtype DBTYPE          Database type. Currently only supports SESAME (default).
-
-    -n TABLENUM, --tablenum TABLENUM    Table ID.
-
-    -o OUT, --out OUT                   Output Filename. Default: DBTYPE-eos-TABLENUM
+   opac-convert [options] myfile_1.ext myfile_2.ext
 
 
-``opacdump``
+Much like ``opac-convert``, this tool will first attempt to read the extensions from your EoS tables
+in order to open them up. However, some file types require additional information, as in
+``opac-convert``, which can be specified in the ``[options]``. The options have many of the same
+names as ``opac-convert`` but suffixed by ``_1`` for file 1 or ``_2`` for file 2.
+
+Then, ``opac-error`` will create error reports for the following data:
+
+* Average ionization
+* Electron Ppessure
+* Ion pressure
+* Electron energy
+* Ion energy
+
+Included in the error report, we have
+
+* Root mean squared % error
+* Maximum absolute % error
+
+If the ``--plot`` flag is called, ``opac-convert`` will also make error plots and save them as images
+to the current directory.
+
+Options
+=======
+
++-------------------------------+------------------------------------------------------------------+
+| Option                        | Action                                                           |
++===============================+==================================================================+
+|--filetypes                    | Comma separated list of file types.                              |
++-------------------------------+------------------------------------------------------------------+
+|--mpi_#                        | Mass per ion (g) for file 1 or 2.                                |
++-------------------------------+------------------------------------------------------------------+
+|--Znum_#                       | Comma separated list of atomic numbers for file 1 or 2.          |
++-------------------------------+------------------------------------------------------------------+
+|--Xfrac_#                      | Comma separated list of number fractions for file 1 or 2.        |
++-------------------------------+------------------------------------------------------------------+
+|--filters_#                    | ``dens_filter, temp_filter`` for file 1 or 2.                    |
++-------------------------------+------------------------------------------------------------------+
+|--tabnum_#                     | SESAME table number for file 1 or 2.                             |
++-------------------------------+------------------------------------------------------------------+
+|--plot                         | Create % error plots for data.                                   |
++-------------------------------+------------------------------------------------------------------+
+|--writelog                     | Write log file with % errors for data.                           |
++-------------------------------+------------------------------------------------------------------+
+|--lin_grid                     | Plot using linear axes.                                          |
++-------------------------------+------------------------------------------------------------------+
+
+
+How It Works
 ============
 
-Located in ``opacplot2.scripts.main``.
-
-Currently not working, fails with ``KeyError: 'rho'``.
-
-``opac_checkhdf``
-=================
-
-Located in ``opacplot2.scripts.main``.
-
-Currently not working, fails with ``KeyError: 'dens'``.
-
-
-``opac_diff``
-=============
-
-Located in ``opacplot2.scripts.opac_diff``.
-
-Currently not working, fails with ``KeyError: 'rho'``.
-
+First, ``opac-convert`` takes an intersection of the two dens/temp grids from each file.
+Then it interpolates the data from both files onto the intersection dens/temp grids and is then
+able to create an error report.

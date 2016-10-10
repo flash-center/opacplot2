@@ -4,15 +4,15 @@ Welcome to Opacplot2's documentation!
 
 Contents:
 
-* Introduction
+* opacplot2
 
-  * Read/Write/Write2hdf
+  * Dependencies
 
   * Installation
 
-* File Format Functions and Classes
+  * Configuring Matplotlib for "opac-error"
 
-  * Native HDF5
+* File Format Functions and Classes
 
   * IONMIX (.cn4)
 
@@ -20,29 +20,19 @@ Contents:
 
   * SESAME ASCII (.ses)
 
-  * TOPS
-
-  * INFERNO
-
   * PROPACEOS ASCII (.prp)
+
+  * HDF5
 
 * Testing Suite
 
   * Running Tests
 
-* Plotting Capabilities
-
-  * Configuring "matplotlib" to display inline
-
-  * Troubleshooting "matplotlib" on OSX
-
 * Command Line Tools
 
-  * "opac_table2hdf"
+  * opac-convert
 
-  * "opac_hdf2table"
-
-  * Other Tools
+  * opac-error
 
 * Utilities
 

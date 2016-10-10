@@ -6,6 +6,8 @@ Interpolation
 
 .. autofunction:: opacplot2.utils.interpDT
 
+.. autofunction:: opacplot2.utils.intersect_1D_sorted_arr
+
 Grid Structure
 **************
 
