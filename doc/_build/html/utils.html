@@ -142,7 +142,7 @@
 <h2>Interpolation<a class="headerlink" href="#interpolation" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="opacplot2.utils.interpDT">
-<code class="descclassname">opacplot2.utils.</code><code class="descname">interpDT</code><span class="sig-paren">(</span><em>arr</em>, <em>dens</em>, <em>temps</em>, <em>bcdmin=0</em>, <em>bctmin=0</em>, <em>lookup=0</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.utils.interpDT" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">opacplot2.utils.</code><code class="descname">interpDT</code><span class="sig-paren">(</span><em>arr</em>, <em>dens</em>, <em>temps</em>, <em>bcdmin=0</em>, <em>bctmin=0</em>, <em>lookup=0</em>, <em>kind='linear'</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.utils.interpDT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Depending on the choice for lookup, this function returns an interpolation
 function for values in arr, the density derivative of arr, or the
 temperature derivative of arr.</p>
@@ -188,8 +188,8 @@ we could use:</p>
 <span class="gp">... </span>                       <span class="n">lookup</span><span class="o">=</span><span class="n">INTERP_FUNC</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span> <span class="c1"># We added points at zero.</span>
 <span class="go">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span> <span class="mi">456</span><span class="p">))</span>
-<span class="go">1234.5678</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span> <span class="mi">456</span><span class="p">))</span> <span class="c1"># Density of 123 and temperature of 456.</span>
+<span class="go">1234.5678 # Resulting ion pressure at this dens/temp.</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -199,7 +199,7 @@ we could use:</p>
 <h2>Grid Structure<a class="headerlink" href="#grid-structure" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="opacplot2.utils.EosMergeGrids">
-<em class="property">class </em><code class="descclassname">opacplot2.utils.</code><code class="descname">EosMergeGrids</code><span class="sig-paren">(</span><em>eos_data, filter_dens=&lt;function EosMergeGrids.&lt;lambda&gt;&gt;, filter_temps=&lt;function EosMergeGrids.&lt;lambda&gt;&gt;, intersect=['ele', 'ioncc'], thresh=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.utils.EosMergeGrids" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">opacplot2.utils.</code><code class="descname">EosMergeGrids</code><span class="sig-paren">(</span><em>eos_data, filter_dens=&lt;function EosMergeGrids.&lt;lambda&gt;&gt;, filter_temps=&lt;function EosMergeGrids.&lt;lambda&gt;&gt;, intersect=['ele', 'ioncc'], thresh=[], qeos=False</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.utils.EosMergeGrids" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class provides filtering capabilities for the EoS temperature and
 density grids.</p>
 <p>For instance, SESAME tables may have some additional points
@@ -212,7 +212,7 @@ the simplest solution is to remove those extra points.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>eos_data</strong> (<em>dict</em>) &#8211; Dictionary contraining the EoS data.</li>
-<li><strong>intersect</strong> (<em>list</em>) &#8211; The resulting temperature [eV] and density [g/cm⁻³]
+<li><strong>intersect</strong> (<em>list</em>) &#8211; The resulting temperature [eV] and density [g/cm^(-3)]
 grids will be computed as an intersection of grids of all the
 species given in this list. Default: [&#8216;ele&#8217;, &#8216;ioncc&#8217;]</li>
 <li><strong>filter_dens</strong> (<em>function</em>) &#8211; A function that takes a grid of densities

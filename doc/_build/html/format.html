@@ -294,7 +294,7 @@ dictionary. Instead, it stores its data in class attributes.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>fn</strong> (<em>str</em>) &#8211; The name of the file to open.</li>
-<li><strong>mpi</strong> (<em>str</em>) &#8211; The mass per ion.</li>
+<li><strong>mpi</strong> (<em>str</em>) &#8211; The mass per ion <strong>in grams</strong>.</li>
 <li><strong>twot</strong> (<em>bool</em>) &#8211; Flag for two-temperature data.</li>
 <li><strong>man</strong> (<em>bool</em>) &#8211; Flag for manual temperature/density points.</li>
 <li><strong>hassele</strong> (<em>bool</em>) &#8211; lag for electron entropy data.</li>
@@ -596,6 +596,7 @@ way to write IONMIX files.</p>
 <li><strong>rosseland=None</strong> (<em>numpy.ndarray</em>) &#8211; Rosseland opacities. Only used for tabulated EoS in <em>FLASH</em>.</li>
 <li><strong>orb=None</strong> (<em>planck_abs</em>) &#8211; Planck absorption opacity. Only used for tabulated EoS in <em>FLASH</em>.</li>
 <li><strong>planck_emiss=None</strong> (<em>numpy.ndarray</em>) &#8211; Planck emission opacity. Only used for tabulated EoS in <em>FLASH</em>.</li>
+<li><strong>sele=None</strong> (<em>numpy.ndarray</em>) &#8211; Electron entropy.</li>
 </ul>
 </td>
 </tr>
@@ -706,6 +707,13 @@ into an <code class="docutils literal"><span class="pre">OpgMulti</span></code> 
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="opacplot2.OpgMulti.toEosDict">
+<code class="descname">toEosDict</code><span class="sig-paren">(</span><em>Znum=None</em>, <em>Anum=None</em>, <em>Xnum=None</em>, <em>log=None</em><span class="sig-paren">)</span><a class="headerlink" href="#opacplot2.OpgMulti.toEosDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method creates a dictionary with keys that are common among
+the various EoS table formats.</p>
 </dd></dl>
 
 <dl class="method">
