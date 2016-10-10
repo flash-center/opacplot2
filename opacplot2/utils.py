@@ -48,7 +48,7 @@ def randomize_ionmix(filename, outfilename):
 
 def interpDT(arr, dens, temps,
              bcdmin=BC_BOUND, bctmin=BC_BOUND, 
-             lookup=INTERP_FUNC, kind='linear'):
+             lookup=INTERP_FUNC):
     """
     Depending on the choice for lookup, this function returns an interpolation
     function for values in arr, the density derivative of arr, or the
@@ -119,7 +119,7 @@ def interpDT(arr, dens, temps,
     # "When on a regular grid with x.size = m and y.size = n,
     # if z.ndim ==2, then z must have shape (n, m)."
     # arr will have shape (dens.size, temps.size), so we must transpose it.
-    f = sp.interpolate.interp2d(dens, temps, arr.T, kind=kind)
+    f = sp.interpolate.interp2d(dens, temps, arr.T, kind='linear')
     
     if lookup == INTERP_FUNC:
         def interp_func(func):

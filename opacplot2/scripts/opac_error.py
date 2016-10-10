@@ -652,8 +652,8 @@ def compare_eos(eos_1, eos_2, verbose=False,
     if (d is None) or (t is None):
         raise Warning('Density and temperature arrays must have some overlap!')
     if verbose:
-        print('Density range: {:.5E} to {:.5E} g/cm^3.'.format(d[0], d[-1]))
-        print('Temperature range: {:.5E} to {:.5E} K.'.format(t[0], t[-1]))
+        print('Density range: {:.5E} to {:.5E} #/cm^3.'.format(d[0], d[-1]))
+        print('Temperature range: {:.5E} to {:.5E} eV.'.format(t[0], t[-1]))
         print('Generating error report...')
     
     fn_1 = os.path.split(eos_1.path_in)[1]
@@ -662,8 +662,7 @@ def compare_eos(eos_1, eos_2, verbose=False,
     if write_log_file:
         # Append heading for our current grid.
         with open(logfile_name, 'a') as f:
-            f.write('Files: {}, {}\n'
-            .format(fn_1, fn_2))
+            f.write('Files: {}, {}\n'.format(fn_1, fn_2))
             f.write('[Array, RMS Error, Absolute Error]\n')
     
     # Do analysis on each of the shared keys.
@@ -707,7 +706,8 @@ def compare_eos(eos_1, eos_2, verbose=False,
         err_1_abs = np.sqrt(np.max(err_1_sqr))
         err_2_abs = np.sqrt(np.max(err_2_sqr))
         err_abs = max(err_1_abs, err_2_abs)
-                
+        
+        fmt='%.0f %%'       
         if plot:
             titles = {'Zf_DT':'Average Ionization',
                       'Pec_DT':'Electron Pressure',
@@ -721,12 +721,14 @@ def compare_eos(eos_1, eos_2, verbose=False,
             x, y = np.meshgrid(d, t)
             cs = ax.contourf(x, y, np.sqrt(err_1_sqr).T, 256)
             cb = fig.colorbar(cs, ticks=matplotlib.ticker.MaxNLocator(nbins=15))
+            cb.formatter = matplotlib.ticker.FuncFormatter(lambda x,p: '{:.2%}'.format(x))
+            cb.update_ticks()
             cb.set_label('% Error')
             if not lin_grid:
                 ax.loglog()
             ax.set_xlim((d[0], d[-1]))
             ax.set_ylim((t[0], t[-1]))
-            ax.set_xlabel('rho [g.cm^(-3)]')
+            ax.set_xlabel('rho [#/cm^(-3)]')
             ax.set_ylabel('T [eV]')
             ax.set_title('{} % Error'.format(titles[key]))
             try:
@@ -745,12 +747,9 @@ def compare_eos(eos_1, eos_2, verbose=False,
             with open(logfile_name, 'a') as f:
                 f.write('{}, {}, {}\n'.format(key, err_rms, err_abs))
         
-        print('Error statistics for {}:'
-              .format(key))
-        print('RMS % Error: {:.2%}.'
-              .format(err_rms))
-        print('Max % Absolute Error: {:.2%}.'
-              .format(err_abs))
+        print('Error statistics for {}:'.format(key))
+        print('RMS % Error: {:.2%}.'.format(err_rms))
+        print('Max % Absolute Error: {:.2%}.'.format(err_abs))
 
 def check_error():
     input_data = get_input_data()
