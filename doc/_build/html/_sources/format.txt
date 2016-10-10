@@ -1,57 +1,6 @@
 File Format Functions and Classes
 #################################
 
-Native HDF5
-***********
-
-.. autoclass:: opacplot2.OpgHdf5
-   :members:
-
-Data Points
-===========
-
-Depending on what kind of data has been written to an HDF5 file, each HDF5 
-file may vary widely. Despite this fact, listed below are the naming conventions
-``opacplot2`` uses for HDF5 data points that are relevant to IONMIX. The
-abbreviations are keys unless otherwise stated to be an attribute to the 
-``OpgHdf5`` object.
-   
-   +----------------------------+---------------------------+
-   | ``opacplot2`` Abbr         | Physical Meaning          |                                                                               
-   +============================+===========================+
-   | ``Znum``                   | Atomic numbers            |                                                                               
-   +----------------------------+---------------------------+
-   | ``Xnum``                   | Element fractions         |                                                                               
-   +----------------------------+---------------------------+
-   | ``idens``                  | Number densities          |                                                                               
-   +----------------------------+---------------------------+
-   | ``temp``                   | Temperature array         |                                                                               
-   +----------------------------+---------------------------+
-   | ``Ng`` (attr)              | Number of energy groups   |                                                                               
-   +----------------------------+---------------------------+
-   | ``groups``                 | Energy group boundaries   |                                                                               
-   +----------------------------+---------------------------+
-   | ``opp_mg``                 | Planck absorption         |                                                                               
-   +----------------------------+---------------------------+
-   | ``opr_mg``                 | Rosseland opacities       |                                                                               
-   +----------------------------+---------------------------+
-   | ``emp_mg``                 | Planck emissivity         |                                                                               
-   +----------------------------+---------------------------+
-
-For example, if we wanted to open up an HDF5 file named ``input.h5`` and write it to an IONMIX file
-named ``output.cn4``, we could write::
-
-   >>> import opacplot2 as opp
-   >>> op = OpgHdf5.open_file('input.h5')
-   >>> opp.writeIonmixFile(outfile,
-                    op['Znum'], op['Xnum'],
-                    numDens=op['idens'][:], temps=op['temp'][:],
-                    ngroups=op.Ng,
-                    opac_bounds=op['groups'][:],
-                    planck_absorb=op['opp_mg'][:],
-                    rosseland=op['opr_mg'][:],
-                    planck_emiss=op['emp_mg'][:])
-
 .. _opg_ionmix:
 
 IONMIX (.cn4)
@@ -157,16 +106,58 @@ density array of electrons, we would simply type::
    >>> print(data['ele_dens'])
    array([...]) # Electron density array.
 
-
-TOPS
-****
-
-
-INFERNO
-*******
-
-
 PROPACEOS ASCII (.prp)
 **********************
 
 .. warning:: Handling for Propaceos EoS tables is not publicly distributed with ``opacplot2`` and so its documentation will not be presented here.
+
+HDF5
+****
+
+.. autoclass:: opacplot2.OpgHdf5
+   :members:
+
+Data Points
+===========
+
+Depending on what kind of data has been written to an HDF5 file, each HDF5 
+file may vary widely. Despite this fact, listed below are the naming conventions
+``opacplot2`` uses for HDF5 data points that are relevant to IONMIX. The
+abbreviations are keys unless otherwise stated to be an attribute to the 
+``OpgHdf5`` object.
+   
+   +----------------------------+---------------------------+
+   | ``opacplot2`` Abbr         | Physical Meaning          |                                                                               
+   +============================+===========================+
+   | ``Znum``                   | Atomic numbers            |                                                                               
+   +----------------------------+---------------------------+
+   | ``Xnum``                   | Element fractions         |                                                                               
+   +----------------------------+---------------------------+
+   | ``idens``                  | Number densities          |                                                                               
+   +----------------------------+---------------------------+
+   | ``temp``                   | Temperature array         |                                                                               
+   +----------------------------+---------------------------+
+   | ``Ng`` (attr)              | Number of energy groups   |                                                                               
+   +----------------------------+---------------------------+
+   | ``groups``                 | Energy group boundaries   |                                                                               
+   +----------------------------+---------------------------+
+   | ``opp_mg``                 | Planck absorption         |                                                                               
+   +----------------------------+---------------------------+
+   | ``opr_mg``                 | Rosseland opacities       |                                                                               
+   +----------------------------+---------------------------+
+   | ``emp_mg``                 | Planck emissivity         |                                                                               
+   +----------------------------+---------------------------+
+
+For example, if we wanted to open up an HDF5 file named ``input.h5`` and write it to an IONMIX file
+named ``output.cn4``, we could write::
+
+   >>> import opacplot2 as opp
+   >>> op = OpgHdf5.open_file('input.h5')
+   >>> opp.writeIonmixFile(outfile,
+                    op['Znum'], op['Xnum'],
+                    numDens=op['idens'][:], temps=op['temp'][:],
+                    ngroups=op.Ng,
+                    opac_bounds=op['groups'][:],
+                    planck_absorb=op['opp_mg'][:],
+                    rosseland=op['opr_mg'][:],
+                    planck_emiss=op['emp_mg'][:])

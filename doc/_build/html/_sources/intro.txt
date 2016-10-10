@@ -1,118 +1,118 @@
 .. _introduction:
 
-Introduction
-############
+opacplot2
+#########
 
-*FLASH* uses the IONMIX4 format for its equations of state (EOS) and opacities.
-However, several other file formats for EOS and opacity data are popular, such
-as Propaceos and SESAME that are incompatible with *FLASH.* So, the Python
-module ``opacplot2`` was created. It contains read/write/write2hdf capabilities for
-various table formats, and as such it can be used to convert between the
-formats as needed for *FLASH* and other MHD Codes. Listed below are the current
-capabilities of ``opacplot2``:
+Python package for manipulating Equation of State (EoS) and Opacity data.
 
-+--------------------------+----------+----------+-----------+----------------------------------------------+
-| Name                     | Reader   | Writer   | Write2hdf | Comments                                     |
-+==========================+==========+==========+===========+==============================================+
-| Native HDF5              |    ✔     |   ✔      |           |                                              |
-+--------------------------+----------+----------+-----------+----------------------------------------------+
-| IONMIX (.cn4)            |    ✔     |   ✔      |           |                                              |
-+--------------------------+----------+----------+-----------+----------------------------------------------+
-| MULTI (.opp, .opr, .eps) |    ✔     |   ✔      |    ✔      |                                              |
-+--------------------------+----------+----------+-----------+----------------------------------------------+
-| SESAME ASCII (.ses)      |    ✔     |          |     ✔     |                                              |
-+--------------------------+----------+----------+-----------+----------------------------------------------+
-| SESAME Binary (.sesb)    |          |          |           | `see pyeospac`_                              |
-+--------------------------+----------+----------+-----------+----------------------------------------------+
-| TOPS                     |    ✔     |          |           |                                              |
-+--------------------------+----------+----------+-----------+----------------------------------------------+
-| INFERNO                  |    ✔     |          |           |                                              |
-+--------------------------+----------+----------+-----------+----------------------------------------------+
-| UW EoS                   |    ✔     |          |           |                                              |
-+--------------------------+----------+----------+-----------+----------------------------------------------+
-| PROPACEOS ASCII (.prp)   |    ✔     |          |      ✔    | not distributed                              |
-+--------------------------+----------+----------+-----------+----------------------------------------------+
-| Opal                     |          |          |           | `see pystellar`_                             |
-+--------------------------+----------+----------+-----------+----------------------------------------------+
+``Opacplot2`` comes with an EoS Table conversion tool named ``opac-convert``.
+It also comes with an EoS Table comparison tool named ``opac-error``.
+Both can be found in the :ref:`clts`
 
-.. _see pyeospac: http://github.com/luli/pyeospac
-.. _see pystellar: https://github.com/alexrudy/pystellar/blob/master/pystellar/opacity.py
+Dependencies
+************
 
-Read/Write/Write2hdf
-********************
+``opacplot2``'s dependencies include:
 
-If a format can be *read* by ``opacplot2``, it means that ``opacplot2`` can browse a
-file of that particular format and it will return a dictionary object
-containing keys corresponding to particular data types (such as the planck
-emmisivity, ``emp_mg``) that match up with the ``numpy`` arrays of the data.
-*Write* cabailities are not as simple. Some format submodules have different
-methods of writing to files than others. *Write2hdf* means that the format
-submodule can open up and read a file of that format, and then write that data
-to an HDF5 (.h5) file. The HDF5 format is somewhat of a middleman for most
-conversions, since it can store any kind of data from a file. Then, using the
-data stored in the HDF5 file, format submodules with *write* capabilities can
-write to a file.
+* numpy
+* nose
+* six
+* pytables
+* matplotlib
+* scipy
+* hedp (https://github.com/luli/hedp)
 
+They can be installed as follows:
+
+``````shell
+pip install numpy nose six pytables matplotlib scipy
+pip install git+https://github.com/luli/hedp
+``````
 
 Installation
 ************
 
-.. _prerequisites:
+This module requires Python 2.7 or 3.5. The latest version can be installed with::
 
-Prerequisites
-=============
+   pip install git+https://github.com/flash-center/opacplot2
 
-Python Packages
----------------
+If you have the Propaceos Python reader, in order to include it in the
+installation, you must install ``opacplot2`` as follows::
 
-Required packages:
+   git clone https://github.com/flash-center/opacplot2
+   cp /path/to/opg_propaceos.py opacplot2/opacplot2/
+   cd opacplot2
+   python setup.py install
 
-#. ``numpy``
-#. ``pytables``
-#. ``six``
-#. ``setuptools``
-#. ``periodictable``
-#. ``matplotlib``
-#. ``scipy``
+Configuring Matplotlib for ``opac-error``
+*****************************************
 
-On Linux
---------
+The plotting capabilities of ``opacplot2`` rely on the ``matplotlib`` python
+module. It can be installed with ``pip``. It can also be installed with ``conda``
+if you are using Anaconda Python. For information on how to install ``matplotlib``, see
+their `website <http://matplotlib.org/users/installing.html>`__.
 
-You could just use your system Python distribution and install numpy, pytables,
-six, periodictable with the system package manager. On Debian-based systems
-(Ubuntu, etc) this can be achieved with::
+Configuring ``matplotlib`` to display inline
+============================================
 
-    sudo apt-get install python-numpy python-tables python-six python-setuptools
-    sudo pip install periodictable matplotlib
+In order to get plots to display inline with the python interpreter,
+it is recommended to use ``matplotlib``
+in conjunction with `Project Jupyter's QtConsole <http://jupyter.org/qtconsole/stable/>`_.
 
+Steps:
 
-On OSX/Windows
---------------
+#. Install ``jupyter`` using your preferred Python package manager.
+#. Start the console with ``jupyter qtconsole``.
+#. Set the mode to suit inline ``matplotlib`` plots using::
 
-The recommended way is to use Anaconda Python distribution (although as long as
-you install the required packages this hardly matters):
+       %matplotlib inline
 
-#. (optional)  `Download <https://www.continuum.io/downloads>`_ and install Anaconda Python
-    3.5 (or 2.7).
-#.  Install the required packages::
-
-        conda install numpy tables six setuptools matplotlib
-        pip install periodictable
+At any point during your Python session on ``qtconsole``, you can view what your
+current plots look like by typing the name of your figure.
 
 
-Install Opacplot2
-=================
+Troubleshooting ``matplotlib`` on OSX
+=====================================
 
-#.  Setup a scientific Python environment including numpy and PyTables (see :ref:`prerequisites`)
-#.  Download the LULI fork of ``opacplot2`` `here <https://github.com/luli/opacplot2>`__.
-#.  (optional) if you have the opg_propaceos.py script (not distributed on github),
-    copy it to the ``opacplot2-master/opacplot2/`` folder, then make sure it is
-    ignored by git::
+In order to display your plots, ``matplotlib`` uses a variety of `backends <http://matplotlib.org/faq/usage_faq.html#what-is-a-backend>`_.
+If you have your plots displaying inline on the ``qtconsole``, it is using a backend
+specific to the ``qtconsole`` that is separate from other standalone backends.
+Thus, for those of you using ``qtconsole``, you can ignore this section.
+The recommended backend to use for OSX is ``macosx``. This can be set in ``matplotlib``'s
+cofiguration file ``~/.matplotlib/matplotlibrc`` with the line::
 
-        cp opg_propaceos.py opacplot2-master/opacplot2/
+    backend: macosx
 
-#.  Install ``opacplot2``::
+It can also be set in an interactive session **before** you import ``matplotlib.pyplot``
+with::
 
-        cd opacplot2-master/
-        python setup.py install
+    matplotlib.rcParams['backend'] = 'macosx'
+
+For more information on the ``matplotlibrc`` file, see ``matplotlib``'s `website <http://matplotlib.org/users/customizing.html#the-matplotlibrc-file>`__.
+
+
+For Double Implementation Errors
+--------------------------------
+
+If you are receiving double implementation errors in Python, it is probably due
+to the backend chosen for ``matplotlib``. This error is confirmed for OSX users
+using the ``Tk`` backends. To fix this, switch your backend to ``macosx`` as shown
+above.
+
+For Framework Errors
+--------------------
+
+From ``matplotlib``'s website:
+
+    ''On OSX, two different types of Python Builds exist: a regular build and a
+    framework build. In order to interact correctly with OSX through some GUI
+    frameworks you need a framework build of Python. At the time of writing the
+    macosx, WX and WXAgg backends require a framework build to function correctly.
+    Unfortunately virtualenv creates a non framework build even if created from a
+    framework build of Python. Conda environments are framework builds. From
+    Matplotlib 1.5 onwards the macosx backend checks that a framework build is
+    available and fails if a non framework build is found. WX has a similar
+    check build in.''
+
+    -- `Matplotlib's documentation <http://matplotlib.org/faq/virtualenv_faq.html?highlight=jupyter#osx>`_
 

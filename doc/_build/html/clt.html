@@ -87,13 +87,16 @@
 <li class="toctree-l1"><a class="reference internal" href="test.html">Testing Suite</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot.html">Plotting Capabilities</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Command Line Tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#opac-table2hdf"><code class="docutils literal"><span class="pre">opac_table2hdf</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#opac-hdf2table"><code class="docutils literal"><span class="pre">opac_hdf2table</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#other-tools">Other Tools</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#opacplot2"><code class="docutils literal"><span class="pre">opacplot2</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#opacdump"><code class="docutils literal"><span class="pre">opacdump</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#opac-checkhdf"><code class="docutils literal"><span class="pre">opac_checkhdf</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#opac-diff"><code class="docutils literal"><span class="pre">opac_diff</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#opac-convert">opac-convert</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#options">Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logarithmic-data">Logarithmic Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#opac-error">opac-error</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-it-works">How It Works</a></li>
 </ul>
 </li>
 </ul>
@@ -145,79 +148,226 @@
             
   <div class="section" id="command-line-tools">
 <span id="clts"></span><h1>Command Line Tools<a class="headerlink" href="#command-line-tools" title="Permalink to this headline">¶</a></h1>
-<p>Opacplot2 supports a number of Opacity/EoS table formats that are listed in the
-<a class="reference internal" href="intro.html#introduction"><span class="std std-ref">Introduction</span></a>.</p>
-<p>It is possible to directly convert between two table formats with a suitable
-Python script. A more systematic way consist in converting the source file to
-the HDF5 format which is then converted to the output format:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="n">table</span> <span class="o">-&gt;</span> <span class="n">HDF5</span> <span class="n">EoS</span><span class="o">/</span><span class="n">Opacity</span> <span class="nb">format</span>  <span class="o">-&gt;</span>  <span class="n">output</span> <span class="n">table</span>
-</pre></div>
-</div>
-<p>Convenience scripts exist to perform this function, installed as:
-<code class="docutils literal"><span class="pre">opac_table2hdf</span></code> and <code class="docutils literal"><span class="pre">opac_hdf2table</span></code>.</p>
-<p>After installation of <code class="docutils literal"><span class="pre">opacplot2</span></code>, these two scripts will be placed in the
-system&#8217;s path and can be called using <code class="docutils literal"><span class="pre">opac_table2hdf</span></code> and similarly
-<code class="docutils literal"><span class="pre">opac_hdf2table</span></code>.</p>
-<div class="section" id="opac-table2hdf">
-<h2><code class="docutils literal"><span class="pre">opac_table2hdf</span></code><a class="headerlink" href="#opac-table2hdf" title="Permalink to this headline">¶</a></h2>
-<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.opac_table2hdf</span></code>.</p>
+<div class="section" id="opac-convert">
+<h2>opac-convert<a class="headerlink" href="#opac-convert" title="Permalink to this headline">¶</a></h2>
+<p>Command line tool for converting EoS Table formats into the IONMIX format
+that comes with <code class="docutils literal"><span class="pre">opacplot2</span></code>.</p>
+<p>Supported input file formats:</p>
+<ul class="simple">
+<li>Propaceos (not distributed, contact jtlaune at uchicago dot edu.)</li>
+<li>SESAME (.ses)</li>
+<li>QEOS SESAME (.mexport)</li>
+<li>MULTI (.opp, .opr, .opz, .eps)</li>
+</ul>
+<p>Currently the only supported output format is IONMIX.</p>
 <p>Usage:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">opac_table2hdf</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="p">{</span><span class="n">multi</span><span class="p">,</span><span class="n">ionmix</span><span class="p">,</span><span class="n">hdf5</span><span class="p">,</span><span class="n">propaceos</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTNAME</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">Znum</span> <span class="n">ZNUM</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">Xnum</span> <span class="n">XNUM</span><span class="p">]</span> <span class="n">input_file</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">opac</span><span class="o">-</span><span class="n">convert</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="n">myfile</span><span class="o">.</span><span class="n">ext</span>
 </pre></div>
 </div>
-<p>This will take a file, <code class="docutils literal"><span class="pre">input_file</span></code> of the type specified by the <code class="docutils literal"><span class="pre">-t</span></code> tag
-and convert it to an HDF5 file with a name specified by the <code class="docutils literal"><span class="pre">-o</span></code> tag.</p>
-<p>In general, one will have to specify the atomic numbers and material fractions
-by using <code class="docutils literal"><span class="pre">--Znum</span></code> and <code class="docutils literal"><span class="pre">--Xnum</span></code>, respectively. These are comma separated
-lists.</p>
+<p><code class="docutils literal"><span class="pre">opac-convert</span></code> will attempt to read your file extension and convert it to
+IONMIX accordingly.
+If it is unable to read the extension, you can use the input flag to specify
+your filetype.
+Some files need additional information to write to IONMIX,
+such as atomic numbers. These you must specify with the command line options
+shown below.</p>
+<div class="section" id="options">
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Option</th>
+<th class="head">Action</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>-i, &#8211;input</td>
+<td>Specify the input filetype (<code class="docutils literal"><span class="pre">propaceos</span></code>, <code class="docutils literal"><span class="pre">sesame</span></code>, <code class="docutils literal"><span class="pre">multi</span></code>)</td>
+</tr>
+<tr class="row-odd"><td>&#8211;Znum</td>
+<td>Comma separated list of atomic numbers.</td>
+</tr>
+<tr class="row-even"><td>&#8211;Xfracs</td>
+<td>Comma separated list of element fractions.</td>
+</tr>
+<tr class="row-odd"><td>&#8211;outname</td>
+<td>Specify the output filename.</td>
+</tr>
+<tr class="row-even"><td>&#8211;log</td>
+<td>Comma separated list of logarithmic data.</td>
+</tr>
+<tr class="row-odd"><td>&#8211;tabnum</td>
+<td>SESAME table number (defaults to last).</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="section" id="opac-hdf2table">
-<h2><code class="docutils literal"><span class="pre">opac_hdf2table</span></code><a class="headerlink" href="#opac-hdf2table" title="Permalink to this headline">¶</a></h2>
-<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.opac_hdf2table</span></code>.</p>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<p>To specify the files atomic numbers, one may use <code class="docutils literal"><span class="pre">--Znum</span></code> with a comma separated
+list of integers. If more than one atomic number is given,
+one must also specify the element fractions with <code class="docutils literal"><span class="pre">--Xfracs</span></code>.
+For example, take a SESAME table for CH named <code class="docutils literal"><span class="pre">myfile.ses</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">opac</span><span class="o">-</span><span class="n">convert</span> <span class="o">--</span><span class="n">Znum</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span> <span class="o">--</span><span class="n">Xfracs</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span> <span class="n">myfile</span><span class="o">.</span><span class="n">ses</span>
+</pre></div>
+</div>
+<p>This will convert <code class="docutils literal"><span class="pre">myfile.ses</span></code> to an IONMIX file named <code class="docutils literal"><span class="pre">myfile.cn4</span></code>.</p>
+</div>
+<div class="section" id="logarithmic-data">
+<h3>Logarithmic Data<a class="headerlink" href="#logarithmic-data" title="Permalink to this headline">¶</a></h3>
+<p>If you would like to take the log of the data before you write it to the IONMIX
+file, use <code class="docutils literal"><span class="pre">--log</span></code> with a comma separated list of the data keys as shown below.
+Each key specified will be written to IONMIX after the base 10 logarithm has
+been applied.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="52%" />
+<col width="48%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Data</th>
+<th class="head">Key</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Ion number density</td>
+<td><code class="docutils literal"><span class="pre">idens</span></code></td>
+</tr>
+<tr class="row-odd"><td>Temperatures</td>
+<td><code class="docutils literal"><span class="pre">temps</span></code></td>
+</tr>
+<tr class="row-even"><td>Average ionization</td>
+<td><code class="docutils literal"><span class="pre">Zf_DT</span></code></td>
+</tr>
+<tr class="row-odd"><td>Ion pressure</td>
+<td><code class="docutils literal"><span class="pre">Pi_DT</span></code></td>
+</tr>
+<tr class="row-even"><td>Electron pressure</td>
+<td><code class="docutils literal"><span class="pre">Pec_DT</span></code></td>
+</tr>
+<tr class="row-odd"><td>Ion internal energy</td>
+<td><code class="docutils literal"><span class="pre">Ui_DT</span></code></td>
+</tr>
+<tr class="row-even"><td>Electron internal energy</td>
+<td><code class="docutils literal"><span class="pre">Uec_DT</span></code></td>
+</tr>
+<tr class="row-odd"><td>Opacity bounds</td>
+<td><code class="docutils literal"><span class="pre">groups</span></code></td>
+</tr>
+<tr class="row-even"><td>Rosseland mean opacity</td>
+<td><code class="docutils literal"><span class="pre">opr_mg</span></code></td>
+</tr>
+<tr class="row-odd"><td>absorption Planck mean opacity</td>
+<td><code class="docutils literal"><span class="pre">opp_mg</span></code></td>
+</tr>
+<tr class="row-even"><td>emission Planck mean opacity</td>
+<td><code class="docutils literal"><span class="pre">emp_emg</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>For example, in order to specify that the emission Planck Mean Opacity be written
+logarithmically:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">opac</span><span class="o">-</span><span class="n">convert</span> <span class="o">--</span><span class="n">log</span> <span class="n">emp_mg</span> <span class="n">my</span><span class="o">-</span><span class="n">file</span><span class="o">.</span><span class="n">ext</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h3>
+<p>Invalid Literal for <code class="docutils literal"><span class="pre">int()</span></code></p>
+<p>The <code class="docutils literal"><span class="pre">--log</span></code> flag may be used to fix the following error:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ne">ValueError</span><span class="p">:</span> <span class="n">invalid</span> <span class="n">literal</span> <span class="k">for</span> <span class="nb">int</span><span class="p">()</span> <span class="k">with</span> <span class="n">base</span> <span class="mi">10</span>
+</pre></div>
+</div>
+<p>This error arises when the exponent for the data is more than 2 digits long,
+which IONMIX does not support.
+What that usually means is that the data was originally
+stored logarithmically and must be written back to IONMIX as logarithmic data.</p>
+</div>
+</div>
+<div class="section" id="opac-error">
+<h2>opac-error<a class="headerlink" href="#opac-error" title="Permalink to this headline">¶</a></h2>
+<p>Command line tool for comparing two EoS/Opacity tables.</p>
+<p>Supported input file formats:</p>
+<ul class="simple">
+<li>Propaceos (not distributed, contact jtlaune at uchicago dot edu.)</li>
+<li>SESAME (.ses)</li>
+<li>QEOS SESAME (.mexport)</li>
+<li>IONMIX</li>
+</ul>
 <p>Usage:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">opac_hdf2table</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="p">{</span><span class="n">multi</span><span class="p">,</span><span class="n">ionmix</span><span class="p">,</span><span class="n">ascii</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTFILE</span><span class="p">]</span> <span class="n">input_file</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">opac</span><span class="o">-</span><span class="n">convert</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="n">myfile_1</span><span class="o">.</span><span class="n">ext</span> <span class="n">myfile_2</span><span class="o">.</span><span class="n">ext</span>
 </pre></div>
 </div>
-<p>This will take a file, <code class="docutils literal"><span class="pre">input_file</span></code> of HDF5 format and convert it to a file of
-the type specified by <code class="docutils literal"><span class="pre">-t</span></code>, with a name specified by <code class="docutils literal"><span class="pre">-o</span></code>.</p>
+<p>Much like <code class="docutils literal"><span class="pre">opac-convert</span></code>, this tool will first attempt to read the extensions from your EoS tables
+in order to open them up. However, some file types require additional information, as in
+<code class="docutils literal"><span class="pre">opac-convert</span></code>, which can be specified in the <code class="docutils literal"><span class="pre">[options]</span></code>. The options have many of the same
+names as <code class="docutils literal"><span class="pre">opac-convert</span></code> but suffixed by <code class="docutils literal"><span class="pre">_1</span></code> for file 1 or <code class="docutils literal"><span class="pre">_2</span></code> for file 2.</p>
+<p>Then, <code class="docutils literal"><span class="pre">opac-error</span></code> will create error reports for the following data:</p>
+<ul class="simple">
+<li>Average ionization</li>
+<li>Electron Ppessure</li>
+<li>Ion pressure</li>
+<li>Electron energy</li>
+<li>Ion energy</li>
+</ul>
+<p>Included in the error report, we have</p>
+<ul class="simple">
+<li>Root mean squared % error</li>
+<li>Maximum absolute % error</li>
+</ul>
+<p>If the <code class="docutils literal"><span class="pre">--plot</span></code> flag is called, <code class="docutils literal"><span class="pre">opac-convert</span></code> will also make error plots and save them as images
+to the current directory.</p>
+<div class="section" id="id1">
+<h3>Options<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Option</th>
+<th class="head">Action</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>&#8211;filetypes</td>
+<td>Comma separated list of file types.</td>
+</tr>
+<tr class="row-odd"><td>&#8211;mpi_#</td>
+<td>Mass per ion (g) for file 1 or 2.</td>
+</tr>
+<tr class="row-even"><td>&#8211;Znum_#</td>
+<td>Comma separated list of atomic numbers for file 1 or 2.</td>
+</tr>
+<tr class="row-odd"><td>&#8211;Xfrac_#</td>
+<td>Comma separated list of number fractions for file 1 or 2.</td>
+</tr>
+<tr class="row-even"><td>&#8211;filters_#</td>
+<td><code class="docutils literal"><span class="pre">dens_filter,</span> <span class="pre">temp_filter</span></code> for file 1 or 2.</td>
+</tr>
+<tr class="row-odd"><td>&#8211;tabnum_#</td>
+<td>SESAME table number for file 1 or 2.</td>
+</tr>
+<tr class="row-even"><td>&#8211;plot</td>
+<td>Create % error plots for data.</td>
+</tr>
+<tr class="row-odd"><td>&#8211;writelog</td>
+<td>Write log file with % errors for data.</td>
+</tr>
+<tr class="row-even"><td>&#8211;lin_grid</td>
+<td>Plot using linear axes.</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="section" id="other-tools">
-<h2>Other Tools<a class="headerlink" href="#other-tools" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="opacplot2">
-<h3><code class="docutils literal"><span class="pre">opacplot2</span></code><a class="headerlink" href="#opacplot2" title="Permalink to this headline">¶</a></h3>
-<p><strong>Has not been tested!</strong></p>
-<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.main</span></code>.</p>
-<p>This script is used to automate EoS/opacity tables generation for <em>FLASH</em> from the
-SESAME database.</p>
-<p>Usage:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">opacplot2</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DBDIR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">DBTYPE</span><span class="p">]</span> <span class="o">-</span><span class="n">n</span> <span class="n">TABLENUM</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>where:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">d</span> <span class="n">DBDIR</span><span class="p">,</span> <span class="o">--</span><span class="n">dbdir</span> <span class="n">DBDIR</span>             <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">database</span><span class="o">.</span> <span class="n">Default</span><span class="p">:</span> <span class="n">current</span> <span class="n">directory</span><span class="o">.</span>
-
-<span class="o">-</span><span class="n">t</span> <span class="n">DBTYPE</span><span class="p">,</span> <span class="o">--</span><span class="n">dbtype</span> <span class="n">DBTYPE</span>          <span class="n">Database</span> <span class="nb">type</span><span class="o">.</span> <span class="n">Currently</span> <span class="n">only</span> <span class="n">supports</span> <span class="n">SESAME</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span><span class="o">.</span>
-
-<span class="o">-</span><span class="n">n</span> <span class="n">TABLENUM</span><span class="p">,</span> <span class="o">--</span><span class="n">tablenum</span> <span class="n">TABLENUM</span>    <span class="n">Table</span> <span class="n">ID</span><span class="o">.</span>
-
-<span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">,</span> <span class="o">--</span><span class="n">out</span> <span class="n">OUT</span>                   <span class="n">Output</span> <span class="n">Filename</span><span class="o">.</span> <span class="n">Default</span><span class="p">:</span> <span class="n">DBTYPE</span><span class="o">-</span><span class="n">eos</span><span class="o">-</span><span class="n">TABLENUM</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="opacdump">
-<h3><code class="docutils literal"><span class="pre">opacdump</span></code><a class="headerlink" href="#opacdump" title="Permalink to this headline">¶</a></h3>
-<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.main</span></code>.</p>
-<p>Currently not working, fails with <code class="docutils literal"><span class="pre">KeyError:</span> <span class="pre">'rho'</span></code>.</p>
-</div>
-<div class="section" id="opac-checkhdf">
-<h3><code class="docutils literal"><span class="pre">opac_checkhdf</span></code><a class="headerlink" href="#opac-checkhdf" title="Permalink to this headline">¶</a></h3>
-<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.main</span></code>.</p>
-<p>Currently not working, fails with <code class="docutils literal"><span class="pre">KeyError:</span> <span class="pre">'dens'</span></code>.</p>
-</div>
-<div class="section" id="opac-diff">
-<h3><code class="docutils literal"><span class="pre">opac_diff</span></code><a class="headerlink" href="#opac-diff" title="Permalink to this headline">¶</a></h3>
-<p>Located in <code class="docutils literal"><span class="pre">opacplot2.scripts.opac_diff</span></code>.</p>
-<p>Currently not working, fails with <code class="docutils literal"><span class="pre">KeyError:</span> <span class="pre">'rho'</span></code>.</p>
+<div class="section" id="how-it-works">
+<h3>How It Works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h3>
+<p>First, <code class="docutils literal"><span class="pre">opac-convert</span></code> takes an intersection of the two dens/temp grids from each file.
+Then it interpolates the data from both files onto the intersection dens/temp grids and is then
+able to create an error report.</p>
 </div>
 </div>
 </div>
