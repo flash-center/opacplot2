@@ -119,7 +119,7 @@ def interpDT(arr, dens, temps,
     # "When on a regular grid with x.size = m and y.size = n,
     # if z.ndim ==2, then z must have shape (n, m)."
     # arr will have shape (dens.size, temps.size), so we must transpose it.
-    f = sp.interpolate.interp2d(dens, temps, arr.T)
+    f = sp.interpolate.interp2d(dens, temps, arr.T, kind='linear')
     
     if lookup == INTERP_FUNC:
         def interp_func(func):
@@ -290,6 +290,34 @@ class EosMergeGrids(dict):
             # Now just in case we have added some extra keys in there,
             # reproduce a normal dict's behaviour
             return dict.__getitem__(self, key)    
+
+def intersect_1D_sorted_arr(arr_1, arr_2):
+    # Check for some overlap.
+    if (arr_1[-1] < arr_2[0]) or (arr_2[-1] < arr_1[0]):
+        return None
+        
+    # Use interpolation to account for mismatched grid sizes.
+    # We will also work with the intersection of the dens/temp grids.
+    arr_min = max(arr_1[0], arr_2[0])
+    arr_max = min(arr_1[-1], arr_2[-1])
+    
+    max_idx_1 = np.argmin(arr_1 <= arr_max)
+    # If arr_max is bigger than arr_1[-1] max_idx_1 = 0, so we fix that here.
+    if max_idx_1 == 0:
+        max_idx_1 = len(arr_1)
+    min_idx_1 = np.argmax(arr_1 >= arr_min)
+    
+    max_idx_2 = np.argmin(arr_2 <= arr_max)
+    if max_idx_2 == 0:
+        max_idx_2 = len(arr_2)-1
+    min_idx_2 = np.argmax(arr_2 >= arr_min)
+        
+    sliced_arr_1 = arr_1[min_idx_1:max_idx_1]
+    sliced_arr_2 = arr_2[min_idx_2:max_idx_2]
+        
+    merged_arr = np.concatenate((sliced_arr_1, sliced_arr_2))
+    
+    return np.unique(merged_arr)
 
 ################################################################################
 # Functions and classes below this have not been adequately tested.            #

@@ -4,8 +4,8 @@
 
 Python package for manipulating Equation of State (EoS) and Opacity data.
 
-`Opacplot2` comes with an EoS Table conversion tool named `opac-convert`, 
-described [here](#opac-convert).
+`Opacplot2` comes with an EoS Table conversion tool named [`opac-convert`](#opac-convert).
+It also comes with an EoS Table comparison tool named [`opac-error`](#opac-error).
 
 ### Dependencies
 
@@ -88,6 +88,7 @@ shown below.
 |--Xfracs| Comma separated list of element fractions.|
 |--outname| Specify the output filename.|
 |--log| Comma separated list of logarithmic data.|
+|--tabnum| SESAME table number (defaults to last).|
 
 ### Example
 
@@ -145,3 +146,64 @@ This error arises when the exponent for the data is more than 2 digits long,
 which IONMIX does not support. 
 What that usually means is that the data was originally
 stored logarithmically and must be written back to IONMIX as logarithmic data.
+
+---
+
+<a name="opac-error"></a>
+# opac-error
+
+Command line tool for comparing two EoS/Opacity tables.
+
+Supported input file formats:
+
+* Propaceos (not distributed, contact jtlaune at uchicago dot edu.)
+* SESAME (.ses)
+* QEOS SESAME (.mexport)
+* IONMIX
+
+### Usage
+
+```bash
+opac-convert [options] myfile_1.ext myfile_2.ext
+```
+
+Much like `opac-convert`, this tool will first attempt to read the extensions from your EoS tables
+in order to open them up. However, some file types require additional information, as in 
+`opac-convert`, which can be specified in the `[options]`. The options have many of the same
+names as `opac-convert` but suffixed by `_1` for file 1 or `_2` for file 2.
+
+Then, `opac-error` will create error reports for the following data:
+
+* Average ionization
+* Electron Ppessure
+* Ion pressure
+* Electron energy
+* Ion energy
+
+Included in the error report, we have
+
+* Root mean squared % error
+* Maximum absolute % error
+
+If the `--plot` flag is called, `opac-convert` will also make error plots and save them as images
+to the current directory.
+
+### Options
+
+| Option | Action |
+|:-------|--------|
+|--filetypes| Comma separated list of file types.|
+|--mpi_#| Mass per ion (g) for file 1 or 2.|
+|--Znum_#| Comma separated list of atomic numbers for file 1 or 2.|
+|--Xfrac_#| Comma separated list of number fractions for file 1 or 2.|
+|--filters_#| `dens_filter, temp_filter` for file 1 or 2.|
+|--tabnum_#| SESAME table number for file 1 or 2.|
+|--plot| Create % error plots for data.|
+|--writelog| Write log file with % errors for data.|
+|--lin_grid| Plot using linear axes.|
+
+### How It Works
+
+First, `opac-convert` takes an intersection of the two dens/temp grids from each file.
+Then it interpolates the data from both files onto the intersection dens/temp grids and is then
+able to create an error report.
