@@ -15,7 +15,7 @@ install:
     # See: https://groups.google.com/a/continuum.io/forum/#!topic/conda/RSFENqovnro
     - conda update --yes --no-deps conda
     - pip install enum34
-    # Out of date, needs fixing for build.
+    # Out of date, needs quick fixing for build.
     - conda install --yes sip
     - conda update --yes sip
     - conda config --set always_yes yes --set changeps1 no
