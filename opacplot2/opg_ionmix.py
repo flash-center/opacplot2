@@ -124,7 +124,7 @@ class OpacIonmix:
     For a directory with the IONMIX file ``imx.cn4`` for Aluminum::
 
        >>> import opacplot2 as opp
-       >>> op = opp.Opac_Ionmix('imx.cn4', 26.981539)
+       >>> op = opp.Opac_Ionmix('imx.cn4', 4.4803895e-23) # Al mass in grams
        >>> print(op.zbar)
        array([...]) # Array of average ionizations for dens/temp points.
     
