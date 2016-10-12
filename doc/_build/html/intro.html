@@ -85,15 +85,6 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">opacplot2</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#configuring-matplotlib-for-opac-error">Configuring Matplotlib for <code class="docutils literal"><span class="pre">opac-error</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#configuring-matplotlib-to-display-inline">Configuring <code class="docutils literal"><span class="pre">matplotlib</span></code> to display inline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#troubleshooting-matplotlib-on-osx">Troubleshooting <code class="docutils literal"><span class="pre">matplotlib</span></code> on OSX</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#for-double-implementation-errors">For Double Implementation Errors</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#for-framework-errors">For Framework Errors</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">File Format Functions and Classes</a></li>
@@ -155,16 +146,16 @@ Both can be found in the <a class="reference internal" href="clt.html#clts"><spa
 <p><code class="docutils literal"><span class="pre">opacplot2</span></code>&#8216;s dependencies include:</p>
 <ul class="simple">
 <li>numpy</li>
-<li>nose</li>
 <li>six</li>
 <li>pytables</li>
 <li>matplotlib</li>
 <li>scipy</li>
+<li>periodictable</li>
 <li>hedp (<a class="reference external" href="https://github.com/luli/hedp">https://github.com/luli/hedp</a>)</li>
 </ul>
 <p>They can be installed as follows:</p>
 <p><code class="docutils literal"><span class="pre">````shell</span>
-<span class="pre">pip</span> <span class="pre">install</span> <span class="pre">numpy</span> <span class="pre">nose</span> <span class="pre">six</span> <span class="pre">pytables</span> <span class="pre">matplotlib</span> <span class="pre">scipy</span>
+<span class="pre">pip</span> <span class="pre">install</span> <span class="pre">numpy</span> <span class="pre">six</span> <span class="pre">pytables</span> <span class="pre">matplotlib</span> <span class="pre">scipy</span> <span class="pre">periodictable</span>
 <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">git+https://github.com/luli/hedp</span>
 <span class="pre">````</span></code></p>
 </div>
@@ -181,74 +172,6 @@ installation, you must install <code class="docutils literal"><span class="pre">
 <span class="n">cd</span> <span class="n">opacplot2</span>
 <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
-</div>
-</div>
-<div class="section" id="configuring-matplotlib-for-opac-error">
-<h2>Configuring Matplotlib for <code class="docutils literal"><span class="pre">opac-error</span></code><a class="headerlink" href="#configuring-matplotlib-for-opac-error" title="Permalink to this headline">¶</a></h2>
-<p>The plotting capabilities of <code class="docutils literal"><span class="pre">opacplot2</span></code> rely on the <code class="docutils literal"><span class="pre">matplotlib</span></code> python
-module. It can be installed with <code class="docutils literal"><span class="pre">pip</span></code>. It can also be installed with <code class="docutils literal"><span class="pre">conda</span></code>
-if you are using Anaconda Python. For information on how to install <code class="docutils literal"><span class="pre">matplotlib</span></code>, see
-their <a class="reference external" href="http://matplotlib.org/users/installing.html">website</a>.</p>
-<div class="section" id="configuring-matplotlib-to-display-inline">
-<h3>Configuring <code class="docutils literal"><span class="pre">matplotlib</span></code> to display inline<a class="headerlink" href="#configuring-matplotlib-to-display-inline" title="Permalink to this headline">¶</a></h3>
-<p>In order to get plots to display inline with the python interpreter,
-it is recommended to use <code class="docutils literal"><span class="pre">matplotlib</span></code>
-in conjunction with <a class="reference external" href="http://jupyter.org/qtconsole/stable/">Project Jupyter&#8217;s QtConsole</a>.</p>
-<p>Steps:</p>
-<ol class="arabic">
-<li><p class="first">Install <code class="docutils literal"><span class="pre">jupyter</span></code> using your preferred Python package manager.</p>
-</li>
-<li><p class="first">Start the console with <code class="docutils literal"><span class="pre">jupyter</span> <span class="pre">qtconsole</span></code>.</p>
-</li>
-<li><p class="first">Set the mode to suit inline <code class="docutils literal"><span class="pre">matplotlib</span></code> plots using:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
-</pre></div>
-</div>
-</li>
-</ol>
-<p>At any point during your Python session on <code class="docutils literal"><span class="pre">qtconsole</span></code>, you can view what your
-current plots look like by typing the name of your figure.</p>
-</div>
-<div class="section" id="troubleshooting-matplotlib-on-osx">
-<h3>Troubleshooting <code class="docutils literal"><span class="pre">matplotlib</span></code> on OSX<a class="headerlink" href="#troubleshooting-matplotlib-on-osx" title="Permalink to this headline">¶</a></h3>
-<p>In order to display your plots, <code class="docutils literal"><span class="pre">matplotlib</span></code> uses a variety of <a class="reference external" href="http://matplotlib.org/faq/usage_faq.html#what-is-a-backend">backends</a>.
-If you have your plots displaying inline on the <code class="docutils literal"><span class="pre">qtconsole</span></code>, it is using a backend
-specific to the <code class="docutils literal"><span class="pre">qtconsole</span></code> that is separate from other standalone backends.
-Thus, for those of you using <code class="docutils literal"><span class="pre">qtconsole</span></code>, you can ignore this section.
-The recommended backend to use for OSX is <code class="docutils literal"><span class="pre">macosx</span></code>. This can be set in <code class="docutils literal"><span class="pre">matplotlib</span></code>&#8216;s
-cofiguration file <code class="docutils literal"><span class="pre">~/.matplotlib/matplotlibrc</span></code> with the line:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">backend</span><span class="p">:</span> <span class="n">macosx</span>
-</pre></div>
-</div>
-<p>It can also be set in an interactive session <strong>before</strong> you import <code class="docutils literal"><span class="pre">matplotlib.pyplot</span></code>
-with:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;backend&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;macosx&#39;</span>
-</pre></div>
-</div>
-<p>For more information on the <code class="docutils literal"><span class="pre">matplotlibrc</span></code> file, see <code class="docutils literal"><span class="pre">matplotlib</span></code>&#8216;s <a class="reference external" href="http://matplotlib.org/users/customizing.html#the-matplotlibrc-file">website</a>.</p>
-<div class="section" id="for-double-implementation-errors">
-<h4>For Double Implementation Errors<a class="headerlink" href="#for-double-implementation-errors" title="Permalink to this headline">¶</a></h4>
-<p>If you are receiving double implementation errors in Python, it is probably due
-to the backend chosen for <code class="docutils literal"><span class="pre">matplotlib</span></code>. This error is confirmed for OSX users
-using the <code class="docutils literal"><span class="pre">Tk</span></code> backends. To fix this, switch your backend to <code class="docutils literal"><span class="pre">macosx</span></code> as shown
-above.</p>
-</div>
-<div class="section" id="for-framework-errors">
-<h4>For Framework Errors<a class="headerlink" href="#for-framework-errors" title="Permalink to this headline">¶</a></h4>
-<p>From <code class="docutils literal"><span class="pre">matplotlib</span></code>&#8216;s website:</p>
-<blockquote>
-<div><p>&#8216;&#8217;On OSX, two different types of Python Builds exist: a regular build and a
-framework build. In order to interact correctly with OSX through some GUI
-frameworks you need a framework build of Python. At the time of writing the
-macosx, WX and WXAgg backends require a framework build to function correctly.
-Unfortunately virtualenv creates a non framework build even if created from a
-framework build of Python. Conda environments are framework builds. From
-Matplotlib 1.5 onwards the macosx backend checks that a framework build is
-available and fails if a non framework build is found. WX has a similar
-check build in.&#8217;&#8216;</p>
-<p class="attribution">&mdash;<a class="reference external" href="http://matplotlib.org/faq/virtualenv_faq.html?highlight=jupyter#osx">Matplotlib&#8217;s documentation</a></p>
-</div></blockquote>
-</div>
 </div>
 </div>
 </div>
