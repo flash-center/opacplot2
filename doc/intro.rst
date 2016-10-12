@@ -16,7 +16,7 @@ Dependencies
 
 * numpy
 * six
-* pytables
+* tables
 * matplotlib
 * scipy
 * periodictable
@@ -24,7 +24,7 @@ Dependencies
 
 They can be installed as follows::
 
-   pip install numpy six pytables matplotlib scipy periodictable
+   pip install numpy six tables matplotlib scipy periodictable
    pip install git+https://github.com/luli/hedp
 
 

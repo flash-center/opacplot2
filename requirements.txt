@@ -1,6 +1,6 @@
 numpy
 six
-pytables
+tables
 matplotlib
 scipy
 periodictable

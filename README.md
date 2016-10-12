@@ -14,7 +14,7 @@ It also comes with an EoS Table comparison tool named [`opac-error`](#opac-error
 
 * numpy 
 * six 
-* pytables 
+* tables 
 * matplotlib 
 * scipy
 * periodictable
@@ -23,7 +23,7 @@ It also comes with an EoS Table comparison tool named [`opac-error`](#opac-error
 They can be installed as follows:
 
 ```shell
-pip install numpy six pytables matplotlib scipy periodictable
+pip install numpy six tables matplotlib scipy periodictable
 pip install git+https://github.com/luli/hedp
 ```
 
