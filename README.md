@@ -46,7 +46,7 @@ python setup.py install
 
 ### Documentation
 
-Full documentation can be found  [here](http://opacplot2.readthedocs.io/en/latest/intro.html).
+Full documentation can be found [here](http://opacplot2.readthedocs.io/en/latest/intro.html).
 
 ---
 
