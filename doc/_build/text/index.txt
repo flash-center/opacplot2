@@ -10,8 +10,6 @@ Contents:
 
   * Installation
 
-  * Configuring Matplotlib for "opac-error"
-
 * File Format Functions and Classes
 
   * IONMIX (.cn4)

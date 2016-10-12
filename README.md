@@ -12,17 +12,17 @@ It also comes with an EoS Table comparison tool named [`opac-error`](#opac-error
 `opacplot2`'s dependencies include:
 
 * numpy 
-* nose 
 * six 
 * pytables 
 * matplotlib 
 * scipy
+* periodictable
 * hedp (https://github.com/luli/hedp)
 
 They can be installed as follows:
 
 ```shell
-pip install numpy nose six pytables matplotlib scipy
+pip install numpy six pytables matplotlib scipy periodictable
 pip install git+https://github.com/luli/hedp
 ```
 
