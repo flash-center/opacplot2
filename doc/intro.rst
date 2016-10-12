@@ -22,12 +22,11 @@ Dependencies
 * periodictable
 * hedp (https://github.com/luli/hedp)
 
-They can be installed as follows:
+They can be installed as follows::
 
-``````shell
-pip install numpy six pytables matplotlib scipy periodictable
-pip install git+https://github.com/luli/hedp
-``````
+   pip install numpy six pytables matplotlib scipy periodictable
+   pip install git+https://github.com/luli/hedp
+
 
 Installation
 ************
