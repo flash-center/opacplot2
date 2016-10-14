@@ -26,6 +26,13 @@ pip install numpy six pytables matplotlib scipy periodictable
 pip install git+https://github.com/luli/hedp
 ```
 
+For OS X users, it is advised to use Anaconda Python to install `matplotlib` in order to avoid framework errors:
+
+```shell
+conda install matplotlib
+```
+
+
 ### Installation 
 
 This module requires Python 2.7 or 3.5. The latest version can be installed with
