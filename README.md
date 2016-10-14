@@ -122,7 +122,7 @@ been applied.
 |Opacity bounds|`groups`|
 |Rosseland mean opacity|`opr_mg`|
 |absorption Planck mean opacity|`opp_mg`|
-|emission Planck mean opacity|`emp_emg`|
+|emission Planck mean opacity|`emp_mg`|
 
 
 For example, in order to specify that the emission Planck Mean Opacity be written
