@@ -750,8 +750,8 @@ def compare_eos(eos_1, eos_2, verbose=False,
                 f.write('{}, {}, {}\n'.format(key, err_rms, err_abs))
         
         print('Error statistics for {}:'.format(key))
-        print('RMS % Error: {:.2%}.'.format(err_rms))
-        print('Max % Absolute Error: {:.2%}.'.format(err_abs))
+        print('RMS % Error: {:.5e}.'.format(err_rms*100))
+        print('Max % Absolute Error: {:.5e}.'.format(err_abs*100))
 
 def check_error():
     input_data = get_input_data()
