@@ -262,9 +262,9 @@ class OpgSesame:
 
         # Sesame has extra data points in it, so we must merge them down. We are
         # merging the default grids ioncc_ and ele_.
-        # We also filter temps >.5 to avoid problems with the solver, per
+        # Information about filtering dens/temp grids is available here:
         # http://flash.uchicago.edu/pipermail/flash-users/2015-April/001689.html
-        # We also filter dens > 0. in order to avoid problems with calculating
+        # We must filter dens > 0. in order to avoid problems with calculating
         # zbar below, since eos.thomas_fermi_ionization() returns `nan` where
         # density is 0.
         if not qeos:
