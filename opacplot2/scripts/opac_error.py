@@ -732,11 +732,11 @@ def compare_eos(eos_1, eos_2, verbose=False,
                 if i==2:
                     cb.set_label('% Error')
                 if not lin_grid:
-                    axarr[0].loglog()
-                axarr[0].set_xlim((d[0], d[-1]))
-                axarr[0].set_ylim((t[0], t[-1]))
-                axarr[0].set_xlabel('rho [#/cm^(3)]')
-                axarr[0].set_ylabel('T [eV]')                
+                    axarr[i].loglog()
+                axarr[i].set_xlim((d[0], d[-1]))
+                axarr[i].set_ylim((t[0], t[-1]))
+                axarr[i].set_xlabel('rho [#/cm^(3)]')
+                axarr[i].set_ylabel('T [eV]')                
             
             fig.tight_layout()
             fig.suptitle('{} % Error for {} vs. {}'.format(titles[key], fn_1, fn_2))
