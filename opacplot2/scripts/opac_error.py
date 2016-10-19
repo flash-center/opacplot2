@@ -481,13 +481,12 @@ class Formats_Read(object):
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
         except ValueError:
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.DOUBLE)
-        if self.verbose:
-            print('Selecting the last table available...')
+            
         if self.tabnum is not None:
             table_key = self.tabnum
         else:
             if self.verbose:
-                print('Setting the atomic numbers...')
+                print('Selecting the last table available...')
             # Select the last table (newest) table available.
             table_key = sorted(op.data.keys())[-1]
         
@@ -717,7 +716,6 @@ def compare_eos(eos_1, eos_2, verbose=False,
                       'Pi_DT':'Ion Pressure',
                       'Uec_DT':'Electron Energy',
                       'Ui_DT':'Ion Energy'}
-            
             
             fig, axarr = plt.subplots(1,3)
             x, y = np.meshgrid(d, t)
