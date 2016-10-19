@@ -721,6 +721,7 @@ def compare_eos(eos_1, eos_2, verbose=False,
             fig, axarr = plt.subplots(1,3)
             x, y = np.meshgrid(d, t)
             res_levels = {0:1, 1:.1, 2:.01 }
+            fig.set_size_inches(4, 12)
                 
             for i in range(3):    
                 levels = np.linspace(0, res_levels[i], 15)
