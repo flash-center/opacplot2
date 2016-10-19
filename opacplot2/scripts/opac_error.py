@@ -721,7 +721,7 @@ def compare_eos(eos_1, eos_2, verbose=False,
             fig, axarr = plt.subplots(1,3)
             x, y = np.meshgrid(d, t)
             res_levels = {0:1, 1:.1, 2:.01 }
-            fig.set_size_inches(4, 12)
+            fig.set_size_inches(12, 4)
                 
             for i in range(3):    
                 levels = np.linspace(0, res_levels[i], 15)
@@ -739,6 +739,7 @@ def compare_eos(eos_1, eos_2, verbose=False,
                 axarr[i].set_xlabel('rho [#/cm^(3)]')
                 axarr[i].set_ylabel('T [eV]')                
             
+            fig.tight_layout()
             fig.suptitle('{} % Error for {} vs. {}'.format(titles[key], fn_1, fn_2))
             fig.subplots_adjust(top=0.85)
             fig.savefig('{}.png'.format(key+'_err'))
