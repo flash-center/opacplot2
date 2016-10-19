@@ -718,30 +718,28 @@ def compare_eos(eos_1, eos_2, verbose=False,
                       'Ui_DT':'Ion Energy'}
             
             
-            fig = plt.figure()
-            ax = fig.add_subplot(111)
+            fig, axarr = plt.subplots(1,3)
             x, y = np.meshgrid(d, t)
-            cs = ax.contourf(x, y, np.sqrt(err_1_sqr).T, 256)
-            cb = fig.colorbar(cs, ticks=matplotlib.ticker.MaxNLocator(nbins=15))
-            cb.formatter = matplotlib.ticker.FuncFormatter(lambda x,p: '{:.2e}'.format(x*100))
-            cb.update_ticks()
-            cb.set_label('% Error')
-            if not lin_grid:
-                ax.loglog()
-            ax.set_xlim((d[0], d[-1]))
-            ax.set_ylim((t[0], t[-1]))
-            ax.set_xlabel('rho [#/cm^(3)]')
-            ax.set_ylabel('T [eV]')
-            ax.set_title('{} % Error'.format(titles[key]))
-            try:
-                cb2 = ax.contour(x, y, np.sqrt(err_1_sqr).T,
-                           colors='k', opacity=0.5, linewidths=0.4,
-                           locator=matplotlib.ticker.MaxNLocator(nbins=15))
-                plt.clabel(cb2,fontsize=6, inline=False, inline_spacing=1,
-                           fmt='%1.0f', rightside_up=True, use_clabeltext=False)
-            except ValueError: # Raised if ticker is empty I believe. - JT
-                pass
-            fig.suptitle('{} vs. {}'.format(fn_1, fn_2))
+            res_levels = {0:1, 1:.1, 2:.01 }
+                
+            for i in range(3):    
+                levels = np.linspace(0, res_levels[i])
+                cs = axarr[i].contourf(x, y, np.sqrt(err_1_sqr).T, 
+                                       levels, extend='both')
+                cb = plt.colorbar(cs, ax=axarr[i])
+                cb.formatter = matplotlib.ticker.FuncFormatter(lambda x,p: '{:.2}%'.format(x*100))
+                cb.update_ticks()
+                if i==2:
+                    cb.set_label('% Error')
+                if not lin_grid:
+                    axarr[0].loglog()
+                axarr[0].set_xlim((d[0], d[-1]))
+                axarr[0].set_ylim((t[0], t[-1]))
+                axarr[0].set_xlabel('rho [#/cm^(3)]')
+                axarr[0].set_ylabel('T [eV]')                
+            
+            fig.tight_layout()
+            fig.suptitle('{} % Error for {} vs. {}'.format(titles[key], fn_1, fn_2))
             fig.subplots_adjust(top=0.85)
             fig.savefig('{}.png'.format(key+'_err'))
         
