@@ -265,19 +265,20 @@ class Formats_Read(object):
                         'emp_mg':'emp_mg'}
     
     sesame_names_dict = {'idens':'idens',
-                         'ele_temps':'temp',
-                         'ele_dens':'dens',
-                         'zbar':'Zf_DT',
-                         'total_eint':'Ut_DT',
-                         'ele_eint':'Uec_DT',
-                         'ioncc_eint':'Ui_DT',
-                         'ioncc_pres':'Pi_DT',
-                         'ele_pres':'Pec_DT',
+                         'temp':'ele_temps',
+                         'dens':'ele_dens',
+                         'Zf_DT':'zbar',
+                         'Ut_DT':'total_eint',
+                         'Uec_DT':'ele_eint',
+                         'Ui_DT':'ioncc_eint',
+                         'Pi_DT':'ioncc_pres',
+                         'Pec_DT':'ele_pres',
                          'Znum':'Znum',
                          'Xnum':'Xnum',
-                         'bulkmod':'BulkMod',
-                         'abar':'Abar',
-                         'zmax':'Zmax'}
+                         'BulkMod':'bulkmod',
+                         'Abar':'abar',
+                         'Zmax':'zmax'}
+
     
     sesame_qeos_names_dict = {'idens' : 'idens',
                               'temp' : 'ele_temps',
@@ -466,9 +467,9 @@ class Formats_Read(object):
                                              / op.data[table_key]['abar'])
         
         # Create a list of the "common dictionary format" keys.
-        self.common_keys = [self.sesame_qeos_names_dict_inv[key]
+        self.common_keys = [self.sesame_names_dict_inv[key]
                             for key in op.data[table_key].keys()
-                            if key in self.sesame_qeos_names_dict_inv.keys()]
+                            if key in self.sesame_names_dict_inv.keys()]
         
         return op
     
@@ -586,7 +587,7 @@ class get_eos_array(object):
         else:
             table_key = eos.tabnum
         data_dict = eos.data.data[table_key]
-        return data_dict[Formats_Read.sesame_qeos_names_dict[arr]]
+        return data_dict[Formats_Read.sesame_names_dict[arr]]
     
     def sesame_qeos(self, eos, arr):
         if eos.tabnum is None:
