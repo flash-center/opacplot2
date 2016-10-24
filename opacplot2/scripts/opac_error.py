@@ -725,7 +725,7 @@ def compare_eos(eos_1, eos_2, verbose=False,
             for i in range(3):    
                 levels = np.linspace(0, res_levels[i], 15)
                 cs = axarr[i].contourf(x, y, np.sqrt(err_1_sqr).T, 
-                                       levels, extend='both')
+                                       levels, extend='max')
                 cb = plt.colorbar(cs, ax=axarr[i])
                 cb.formatter = matplotlib.ticker.FuncFormatter(lambda x,p: '{:.2}%'.format(x*100))
                 cb.update_ticks()
