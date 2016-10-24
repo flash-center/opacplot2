@@ -727,7 +727,7 @@ def compare_eos(eos_1, eos_2, verbose=False,
                 cs = axarr[i].contourf(x, y, np.sqrt(err_1_sqr).T, 
                                        levels, extend='max')
                 cb = plt.colorbar(cs, ax=axarr[i])
-                cb.formatter = matplotlib.ticker.FuncFormatter(lambda x,p: '{}%'.format(x*100))
+                cb.formatter = matplotlib.ticker.FuncFormatter(lambda x,p: '{2.1}%'.format(x*100))
                 cb.update_ticks()
                 if i==2:
                     cb.set_label('% Error')
