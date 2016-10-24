@@ -265,19 +265,20 @@ class Formats_Read(object):
                         'emp_mg':'emp_mg'}
     
     sesame_names_dict = {'idens':'idens',
-                         'ele_temps':'temp',
-                         'ele_dens':'dens',
-                         'zbar':'Zf_DT',
-                         'total_eint':'Ut_DT',
-                         'ele_eint':'Uec_DT',
-                         'ioncc_eint':'Ui_DT',
-                         'ioncc_pres':'Pi_DT',
-                         'ele_pres':'Pec_DT',
+                         'temp':'ele_temps',
+                         'dens':'ele_dens',
+                         'Zf_DT':'zbar',
+                         'Ut_DT':'total_eint',
+                         'Uec_DT':'ele_eint',
+                         'Ui_DT':'ioncc_eint',
+                         'Pi_DT':'ioncc_pres',
+                         'Pec_DT':'ele_pres',
                          'Znum':'Znum',
                          'Xnum':'Xnum',
-                         'bulkmod':'BulkMod',
-                         'abar':'Abar',
-                         'zmax':'Zmax'}
+                         'BulkMod':'bulkmod',
+                         'Abar':'abar',
+                         'Zmax':'zmax'}
+
     
     sesame_qeos_names_dict = {'idens' : 'idens',
                               'temp' : 'ele_temps',
@@ -466,9 +467,9 @@ class Formats_Read(object):
                                              / op.data[table_key]['abar'])
         
         # Create a list of the "common dictionary format" keys.
-        self.common_keys = [self.sesame_qeos_names_dict_inv[key]
+        self.common_keys = [self.sesame_names_dict_inv[key]
                             for key in op.data[table_key].keys()
-                            if key in self.sesame_qeos_names_dict_inv.keys()]
+                            if key in self.sesame_names_dict_inv.keys()]
         
         return op
     
@@ -480,13 +481,12 @@ class Formats_Read(object):
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
         except ValueError:
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.DOUBLE)
-        if self.verbose:
-            print('Selecting the last table available...')
+            
         if self.tabnum is not None:
             table_key = self.tabnum
         else:
             if self.verbose:
-                print('Setting the atomic numbers...')
+                print('Selecting the last table available...')
             # Select the last table (newest) table available.
             table_key = sorted(op.data.keys())[-1]
         
@@ -586,7 +586,7 @@ class get_eos_array(object):
         else:
             table_key = eos.tabnum
         data_dict = eos.data.data[table_key]
-        return data_dict[Formats_Read.sesame_qeos_names_dict[arr]]
+        return data_dict[Formats_Read.sesame_names_dict[arr]]
     
     def sesame_qeos(self, eos, arr):
         if eos.tabnum is None:
@@ -717,31 +717,29 @@ def compare_eos(eos_1, eos_2, verbose=False,
                       'Uec_DT':'Electron Energy',
                       'Ui_DT':'Ion Energy'}
             
-            
-            fig = plt.figure()
-            ax = fig.add_subplot(111)
+            fig, axarr = plt.subplots(1,3)
             x, y = np.meshgrid(d, t)
-            cs = ax.contourf(x, y, np.sqrt(err_1_sqr).T, 256)
-            cb = fig.colorbar(cs, ticks=matplotlib.ticker.MaxNLocator(nbins=15))
-            cb.formatter = matplotlib.ticker.FuncFormatter(lambda x,p: '{:.2e}'.format(x*100))
-            cb.update_ticks()
-            cb.set_label('% Error')
-            if not lin_grid:
-                ax.loglog()
-            ax.set_xlim((d[0], d[-1]))
-            ax.set_ylim((t[0], t[-1]))
-            ax.set_xlabel('rho [#/cm^(3)]')
-            ax.set_ylabel('T [eV]')
-            ax.set_title('{} % Error'.format(titles[key]))
-            try:
-                cb2 = ax.contour(x, y, np.sqrt(err_1_sqr).T,
-                           colors='k', opacity=0.5, linewidths=0.4,
-                           locator=matplotlib.ticker.MaxNLocator(nbins=15))
-                plt.clabel(cb2,fontsize=6, inline=False, inline_spacing=1,
-                           fmt='%1.0f', rightside_up=True, use_clabeltext=False)
-            except ValueError: # Raised if ticker is empty I believe. - JT
-                pass
-            fig.suptitle('{} vs. {}'.format(fn_1, fn_2))
+            res_levels = {0:1, 1:.1, 2:.01 }
+            fig.set_size_inches(18, 6)
+                
+            for i in range(3):    
+                levels = np.linspace(0, res_levels[i], 15)
+                cs = axarr[i].contourf(x, y, np.sqrt(err_1_sqr).T, 
+                                       levels, extend='max')
+                cb = plt.colorbar(cs, ax=axarr[i])
+                cb.formatter = matplotlib.ticker.FuncFormatter(lambda x,p: '{:.2}%'.format(x*100))
+                cb.update_ticks()
+                if i==2:
+                    cb.set_label('% Error')
+                if not lin_grid:
+                    axarr[i].loglog()
+                axarr[i].set_xlim((d[0], d[-1]))
+                axarr[i].set_ylim((t[0], t[-1]))
+                axarr[i].set_xlabel('rho [#/cm^(3)]')
+                axarr[i].set_ylabel('T [eV]')                
+            
+            fig.tight_layout()
+            fig.suptitle('{} % Error for {} vs. {}'.format(titles[key], fn_1, fn_2))
             fig.subplots_adjust(top=0.85)
             fig.savefig('{}.png'.format(key+'_err'))
         
