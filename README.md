@@ -52,9 +52,11 @@ cd opacplot2
 python setup.py install
 ```
 
-### Documentation
+### Documentation & Wiki
 
 Full documentation can be found [here](http://opacplot2.readthedocs.io/en/latest/intro.html).
+
+Example output from `opac-convert` may be found in the [wiki](https://github.com/flash-center/opacplot2/wiki).
 
 ---
 
