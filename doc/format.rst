@@ -29,7 +29,7 @@ SESAME ASCII (.ses)
 .. autoclass:: opacplot2.OpgSesame
    :members:
 
-.. note:: There are currently no handling functions for 500 series entries in the SESAME tables.
+.. note:: There are only handling functions for 300 series entries in the SESAME tables.
         
 Data Prefixes
 =============

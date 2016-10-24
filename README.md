@@ -27,6 +27,13 @@ pip install numpy six tables matplotlib scipy periodictable
 pip install git+https://github.com/luli/hedp
 ```
 
+For OS X users, it is advised to use Anaconda Python to install `matplotlib` in order to avoid framework errors:
+
+```shell
+conda install matplotlib
+```
+
+
 ### Installation 
 
 This module requires Python 2.7 or 3.5. The latest version can be installed with
@@ -123,7 +130,7 @@ been applied.
 |Opacity bounds|`groups`|
 |Rosseland mean opacity|`opr_mg`|
 |absorption Planck mean opacity|`opp_mg`|
-|emission Planck mean opacity|`emp_emg`|
+|emission Planck mean opacity|`emp_mg`|
 
 
 For example, in order to specify that the emission Planck Mean Opacity be written
