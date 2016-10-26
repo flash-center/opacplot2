@@ -11,7 +11,7 @@ It also comes with an EoS Table comparison tool named [`opac-error`](#opac-error
 ### Current Status
 
 | EoS/Opacity Table | opac-convert | opac-error | Notes |
-|:-------|--------|--------|
+|:-------|--------|--------|-----------|
 | Propaceos | :heavy_check_mark: | :heavy_check_mark:  | The Propaceos reader is currently not distributed. |
 | SESAME | :heavy_check_mark: | :heavy_check_mark: | |
 | QEOS-SESAME | | | Currently in development. |
