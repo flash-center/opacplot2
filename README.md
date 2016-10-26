@@ -12,11 +12,11 @@ It also comes with an EoS Table comparison tool named [`opac-error`](#opac-error
 
 | EoS/Opacity Table | opac-convert | opac-error | Notes |
 |:-------|--------|--------|-----------|
-| Propaceos | :heavy_check_mark: | :heavy_check_mark:  | The Propaceos reader is currently not distributed. |
+| Propaceos | :heavy_check_mark: | :heavy_check_mark:  | The Propaceos reader is not distributed. |
 | SESAME | :heavy_check_mark: | :heavy_check_mark: | |
 | QEOS-SESAME | | | Currently in development. |
 | MULTI | :heavy_check_mark: | | Convert MULTI opacity data at your own risk. | 
-| IONMIX | | :heavy_check_mark: | Only converts *into* IONMIX. |
+| IONMIX | :heavy_check_mark: | :heavy_check_mark: | Only converts *into* IONMIX. |
 
 ### Dependencies
 
