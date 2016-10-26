@@ -13,12 +13,13 @@ Supported input file formats:
 
 * Propaceos (not distributed, contact jtlaune at uchicago dot edu.)
 * SESAME (.ses)
-* QEOS SESAME (.mexport)
 * MULTI (.opp, .opr, .opz, .eps)
 
-Currently the only supported output format is IONMIX.
+The only supported output format is IONMIX.
 
-Usage::
+Usage
+=====
+::
 
    opac-convert [options] myfile.ext
 
@@ -119,17 +120,24 @@ stored logarithmically and must be written back to IONMIX as logarithmic data.
 opac-error
 **********
 
-Command line tool for comparing two EoS/Opacity tables.
-
+Command line tool for comparing two EoS table data. Unlike `opac-convert`, this tool will only
+compare equation of state data (not opacity). It is particularly useful in checking the consistency of `opac-convert` by comparing
+the original file with the converted IONMIX output.
 Supported input file formats:
 
 * Propaceos (not distributed, contact jtlaune at uchicago dot edu.)
 * SESAME (.ses)
-* QEOS SESAME (.mexport)
 * IONMIX
 
-Usage::
+The output will consist of an error report with maximum absolute % error RMS % error.
+All % errors are calculated with respect to the first file listed.
+The user may also opt to create % error plots for the EoS data stored in the file
+(ion/electron pressure and energy and average ionization).
+These consist of three plots with resolutions of 10%, 1%, and .01%.
 
+Usage
+=====
+::
    opac-convert [options] myfile_1.ext myfile_2.ext
 
 
@@ -179,10 +187,14 @@ Options
 |--lin_grid                     | Plot using linear axes.                                          |
 +-------------------------------+------------------------------------------------------------------+
 
+Example
+=======
+
+See the `wiki <https://github.com/flash-center/opacplot2/wiki>`_ on GitHub.
 
 How It Works
 ============
 
-First, ``opac-convert`` takes an intersection of the two dens/temp grids from each file.
-Then it interpolates the data from both files onto the intersection dens/temp grids and is then
-able to create an error report.
+First, `opac-convert` takes a conservative intersection of the two dens/temp grids from each file.
+Then it linearly interpolates the data from both files onto the intersection dens/temp grids.
+Using the interpolated data, it is able to create an error report.
