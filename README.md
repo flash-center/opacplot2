@@ -219,7 +219,7 @@ to the current directory.
 | Option | Action |
 |:-------|--------|
 |--filetypes| Comma separated list of file types.|
-|--mpi_#| Mass per ion (g) for file 1 or 2.|
+|--mpi_#| Mass per ion (**in grams**) for IONMIX file 1 or 2.|
 |--Znum_#| Comma separated list of atomic numbers for file 1 or 2.|
 |--Xfrac_#| Comma separated list of number fractions for file 1 or 2.|
 |--filters_#| `dens_filter, temp_filter` for file 1 or 2.|
