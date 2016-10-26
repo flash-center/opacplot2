@@ -5,8 +5,18 @@
 
 Python package for manipulating Equation of State (EoS) and Opacity data.
 
-`Opacplot2` comes with an EoS Table conversion tool named [`opac-convert`](#opac-convert).
+`Opacplot2` comes with an EoS/Opacity Table conversion tool named [`opac-convert`](#opac-convert).
 It also comes with an EoS Table comparison tool named [`opac-error`](#opac-error).
+
+### Current Status
+
+| EoS/Opacity Table | opac-convert | opac-error | Notes |
+|:-------|--------|--------|
+| Propaceos | :heavy_check_mark: | :heavy_check_mark:  | The Propaceos reader is currently not distributed. |
+| SESAME | :heavy_check_mark: | :heavy_check_mark: | |
+| QEOS-SESAME | | | Currently in development. |
+| MULTI | :heavy_check_mark: | | Convert MULTI opacity data at your own risk. | 
+| IONMIX | | :heavy_check_mark: | `opac-convert` only converts *into* IONMIX. |
 
 ### Dependencies
 
@@ -174,7 +184,7 @@ Supported input file formats:
 ### Usage
 
 ```bash
-opac-convert [options] myfile_1.ext myfile_2.ext
+opac-error [options] myfile_1.ext myfile_2.ext
 ```
 
 Much like `opac-convert`, this tool will first attempt to read the extensions from your EoS tables
@@ -211,6 +221,10 @@ to the current directory.
 |--plot| Create % error plots for data.|
 |--writelog| Write log file with % errors for data.|
 |--lin_grid| Plot using linear axes.|
+
+### Example
+
+See the [wiki](https://github.com/flash-center/opacplot2/wiki).
 
 ### How It Works
 
