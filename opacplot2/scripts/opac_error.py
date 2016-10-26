@@ -719,15 +719,15 @@ def compare_eos(eos_1, eos_2, verbose=False,
             
             fig, axarr = plt.subplots(1,3)
             x, y = np.meshgrid(d, t)
-            res_levels = {0:1, 1:.1, 2:.01 }
-            fig.set_size_inches(19, 6)
+            res_levels = {0:.1, 1:.01, 2:.0001 }
+            fig.set_size_inches(21, 6)
                 
             for i in range(3):    
                 levels = np.linspace(0, res_levels[i], 256)
                 cs = axarr[i].contourf(x, y, np.sqrt(err_1_sqr).T, 
                                        levels, extend='max')
                 cb = plt.colorbar(cs, ax=axarr[i])
-                cb.formatter = matplotlib.ticker.FuncFormatter(lambda x,p: '{:.1f}%'.format(float(x)*100))
+                cb.formatter = matplotlib.ticker.FuncFormatter(lambda x,p: '{:.1e}%'.format(float(x)*100))
                 cb.update_ticks()
                 if i==2:
                     cb.set_label('% Error')
