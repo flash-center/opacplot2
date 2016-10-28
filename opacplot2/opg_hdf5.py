@@ -74,7 +74,7 @@ class OpgHdf5(dict):
         """
         import tables
         h5filters = tables.Filters(complib='blosc', complevel=7, shuffle=True)
-        f = tables.openFile(filename, 'w', filters=h5filters)
+        f = tables.open_file(filename, 'w', filters=h5filters)
 
         ATTR_LIST = ['BulkMod', 'ElemNum', 'Abar', 'Zmax']
 
