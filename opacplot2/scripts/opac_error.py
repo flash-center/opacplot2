@@ -474,6 +474,8 @@ class Formats_Read(object):
         return op
     
     def sesame_qeos_read(self):
+        raise Warning('QEOS-SESAME is not ready yet!')
+        
         if self.verbose:
             print('Opening up QEOS SESAME file {}...'.format(self.path_in))
         # Try SINGLE precision and then DOUBLE if that doesn't work.
