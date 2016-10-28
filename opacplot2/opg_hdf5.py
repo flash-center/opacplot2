@@ -86,7 +86,7 @@ class OpgHdf5(dict):
                 if self[key] is None: continue
                 val = self[key][:]
             atom = tables.Atom.from_dtype(val.dtype)
-            ds = f.createCArray(f.root, key, atom, val.shape, filters=h5filters)
+            ds = f.create_carray(f.root, key, atom, val.shape, filters=h5filters)
             ds[:] = val
         
         # I believe we should only put ion_frac in the table if it was already
@@ -95,7 +95,7 @@ class OpgHdf5(dict):
             f.createGroup(where='/', name='ion_frac', filters=h5filters)
             for  ion_frac_key,  ion_frac_val in iteritems(self['ion_frac']):
                 atom = tables.Atom.from_dtype(ion_frac_val.dtype)
-                ds = f.createCArray(f.root.ion_frac, ion_frac_key, atom, ion_frac_val.shape)
+                ds = f.create_carray(f.root.ion_frac, ion_frac_key, atom, ion_frac_val.shape)
                 ds[:] = ion_frac_val[:]
 
         # writing attributes
