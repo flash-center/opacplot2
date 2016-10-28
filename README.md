@@ -5,18 +5,23 @@
 
 Python package for manipulating Equation of State (EoS) and Opacity data.
 
-`Opacplot2` comes with an EoS/Opacity Table conversion tool named [`opac-convert`](#opac-convert).
-It also comes with an EoS Table comparison tool named [`opac-error`](#opac-error).
+Opacplot2 includes command-line tools to make EoS tables of various formats
+available to FLASH. `opac-convert` converts EoS/opacity tables like SESAME and
+Propaceos into a FLASH-readable IONMIX (.cn4) format. `opac-error` generates plots comparing the
+contents of two EoS tables for the same material. It is particularly useful for checking
+the consistency of conversions made with `opac-error`.
 
 ### Current Status
 
-| EoS/Opacity Table | opac-convert | opac-error | Notes |
+| EoS/Opacity Table | opac-convert | opac-error |
 |:-------|--------|--------|-----------|
-| Propaceos | :heavy_check_mark: | :heavy_check_mark:  | The Propaceos reader is not distributed. |
-| SESAME | :heavy_check_mark: | :heavy_check_mark: | |
-| QEOS-SESAME | | | Currently in development. |
-| MULTI | :heavy_check_mark: | | Convert MULTI opacity data at your own risk. | 
-| IONMIX | :heavy_check_mark: | :heavy_check_mark: | Only converts *into* IONMIX. |
+| IONMIX | N/A | :heavy_check_mark: | 
+| SESAME | :heavy_check_mark: | :heavy_check_mark: | 
+| MULTI | :heavy_check_mark: | |
+| Propaceos* | :heavy_check_mark: | :heavy_check_mark:  | 
+| QEOS-SESAME | | 
+
+*The Propaceos reader is only distributed with a Propaceos license.
 
 ### Dependencies
 
@@ -46,7 +51,7 @@ conda install matplotlib
 
 ### Installation 
 
-This module requires Python 2.7 or 3.5. The latest version can be installed with
+This module requires Python 3.5. The latest version can be installed with
 
 ```shell
 pip install git+https://github.com/flash-center/opacplot2
