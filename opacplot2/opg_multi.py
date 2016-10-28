@@ -383,7 +383,7 @@ class OpgMulti(dict):
             names_dict['emp_mg'] = 'emp_mg'
         for prp_key, h5_key in sorted(six.iteritems(names_dict)):
             atom = tables.Atom.from_dtype(self[prp_key].dtype)
-            ds = f.createCArray(f.root, h5_key, atom, self[prp_key].shape, filters=h5filters)
+            ds = f.create_carray(f.root, h5_key, atom, self[prp_key].shape, filters=h5filters)
             ds[:] = self[prp_key]
         # writing attributes
         for attr in ['Abar', 'Zmax']:
