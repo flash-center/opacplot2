@@ -41,7 +41,7 @@ class OpgHdf5(dict):
         ``explicit_load`` with caution.
         """
         self = cls()
-        self.f = f = tables.openFile(filename, 'r')
+        self.f = f = tables.open_file(filename, 'r')
         for el in f.root:
             if isinstance(el, tables.group.Group):
                 # loading ion_frac group
