@@ -22,8 +22,9 @@ the consistency of conversions made with `opac-convert`.
 
 Additionally, QEOS-SESAME table support is in development.
 
-*The Propaceos reader is only distributed with a Propaceos license.
-&#8224;Only opacity parsers are available for MULTI.
+*<sub>The Propaceos reader is only distributed with a Propaceos license.<sub>
+
+&#8224;<sub>Only opacity parsers are available for MULTI.<sub>
 
 ### Dependencies
 
