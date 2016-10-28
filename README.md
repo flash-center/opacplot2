@@ -54,7 +54,7 @@ conda install matplotlib
 
 ### Installation 
 
-This module requires Python 3.5. The latest version can be installed with
+This module requires Python 2.7 or 3.5. The latest version can be installed with
 
 ```shell
 pip install git+https://github.com/flash-center/opacplot2
