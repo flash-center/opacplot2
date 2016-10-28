@@ -63,7 +63,7 @@ class OpgMulti(dict):
     Can be used either to parse or to write MULTIv5 tables.
     
     ``OpgMulti`` is a subclass of ``dict``. Through ``open_file()``, it can
-    read EoS and opacity data from MULTI files. Then, the data can be accessed
+    read opacity data (only) from MULTI files. Then, the data can be accessed
     through the key:value pairs of the ``OpgMulti`` instance.
     
     Examples

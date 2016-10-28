@@ -9,7 +9,7 @@ Opacplot2 includes command-line tools to make EoS tables of various formats
 available to FLASH. `opac-convert` converts EoS/opacity tables like SESAME and
 Propaceos into a FLASH-readable IONMIX (.cn4) format. `opac-error` generates plots comparing the
 contents of two EoS tables for the same material. It is particularly useful for checking
-the consistency of conversions made with `opac-error`.
+the consistency of conversions made with `opac-convert`.
 
 ### Current Status
 
@@ -17,11 +17,13 @@ the consistency of conversions made with `opac-error`.
 |:-------|--------|--------|-----------|
 | IONMIX | N/A | :heavy_check_mark: | 
 | SESAME | :heavy_check_mark: | :heavy_check_mark: | 
-| MULTI | :heavy_check_mark: | |
+| MULTI&#8224; | :heavy_check_mark: | |
 | Propaceos* | :heavy_check_mark: | :heavy_check_mark:  | 
-| QEOS-SESAME | | 
+
+Additionally, QEOS-SESAME table support is in development.
 
 *The Propaceos reader is only distributed with a Propaceos license.
+&#8224;Only opacity parsers are available for MULTI.
 
 ### Dependencies
 
