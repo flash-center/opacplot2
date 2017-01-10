@@ -125,7 +125,7 @@ one must also specify the element fractions with `--Xfracs`.
 For example, take a SESAME table for CH named `myfile.ses`:
 
 ```bash
-opac-convert --Znum 1, 6 --Xfracs .5, .5 myfile.ses
+opac-convert --Znum 1,6 --Xfracs .5,.5 myfile.ses
 ```
 
 This will convert `myfile.ses` to an IONMIX file named `myfile.cn4`.
