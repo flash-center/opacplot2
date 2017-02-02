@@ -165,6 +165,12 @@ class Formats_toEosDict(object):
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
         except ValueError:
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.DOUBLE)
+        
+        if len(op.data.keys()) > 1:
+            raise Warning('More than one material ID found. '
+                          'Use sesame-extract to create a file '
+                          'with only one material first.')
+        
         if self.args.tabnum is not None:
             eos_dict = op.toEosDict(Znum=self.args.Znum, 
                                     Xnum=self.args.Xfracs,
@@ -182,6 +188,13 @@ class Formats_toEosDict(object):
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
         except ValueError:
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.DOUBLE)
+        
+            
+        if len(op.data.keys()) > 1:
+            raise Warning('More than one material ID found. '
+                          'Use sesame-extract to create a file '
+                          'with only one material first.')
+
         if self.args.tabnum is not None:
             eos_dict = op.toEosDict(Znum=self.args.Znum, Xnum=self.args.Xfracs, 
                                     qeos=True, log=self.args.log,

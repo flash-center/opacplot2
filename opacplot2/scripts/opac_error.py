@@ -422,7 +422,7 @@ class Formats_Read(object):
         if len(op.data.keys()) > 1:
             raise Warning('More than one material ID found. '
                           'Use sesame-extract to create a file '
-                          'with only one material first.'
+                          'with only one material first.')
         
         if self.tabnum is not None:
             table_key = self.tabnum
@@ -496,7 +496,7 @@ class Formats_Read(object):
         if len(op.data.keys()) > 1:
             raise Warning('More than one material ID found. '
                           'Use sesame-extract to create a file '
-                          'with only one material first.'
+                          'with only one material first.')
 
         if self.tabnum is not None:
             table_key = self.tabnum
