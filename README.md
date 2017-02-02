@@ -78,6 +78,14 @@ Example output from `opac-convert` may be found in the [wiki](https://github.com
 
 ---
 
+### Warning About the SESAME Database
+
+Many SESAME EoS files have multiple materials. To ensure conversion accuracy,
+it is important that the SESAME file must have only one material. In order to aid in the process
+of extracting one material's table from an entire SESAME document, included in the command line tools
+of `opacplot2` is `sesame-extract`, which will extract a single material table from a SESAME
+document based on the material ID.
+
 <a name="opac-convert"></a>
 # opac-convert
 
@@ -245,3 +253,22 @@ See the [wiki](https://github.com/flash-center/opacplot2/wiki).
 First, `opac-convert` takes a conservative intersection of the two dens/temp grids from each file.
 Then it linearly interpolates the data from both files onto the intersection dens/temp grids.
  Using the interpolated data, it is able to create an error report.
+
+
+<a name="sesame-extract"></a>
+# sesame-extract
+
+### Usage
+
+Check syntax possibilities:
+
+```bash
+python sesame_extract.py -h
+```
+
+Extract water (SESAME element 7150 - see the publicly available PDF) information
+from the 160 MB SESAME ASCII file, and save it into "water.ses":
+
+```bash
+python sesame_extract.py -o "./water.ses" "$HOME/SESAME/sesame-ec/sesame_ascii" 7150
+```

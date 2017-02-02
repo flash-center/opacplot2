@@ -25,6 +25,8 @@ if __name__ == "__main__":
 
           entry_points = {
                     'console_scripts': ['opac-convert = opacplot2.scripts.opac_convert:convert_tables',
-                                        'opac-error = opacplot2.scripts.opac_error:check_error'],
+                                        'opac-error = opacplot2.scripts.opac_error:check_error',
+                                        'sesame-extract = opacplot2.scripts.sesame_extract:extract_tables'
+                                        ],
                         }
           )
