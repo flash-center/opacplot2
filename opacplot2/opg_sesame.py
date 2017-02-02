@@ -94,6 +94,8 @@ class OpgSesame:
         self.data = {}
 
         self.parse()
+        
+        self.recs = {}
 
     def parse(self):
 
@@ -113,8 +115,14 @@ class OpgSesame:
 
             if not recid in self.fdict:
                 raise ValueError("No handling function for record %d" % recid)
+            
 
             self.fdict[recid](nentries,matid, recid)
+            
+            if matid not in self.recs.keys():
+                self.recs[matid] = [recid]
+            else:
+                self.recs[matid] = self.recs[matid] + [recid]
 
     def parseComment(self, nentries, matid, recid):
 
