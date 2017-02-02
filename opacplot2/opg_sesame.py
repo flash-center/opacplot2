@@ -92,10 +92,11 @@ class OpgSesame:
                        }
 
         self.data = {}
+        
+        self.recs = {}
 
         self.parse()
         
-        self.recs = {}
 
     def parse(self):
 
