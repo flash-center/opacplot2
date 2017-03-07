@@ -323,9 +323,14 @@ class OpgSesame:
             
         
         # Calculate zbar using thomas_fermi_ionization.
+        # If there are multiple elements, it suffices to use the average
+        # atomic number in this calculation - JTL
         dens_arr, temp_arr = np.meshgrid(opp_ses_data['ele_dens'], 
                                          opp_ses_data['ele_temps'])
-        zbar = eos.thomas_fermi_ionization(dens_arr, temp_arr,  opp_ses_data['Znum'], opp_ses_data['abar']).T
+        zbar = eos.thomas_fermi_ionization(dens_arr,
+                                           temp_arr,  
+                                           opp_ses_data['Znum'].mean(),
+                                           opp_ses_data['abar']).T
         opp_ses_data['zbar'] = zbar
         
         # Translating SESAME names to common dictionary format.
