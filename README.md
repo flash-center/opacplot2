@@ -14,7 +14,7 @@ the consistency of conversions made with `opac-convert`.
 ### Current Status
 
 | EoS/Opacity Table | opac-convert | opac-error |
-|:-------|--------|--------|-----------|
+|:-------|--------|--------|
 | IONMIX | N/A | :heavy_check_mark: | 
 | SESAME | :heavy_check_mark: | :heavy_check_mark: | 
 | MULTI&#8224; | :heavy_check_mark: | |
