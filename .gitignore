@@ -1,17 +1,27 @@
-.cache
-.old
+# Python virtualenv
+env
+
+# Cannot distribute opg_propaceos.py
+opacplot2/opg_propaceos.py
+
+# OSX filesystem
 .DS_Store
-build
-dist
+
+# Python stuff
+.cache
 opacplot2.egg-info
+build
 visualization/*.ipynb
 visualization/.ipynb_checkpoints
-*.swp
 *pyc
-*cn4
-.coverage
-opacplot2/opg_propaceos.py
-.old
-.cache
 to-do.txt
+.coverage
+
+# Misc
+.old
+dist
+*.swp
 misc
+
+# EoS/opacity files
+*cn4
