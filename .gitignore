@@ -1,5 +1,5 @@
 # Python virtualenv
-env
+venv
 
 # Cannot distribute opg_propaceos.py
 opacplot2/opg_propaceos.py
