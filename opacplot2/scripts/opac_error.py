@@ -416,6 +416,14 @@ class Formats_Read(object):
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
         except ValueError:
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.DOUBLE)
+        
+        # If there is more than one table, fail. Use sesame-extract
+        # to create a one-table file.
+        if len(op.data.keys()) > 1:
+            raise Warning('More than one material ID found. '
+                          'Use sesame-extract to create a file '
+                          'with only one material first.')
+        
         if self.tabnum is not None:
             table_key = self.tabnum
         else:
@@ -483,6 +491,10 @@ class Formats_Read(object):
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.SINGLE)
         except ValueError:
             op = opp.OpgSesame(self.path_in, opp.OpgSesame.DOUBLE)
+        if len(op.data.keys()) > 1:
+            raise Warning('More than one material ID found. '
+                          'Use sesame-extract to create a file '
+                          'with only one material first.')
 
         if self.tabnum is not None:
             table_key = self.tabnum

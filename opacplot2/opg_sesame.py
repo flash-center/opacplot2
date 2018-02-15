@@ -80,10 +80,13 @@ class OpgSesame:
                        304 : self.parseEos,
                        305 : self.parseEos,
                        306 : self.parseEos,
+                       311 : self.parseEos,
+                       321 : self.parseEos,
                        401 : self.parseVap,
                        411 : self.parseSolid,
                        412 : self.parseLiquid,
                        431 : self.parseShear,
+                       432 : self.parseShear,
                        601 : self.parseZbar,
                        602 : self.parseEcond,
                        603 : self.parseTcond,
@@ -92,8 +95,11 @@ class OpgSesame:
                        }
 
         self.data = {}
+        
+        self.recs = {}
 
         self.parse()
+        
 
     def parse(self):
 
@@ -113,8 +119,14 @@ class OpgSesame:
 
             if not recid in self.fdict:
                 raise ValueError("No handling function for record %d" % recid)
+            
 
             self.fdict[recid](nentries,matid, recid)
+            
+            if matid not in self.recs.keys():
+                self.recs[matid] = [recid]
+            else:
+                self.recs[matid] = self.recs[matid] + [recid]
 
     def parseComment(self, nentries, matid, recid):
 
@@ -314,9 +326,14 @@ class OpgSesame:
 
 
         # Calculate zbar using thomas_fermi_ionization.
-        dens_arr, temp_arr = np.meshgrid(opp_ses_data['ele_dens'],
+        # If there are multiple elements, it suffices to use the average
+        # atomic number in this calculation - JTL
+        dens_arr, temp_arr = np.meshgrid(opp_ses_data['ele_dens'], 
                                          opp_ses_data['ele_temps'])
-        zbar = eos.thomas_fermi_ionization(dens_arr, temp_arr,  opp_ses_data['Znum'], opp_ses_data['abar']).T
+        zbar = eos.thomas_fermi_ionization(dens_arr,
+                                           temp_arr,  
+                                           opp_ses_data['Znum'].mean(),
+                                           opp_ses_data['abar']).T
         opp_ses_data['zbar'] = zbar
 
         # Translating SESAME names to common dictionary format.
@@ -372,5 +389,4 @@ class OpgSesame:
             for key in eos_dict.keys():
                 if key in log:
                     eos_dict[key] = np.log10(eos_dict[key])
-
         return eos_dict
