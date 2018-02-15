@@ -704,7 +704,7 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
     write_block(deedn.flatten()*ERG_TO_JOULE, 'D(electron energy)_DT')
 
     # Check for electron entropy (if it is there):
-    if sele != None: write_block(sele.flatten()*ERG_TO_JOULE, 
+    if sele is not None: write_block(sele.flatten()*ERG_TO_JOULE, 
                                  'electron entropy')
 
     write_block(opac_bounds, 'opacity bounds')
