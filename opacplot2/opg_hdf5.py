@@ -23,7 +23,7 @@ class OpgHdf5(dict):
                   Name of file to open.
         explicit_load : bool
                   Option to load the whole file to memory.
-        
+
         Examples
         --------
         To open a file::
@@ -34,7 +34,7 @@ class OpgHdf5(dict):
            dict_keys(['Anum', ..., 'Znum']) # OpgHdf5 is a dictionary.
            >>> print(op['Zf_DT'])
            array([...]) # Array for average ionization.
-        
+
         Notes
         -----
         Loading the entire file into memory can be potentially dangerous. Use
@@ -63,14 +63,14 @@ class OpgHdf5(dict):
 
     def write2file(self, filename, **args):
         """Write to an HDF5 output file.
-        
+
         Parameters
         ----------
         filename : str
            Name of output file.
         args : dict
            Dictionary of data to write.
-        
+
         """
         import tables
         h5filters = tables.Filters(complib='blosc', complevel=7, shuffle=True)
@@ -88,7 +88,7 @@ class OpgHdf5(dict):
             atom = tables.Atom.from_dtype(val.dtype)
             ds = f.create_carray(f.root, key, atom, val.shape, filters=h5filters)
             ds[:] = val
-        
+
         # I believe we should only put ion_frac in the table if it was already
         # in the data. -JT
         if 'ion_frac' in self:
@@ -115,7 +115,7 @@ class OpgHdf5(dict):
                 for key_in, val_in in iteritems(val):
                     print(key, key_in)
                     self[key][key_in] = val_in[:]
-    
+
     def _compute_ionization(self):
         """
         Compute ionization from populations if available.

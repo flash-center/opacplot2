@@ -13,7 +13,7 @@ GPA_TO_ERGCC = 1.0e+10
 # Convert MJ/kg to Ergs/g:
 MJKG_TO_ERGG = 1.0e+10
 
-# Convert MJ/kg to Ergs/cc: 
+# Convert MJ/kg to Ergs/cc:
 MJKG_TO_ERGCC = 1.0e+10
 
 # Convert Kelvin to eV:
@@ -57,4 +57,4 @@ ATOMIC_WEIGHTS[ELE_AL] = 26.9815386
 
 # Atomic Symbols:
 ATOMIC_SYMBOLS = ["H" , "He", "Li", "Be", "B", "C",
-                  "N" , "O" ]  
+                  "N" , "O" ]

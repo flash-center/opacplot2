@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-sesame_extract.py Extract single table from the SESAME ASCII file and write into a separate file 
+sesame_extract.py Extract single table from the SESAME ASCII file and write into a separate file
 
 Created by JT Laune on Jan 26, 2017 for the Flash Center for Computational Science
   for use in managing the Flash Center's SESAME tables, and for development of opacplot2.
@@ -11,7 +11,7 @@ Simple enough to be hopefully functional in both Python 2.x and Python 3.x.
 Example usage:
   # Check syntax possibilities
   python sesame_extract.py -h
-  
+
   # Extract water (SESAME element 7150 - see the publicly available PDF) information
   #   from the 160 MB SESAME ASCII file, and save it into "water.ses"
   python sesame_extract.py -o "./water.ses" "$HOME/SESAME/sesame-ec/sesame_ascii" 7150
@@ -49,7 +49,7 @@ def find_table(f_out, fhand, tabnum):
     while True:
         line = fhand.readline()
         if not line: raise Warning('Table not found') # Reached EOF.
-        if line[:3] == " 2 ": raise Warning('Table not found') 
+        if line[:3] == " 2 ": raise Warning('Table not found')
         if line.split()[0] == '0':
             if str(line.split()[1]) == tabnum:
                 f_out.write(line)
@@ -64,7 +64,7 @@ def write_entries(f_out, fhand):
         f_out.write(line)
 
 def extract_tables():
-    """ Extract single table from the SESAME ASCII file and write into a separate file """ 
+    """ Extract single table from the SESAME ASCII file and write into a separate file """
     args = get_input_data()
     with open(args.output, 'w') as f_out:
         with open(args.database, 'r') as fhand:

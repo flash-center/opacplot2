@@ -10,7 +10,7 @@ class OpgQeos:
     """
     This class is responsible for parsing data from the legacy format
     produced by the QEOS code used by scientists at LULI.
-    """        
+    """
 
     def __init__(self, filename, datatype, verbose=False):
         """
@@ -36,12 +36,12 @@ class OpgQeos:
         if self.count == 4:
             self.count = 0
             self.fhand.readline()
-        
+
         return data
 
     def getblock(self):
         data = np.empty((self.ndens, self.ntemps))
-        
+
         for jt in range(self.ntemps):
             for jd in range(self.ndens):
                 data[jd,jt] = float(self.getnext())
@@ -51,20 +51,20 @@ class OpgQeos:
     def parse(self):
 
         # Read the table id:
-        self.tabid = int(self.getnext()) 
+        self.tabid = int(self.getnext())
 
         # Throw away the next number (alway 6 for some reason):
         self.getnext()
-        
+
         # Read the number of mass density points:
         self.ndens = int(float(self.getnext()))
-        
+
         # Read the number of temperature points:
         self.ntemps = int(float(self.getnext()))
 
         # Read the densities:
         self.denss = np.empty(self.ndens)
-        if self.verbose: 
+        if self.verbose:
             print("%i Densities [g/cc]:" % self.ndens)
         for i in range(self.ndens):
             num = self.getnext()
@@ -73,13 +73,13 @@ class OpgQeos:
             else:
                 self.denss[i] = float(num)
                 if self.datatype == "zstar": self.denss[i] = 10**self.denss[i]
-                
+
             if self.verbose:
                 print("%3i  %15.6e" % (i, self.denss[i]))
-                
+
         # Read the temperatures:
         self.temps = np.empty(self.ntemps)
-        if self.verbose: 
+        if self.verbose:
             print("\n%i Temperatures [eV]:" % self.ntemps)
         for i in range(self.ntemps):
             num = self.getnext()
@@ -88,7 +88,7 @@ class OpgQeos:
             else:
                 self.temps[i] = num
 
-                if self.datatype == "zstar": 
+                if self.datatype == "zstar":
                     # I believe that the temperatures in this file are
                     # in log10(kilo-Kelvin). So first convert to
                     # kilo-Kelvin:
@@ -99,16 +99,16 @@ class OpgQeos:
 
                 # Now convert from K to eV:
                 self.temps[i] *= KELVIN_TO_EV
-                
+
             if self.verbose:
                 print("%3i  %15.6e" % (i, self.temps[i]))
 
 
         print("\n")
-                
+
         if self.datatype == "zstar":
             self.zbar = 10**self.getblock()
-                
+
 
         if self.datatype == "eos":
             # I believe pressures are in GPa:

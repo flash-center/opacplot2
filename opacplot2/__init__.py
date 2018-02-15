@@ -17,7 +17,7 @@ from .opg_qeos      import *
 from .opg_sesame    import *
 from .opg_tabop     import *
 
-# plotting 
+# plotting
 from .opac_plotter  import *
 from .histogram     import *
 

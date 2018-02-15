@@ -29,7 +29,7 @@ class test_sesame(unittest.TestCase):
             self.data['total_temps'],
             self.data['ioncc_temps'],
             err_msg='Checking that the temperatures are consistent!')
-            
+
         np.testing.assert_array_equal(
             self.data['total_temps'],
             self.data['ele_temps'],

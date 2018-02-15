@@ -8,15 +8,15 @@ plt.rcParams.update({'text.usetex': True})
 def plot_zbar(denss, temps, zbar, fig, log=True, subplot_number=111):
     ax = fig.add_subplot(subplot_number)
     x,y = np.meshgrid(denss, temps)
-    
+
     # Contour the plot and grab its colorset.
     cs = ax.contourf(x,y, zbar.T, 256)
-    
+
     # Create a colorbar based on the contourset from earlier.
     # This will be put on its own axes.
     cb = fig.colorbar(cs, ticks=matplotlib.ticker.MaxNLocator(nbins=15))
     cb.set_label("Average Ionization")
-    
+
     # Create a line contour.
     cb2 = ax.contour(x, y, zbar.T,
                colors='k', opacity=0.5, linewidths=0.4,
@@ -25,17 +25,17 @@ def plot_zbar(denss, temps, zbar, fig, log=True, subplot_number=111):
     plt.clabel(cb2,fontsize=6, inline=False, inline_spacing=1, fmt='%1.0f',
                    rightside_up=True, use_clabeltext=False)
 
-    
+
     # Put the graph axes into logarithmic scales.
     if log==True:
         ax.loglog()
-        
+
     ax.set_xlim((denss[0], denss[-1]))
     ax.set_ylim((temps[0], temps[-1]))
-    
+
     ax.set_xlabel(r'$\rho$ [g.cm$^{-3}$]')
     ax.set_ylabel(r'$T$ [eV]')
-    
+
     # Return the plot's axes and its colorbar's axes.
     return ax, cb
 
@@ -46,7 +46,7 @@ def plot_eos_grid(tdata, var):
     -----------
      - tdata [dict]: dictionary containg EoS data.
      - var [str] : select which grid to plot 'dens' or 'temps'.
-    
+
     Examples:
     ---------
     see visualization/eos.ipynb
@@ -70,7 +70,7 @@ def plot_eos_grid(tdata, var):
         plt.title(r'Density grids: $\rho$ [g.cm$^{-3}$]')
     else:
         plt.title(r'Temperature grids: $T$ [eV]')
-    
+
     return fig
 
 def plot_eos_field(eos_data, species, parameter, grad=None):
@@ -102,7 +102,7 @@ def plot_eos_field(eos_data, species, parameter, grad=None):
     var_ctitle = {'pres': {'rho': '$c_s$ [km.s$^{-1}$]',
                            'T': 'log scale',
                            None: '$\log(p)$ [Mbar]'},
-                  'eint': {'rho': 'log scale', 'T':'log scale', 
+                  'eint': {'rho': 'log scale', 'T':'log scale',
                            None: '$\log(e)$'},
                   }[parameter]
     grad_label = {'rho': r'\rho', 'T': 'T', None: ''}
@@ -110,7 +110,7 @@ def plot_eos_field(eos_data, species, parameter, grad=None):
     if grad is None:
         fig = plt.figure(figsize=(6,4.5))
         ax = plt.subplot(111)
-        # Plot the 
+        # Plot the
         if Z[1:,1:].min() <= 0:
             zmin = 1e-15
         else:
@@ -151,7 +151,7 @@ def plot_eos_field(eos_data, species, parameter, grad=None):
 def plot_diff_mg_opac(fig, op_list, idx=None):
 
     plt.rcParams.update({'text.usetex': True})
-    ax = [plt.subplot(2,2,i) for i in range(1, 5)] 
+    ax = [plt.subplot(2,2,i) for i in range(1, 5)]
     groups = op_list[0]['groups']
     plt.suptitle('Multigroup opacity comparison: {0:.2e} g.cm$^{{-2}}$, {1:.3f} eV'.format(
                         op_list[0]['rho'][idx[0]], op_list[0]['temp'][idx[1]]))
@@ -241,9 +241,9 @@ def plot_Zbar(fig, op):
     Zmax = np.ceil(op[0]['zbar'].max())
     contour_lvls = np.arange(0, Zmax, np.ceil(Zmax/10.))
     contour_lvls = np.unique(np.sort(np.concatenate((contour_lvls, np.array([1])))))
-    
+
     linestyles  = iter(('solid', 'dashed', 'dashdot', 'dotted'))
-    for op_idx, op_el in enumerate(op): 
+    for op_idx, op_el in enumerate(op):
         X, Y = np.meshgrid(op_el['rho'], op_el['temp'], indices='ij')
         current_ls = linestyles.next()
         cs = ax[0].contour(X, Y, op_el['zbar'].T, contour_lvls,
@@ -257,7 +257,7 @@ def plot_Zbar(fig, op):
                 label=op_el["label"].replace('_', '\_'))
 
 
-        
+
     plt.colorbar(cs, ax=ax[0])
     ax[0].set_xscale('log')
     ax[0].set_yscale('log')

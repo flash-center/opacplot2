@@ -1,8 +1,8 @@
  0  3721   101   160   r        0        0   1                                 1
-material. Al (z=13.0, a=26.98) /source. mpqeos /date 201501131653               
-/refs. none /comp. LULI /codes. MPQEOS /                                        
+material. Al (z=13.0, a=26.98) /source. mpqeos /date 201501131653
+/refs. none /comp. LULI /codes. MPQEOS /
  1  3721   102    80   r        0        0   1                                 1
-contact: tommaso.vinci@polytechnique.edu                                        
+contact: tommaso.vinci@polytechnique.edu
  1  3721   201     5   r        0        0   1                                 1
  1.30000000e+01 2.69815000e+01 2.70000000e+00 5.00000000e+11 0.00000000e+0011100
  1  3721   301 26698   r        0        0   1                                 1

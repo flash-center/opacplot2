@@ -4,7 +4,7 @@ from __future__ import print_function
 from io import StringIO
 import sys
 import numpy as np
-import re 
+import re
 import math
 
 from .opl_grid import OplGrid
@@ -13,13 +13,13 @@ from .constants import ERG_TO_JOULE
 class OpacIonmix:
     """
     Class to read in IONMIX EOS and Opacity Files.
-    
+
     The ``OpacIonmix`` class is used to read in an IONMIX file
     and translate its information into object attributes.
     All energies in this file are in Joules and must be converted to ergs.
-    Unlike other file classes, ``OpacIonmix`` does not store its data as a 
+    Unlike other file classes, ``OpacIonmix`` does not store its data as a
     dictionary. Instead, it stores its data in class attributes.
-    
+
     Parameters
     ----------
     fn: str
@@ -35,7 +35,7 @@ class OpacIonmix:
 
     hassele: bool
        lag for electron entropy data.
-    
+
     Attributes
     ----------
     fn : str
@@ -63,7 +63,7 @@ class OpacIonmix:
     data : str
         Data at the end of the IONMIX file.
     dens : numpy.ndarray
-        Densities.   
+        Densities.
     ngroups : int
         Number of groups.
     zbar : numpy.ndarray
@@ -118,7 +118,7 @@ class OpacIonmix:
         Planck absorption.
     planck_emiss : numpy.ndarray
         Planck emissivity.
-    
+
     Examples
     --------
     For a directory with the IONMIX file ``imx.cn4`` for Aluminum::
@@ -127,7 +127,7 @@ class OpacIonmix:
        >>> op = opp.Opac_Ionmix('imx.cn4', 4.4803895e-23) # Al mass in grams
        >>> print(op.zbar)
        array([...]) # Array of average ionizations for dens/temp points.
-    
+
     Notes
     -----
     If you receive a ``ValueError:
@@ -139,7 +139,7 @@ class OpacIonmix:
 
 
     def __init__(self, fn, mpi, twot=False, man=False, hassele=False, verbose=False):
-        
+
         self.fn = fn
         self.mpi = mpi
         self.twot = twot
@@ -166,12 +166,12 @@ class OpacIonmix:
             self.temp0_log10 = float(f.read(12))
 
             # Compute number densities:
-            self.numDens = np.logspace(self.dens0_log10, 
-                                       self.dens0_log10+self.ddens_log10*(self.ndens-1), 
+            self.numDens = np.logspace(self.dens0_log10,
+                                       self.dens0_log10+self.ddens_log10*(self.ndens-1),
                                        self.ndens)
 
-            self.temps = np.logspace(self.temp0_log10, 
-                                     self.temp0_log10+self.dtemp_log10*(self.ntemp-1), 
+            self.temps = np.logspace(self.temp0_log10,
+                                     self.temp0_log10+self.dtemp_log10*(self.ntemp-1),
                                      self.ntemp)
 
             # Read number of groups:
@@ -190,7 +190,7 @@ class OpacIonmix:
                 return codecs.unicode_escape_decode(x)[0]
             txt = u(txt)
         self.data = StringIO(txt)
-                        
+
         if self.man == True:
             # For files where temperatures/densities are manually
             # specified, read the manual values here.
@@ -198,8 +198,8 @@ class OpacIonmix:
             self.numDens = self.get_block(self.ndens)
 
         self.dens = self.numDens * self.mpi
-            
-        if self.verb: 
+
+        if self.verb:
             print("  Number of temperatures: %i" % self.ntemp)
             for i in range(0, self.ntemp):
                 print("%6i%27.16e" % (i, self.temps[i]))
@@ -219,7 +219,7 @@ class OpacIonmix:
 
     def read_eos(self):
         # Load the EoS data from the file.
-        
+
         nt = self.ntemp
         nd = self.ndens
         ng = self.ngroups
@@ -232,7 +232,7 @@ class OpacIonmix:
             self.cvtot = self.get_block(nd*nt).reshape(nd,nt) * self.joules_to_ergs
             self.dedn  = self.get_block(nd*nt).reshape(nd,nt)
 
-        else: 
+        else:
             # Read in pressure, specific internal energies and
             # specific heats, but convert from J to ergs:
             self.dzdt  = self.get_block(nd*nt).reshape(nd,nt)
@@ -251,8 +251,8 @@ class OpacIonmix:
             self.sele  = self.get_block(nd*nt).reshape(nd,nt) * self.joules_to_ergs
 
     def read_opac(self):
-        # Load the opacities from the file. 
-        # 
+        # Load the opacities from the file.
+        #
         # The opacities are arranged
         # in the file so that temperature varies the fastest, then
         # density, and group number varies the slowest. Note, that this
@@ -261,11 +261,11 @@ class OpacIonmix:
         nt = self.ntemp
         nd = self.ndens
         ng = self.ngroups
-        
+
         # Read group bounds in eV and convert to ergs:
         self.opac_bounds = self.get_block(ng+1)
 
-        if self.verb: 
+        if self.verb:
             print("\n  Number of Energy Groups: %i" % self.ngroups)
             for i in range(0, self.ngroups+1):
                 print("%6i%15.6e" % (i, self.opac_bounds[i]))
@@ -286,24 +286,24 @@ class OpacIonmix:
                     self.rosseland[d,t,g]     = arr_ro[i]
                     self.planck_absorb[d,t,g] = arr_pa[i]
                     self.planck_emiss[d,t,g]  = arr_pe[i]
-                    i += 1    
-        
+                    i += 1
+
     def oplAbsorb(self):
-        return OplGrid(self.dens, self.temps, self.opac_bounds, 
+        return OplGrid(self.dens, self.temps, self.opac_bounds,
                        lambda jd, jt: self.planck_absorb[jd,jt,:])
 
     def oplEmiss(self):
-        return OplGrid(self.dens, self.temps, self.opac_bounds, 
+        return OplGrid(self.dens, self.temps, self.opac_bounds,
                        lambda jd, jt: self.planck_emiss[jd,jt,:])
 
     def oplRosseland(self):
-        return OplGrid(self.dens, self.temps, self.opac_bounds, 
+        return OplGrid(self.dens, self.temps, self.opac_bounds,
                        lambda jd, jt: self.rosseland[jd,jt,:])
 
     def write(self, fn, zvals, fracs, twot=None, man=None):
         """
         This method writes to an IONMIX file.
-        
+
         Parameters
         ----------
         fn : str
@@ -316,11 +316,11 @@ class OpacIonmix:
             Flag for two-temperature data.
         man : bool
             Flag for manual temp/dens points.
-        
+
         Examples
         --------
         In order to extend ``imx.cn4`` for Al to zero::
-        
+
             >>> import opacplot2 as opp
             >>> op = opp.OpacIonmix('imx.cn4', (13,), (1,))
             >>> op.extendToZero() # Add temperature point at zero.
@@ -346,12 +346,12 @@ class OpacIonmix:
         # Write temperature/density grid and number of groups:
         def convert(num):
             string_org = "%12.5E" % (num)
-            negative = (string_org[0] == "-")            
+            negative = (string_org[0] == "-")
             lead = "-." if negative else "0."
             string = lead + string_org[1] + string_org[3:8] + "E"
 
             # Deal with the exponent:
-            
+
             # Check for zero:
             if int(string_org[1] + string_org[3:8]) == 0:
                 return string + "+00"
@@ -371,7 +371,7 @@ class OpacIonmix:
                 count += 1
 
                 f.write("%s" % convert(var[n]))
-                    
+
                 if count == 4:
                     count = 0
                     f.write("\n")
@@ -386,19 +386,19 @@ class OpacIonmix:
                         count += 1
 
                         f.write("%s" % convert(var[jd,jt,g]))
-                
+
                         if count == 4:
                             count = 0
                             f.write("\n")
 
             if count != 0: f.write("\n")
 
-        if man == False:    
-            f.write("%s%s%s%s" % (convert(self.ddens_log10), 
-                                  convert(self.dens0_log10), 
-                                  convert(self.dtemp_log10), 
+        if man == False:
+            f.write("%s%s%s%s" % (convert(self.ddens_log10),
+                                  convert(self.dens0_log10),
+                                  convert(self.dtemp_log10),
                                   convert(self.temp0_log10)) )
-            
+
         f.write("%12i\n" % self.ngroups)
 
         if man == True:
@@ -517,14 +517,14 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
                     rosseland=None, planck_absorb=None, planck_emiss=None,
                     sele=None):
     """
-    ``opacplot2.writeIonmixFile()`` provides an explicit and flexible 
+    ``opacplot2.writeIonmixFile()`` provides an explicit and flexible
     way to write IONMIX files.
-                    
+
     Parameters
     ----------
     fn : str
        Name of the file to write.
-    zvals : tuple 
+    zvals : tuple
        Atomic numbers of elements to write to file.
     fracs : tuple
        Element  fractions.
@@ -568,7 +568,7 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
        Planck emission opacity. Only used for tabulated EoS in *FLASH*.
     sele=None : numpy.ndarray
         Electron entropy.
-    
+
     Examples
     --------
     Here we open an HDF5 file containing EoS and Opacity data and
@@ -585,7 +585,7 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
                        rosseland=op['opr_mg'][:],
                        planck_emiss=op['emp_mg'][:])
     """
-    
+
     ndens, ntemps = len(numDens), len(temps)
 
     if  zbar is None:  zbar = np.zeros((ndens,ntemps))
@@ -613,7 +613,7 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
         if ctab.shape != (ndens, ntemps):
             raise ValueError('Table {0} has shape {1}, expected {2}!'.format(
                 tab, str(ctab.shape), str((ndens, ntemps))))
-    for tab in ['rosseland', 'planck_absorb', 'planck_emiss']: 
+    for tab in ['rosseland', 'planck_absorb', 'planck_emiss']:
         ctab = locals()[tab]
         if ctab.shape != (ndens, ntemps, ngroups):
             raise ValueError('Table {0} has shape {1}, expected {2}!'.format(
@@ -704,7 +704,7 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
     write_block(deedn.flatten()*ERG_TO_JOULE, 'D(electron energy)_DT')
 
     # Check for electron entropy (if it is there):
-    if sele is not None: write_block(sele.flatten()*ERG_TO_JOULE, 
+    if sele is not None: write_block(sele.flatten()*ERG_TO_JOULE,
                                  'electron entropy')
 
     write_block(opac_bounds, 'opacity bounds')

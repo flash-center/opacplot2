@@ -15,7 +15,7 @@ class OplTempGrid(OplList):
         dens -> list of numpy arrays. len(dens) = len(temps. dens[n]
         stores a sorted list of all of the densities [g/cc]
         corresponding to temperature temps[n]
-        
+
         energies -> [eV] energy group structure
         """
         self.dens = dens
@@ -35,7 +35,7 @@ class OplTempGrid(OplList):
         def getDensTemp(n):
             jd, jt = map(n)
             return self.dens[jt][jd], self.temps[jt]
-    
+
         def getListOpac(n):
             jd, jt = map(n)
             return self.go(jd,jt)
@@ -65,11 +65,11 @@ class OplTempGrid(OplList):
 
         # First, find the temperatures that straddle temp:
         jt = np.searchsorted(temps, temp)
-        if jt == 0: 
+        if jt == 0:
             temp = temps[0]
             jt += 1
 
-        if jt == len(temps): 
+        if jt == len(temps):
             jt = jt - 1
             temp = temps[-1]
         # temp is bounded by temps[jt] and temps[jt-1].
@@ -91,7 +91,7 @@ class OplTempGrid(OplList):
         # First, do interpolation along temps[jt-1]:
         opa = self.go(jdm-1, jt-1)
         opb = self.go(jdm, jt-1)
-        
+
         rhoa = dens[jt-1][jdm-1]
         rhob = dens[jt-1][jdm]
 
@@ -100,12 +100,12 @@ class OplTempGrid(OplList):
         # Second, do interpolation along temps[jt]:
         opa = self.go(jdp-1, jt)
         opb = self.go(jdp, jt)
-        
+
         rhoa = dens[jt][jdp-1]
         rhob = dens[jt][jdp]
 
         opp = (rho-rhoa)*(opb-opa)/(rhob-rhoa) + opa
-        
+
         # Interpolate in the temperature direction to find the solution:
         tempa = temps[jt-1]
         tempb = temps[jt]
@@ -121,4 +121,4 @@ class OplTempGrid(OplList):
 
             string += "\n"
         return string
-            
+

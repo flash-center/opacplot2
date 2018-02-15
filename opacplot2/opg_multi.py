@@ -27,9 +27,9 @@ def get_related_multi_tables(folder, base_name, verbose=False):
 
     Parameters
     ----------
-    folder : str 
+    folder : str
         Folder containing the tables.
-    base_name : str 
+    base_name : str
         Base name of the table.
     verbose : bool
         Flag for verbose option.
@@ -61,11 +61,11 @@ SMALL_FLOAT_LOG = -4.42627399E+02
 class OpgMulti(dict):
     """
     Can be used either to parse or to write MULTIv5 tables.
-    
+
     ``OpgMulti`` is a subclass of ``dict``. Through ``open_file()``, it can
     read opacity data (only) from MULTI files. Then, the data can be accessed
     through the key:value pairs of the ``OpgMulti`` instance.
-    
+
     Examples
     --------
     If we are in a directory with the files ``He_snp.eps.gz``, ``He_snp.opp.gz``,
@@ -86,7 +86,7 @@ class OpgMulti(dict):
     def open_file(cls, folder, base_name, verbose=True):
         """
         Parse MULTI format from a file.
-        
+
         Parameters
         ----------
         folder   str
@@ -124,7 +124,7 @@ class OpgMulti(dict):
     def _parse(self, path, tabletype):
         """
         Parse MULTIv5 opacity/ionization file
-        
+
         Parameters
         ----------
           - path [str]: path to the file
@@ -203,7 +203,7 @@ class OpgMulti(dict):
                 self['dens'] = rho
                 if tabletype == 'opz':
                     self['temp'] = temp*1e3  # opz is in keV
-                else: 
+                else:
                     self['temp'] = temp       # everything else is in eV
 
         if tabletype == 'opz':
@@ -222,7 +222,7 @@ class OpgMulti(dict):
     def write(self, prefix, fmin=None, fmax=None):
         """
         Write multigroup opacities to files specified by a prefix.
-        
+
         Parameters
         ----------
         prefix : str
@@ -233,7 +233,7 @@ class OpgMulti(dict):
 
         fmax : float
             Maximum value for opacities to write.
-        
+
         Examples
         --------
         After filling an instance of ``OpgMulti`` with EoS/opacity data,
@@ -241,13 +241,13 @@ class OpgMulti(dict):
 
             >>> op_multi.write('multi_')
 
-        to write data files containing multigroup opacities specified by the 
+        to write data files containing multigroup opacities specified by the
         'multi\_' prefix.
         """
         for key in ['eps_mg', 'temp', 'dens', 'opp_mg', 'opr_mg', 'emp_mg']:
             if key in self:
                 self[key] = self[key][:]
-        
+
         HEADER_FMT2 = "{dim[0]:{f}}{dim[1]:{f}}\n"
         extensions = {'opp_mg': 'opp','opr_mg':'opr','eps_mg': 'eps','zbar':'opz'}
         if 'eps_mg' not in self and 'emp_mg' in self:
@@ -307,7 +307,7 @@ class OpgMulti(dict):
 
     def write2hdf(self, filename, Znum=None, Anum=None, Xnum=None):
         """ Convert to HDF5 parameters.
-        
+
         Parameters
         ----------
         filename : str
@@ -318,7 +318,7 @@ class OpgMulti(dict):
            Atomic masses of elements.
         Xnum : tuple
            Fractions of elements.
-        
+
         Examples
         --------
         The atomic number and relative fractions
@@ -360,7 +360,7 @@ class OpgMulti(dict):
         self['Abar'] = np.sum(self['Xnum']*self['Anum'])
         self['Zmax'] = np.sum(self['Xnum']*self['Znum'])
         self['idens'] = self['dens']*NA/self['Abar']
-        
+
         if "eps_mg" in self:
             self['emp_mg'] = self['opp_mg']*self['eps_mg']
         else:
@@ -416,12 +416,12 @@ class OpgMulti(dict):
                 raise ValueError('Xnum array should be provided')
         else:
             self['Xnum'] = np.array(Xnum)
-        
+
         # Setting more attributes.
         self['Abar'] = np.sum(self['Xnum']*self['Anum'])
         self['Zmax'] = np.sum(self['Xnum']*self['Znum'])
         self['idens'] = self['dens']*NA/self['Abar']
-        
+
         # Calculate Planck Mean Emissivity. Set it equal to Planck Opacity if
         # we don't have the correct data.
         if "eps_mg" in self:
@@ -430,7 +430,7 @@ class OpgMulti(dict):
             print('Warning: looks like this is LTE opacity, no eps file found!')
             print('Setting planck emissivity to be the same as planck opacity...')
             self['emp_mg'] = self['opp_mg'].copy()
-        
+
         # To translate the MULTI keys to a common EoS dictionary format.
         names_dict = {'idens': 'idens',
                       'temp': 'temp',
@@ -445,20 +445,20 @@ class OpgMulti(dict):
                       'Abar': 'Abar',
                       'Zmax': 'Zmax',
                       'emp_mg': 'emp_mg'}
-        
+
         # Initialize eos_dict.
         eos_dict = {}
-        
+
         # Translate keys.
         for mul_key, eos_key in sorted(six.iteritems(names_dict)):
             eos_dict[eos_key] = self[mul_key]
-            
+
         # Handle the logarithmic data.
         if log is not None:
             for key in eos_dict.keys():
                 if key in log:
                     eos_dict[key] = np.log10(eos_dict[key])
-        
+
         return eos_dict
 
     @staticmethod

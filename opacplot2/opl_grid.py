@@ -16,14 +16,14 @@ class OplGrid(OplList):
             jt = n % len(self.temps)
             jd = n / len(self.temps)
             return self.dens[jd], self.temps[jt]
-    
+
         def getListOpac(n):
             jt = n % len(self.temps)
             jd = n / len(self.temps)
             return self.go(jd,jt)
 
         OplList.__init__(self,
-                         len(self.dens)*len(self.temps), 
+                         len(self.dens)*len(self.temps),
                          getDensTemp,
                          lambda n: self.energies,
                          getListOpac)
@@ -51,20 +51,20 @@ class OplGrid(OplList):
         #   temp[jt-1], temp[jt]
 
         jd = np.searchsorted(dens, rho)
-        if jd == 0: 
+        if jd == 0:
             rho = dens[0]
             jd += 1
 
-        if jd == len(dens): 
+        if jd == len(dens):
             jd = jd - 1
             rho = dens[-1]
 
         jt = np.searchsorted(temps, temp)
-        if jt == 0: 
+        if jt == 0:
             temp = temps[0]
             jt += 1
 
-        if jt == len(temps): 
+        if jt == len(temps):
             jt = jt - 1
             temp = temps[-1]
 
@@ -79,7 +79,7 @@ class OplGrid(OplList):
         d2 = dens[jd]
         t1 = temps[jt-1]
         t2 = temps[jt]
-                
+
         delta = (rho-d1)/(d2-d1)
         tau   = (temp-t1)/(t2-t1)
 

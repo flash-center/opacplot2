@@ -5,7 +5,7 @@ from .opl_tempgrid import OplTempGrid
 from .utils import avgopac
 
 def listToGrid(opllist, ndens, ntemps):
-    
+
     # Create an array containing all temperatures and densities:
     rho  = np.empty(opllist.nopacs)
     tele = np.empty(opllist.nopacs)
@@ -19,9 +19,9 @@ def listToGrid(opllist, ndens, ntemps):
 
     rho = rho[::ntemps]
     tele = tele[::ndens]
-    
+
     # rho and tele should now contain the densities and temperatures
-    return OplGrid(rho, tele, opllist.getEnergies(0), 
+    return OplGrid(rho, tele, opllist.getEnergies(0),
                    lambda jd, jt: opllist.findExact(rho[jd],tele[jt])[1])
 
 
@@ -32,17 +32,17 @@ def avgOplList(opllist, ebds, weight="constant", bound="error"):
     def getOpac(n):
         rho_n, trad_n = opllist.getDensTemp(n)
 
-        return avgopac(opllist.getEnergies(n), 
+        return avgopac(opllist.getEnergies(n),
                        opllist.getOpac(n),
-                       trad_n, 
-                       ebds, 
+                       trad_n,
+                       ebds,
                        weight=weight,
                        bound=bound)
 
     return OplList(opllist.nopacs, opllist.getDensTemp, getEnergies, getOpac)
 
 def listToTempGrid(opllist, ntemps):
-    
+
     # Create an array containing all of the temperatures:
     rhos     = np.empty(opllist.nopacs)
     alltrads = np.empty(opllist.nopacs)
@@ -53,8 +53,8 @@ def listToTempGrid(opllist, ntemps):
         rhos[n], alltrads[n] = opllist.getDensTemp(n)
 
     alltrads.sort()
-    
-    for n in range(opllist.nopacs-1): 
+
+    for n in range(opllist.nopacs-1):
         dt[n] = alltrads[n+1] - alltrads[n]
     idxs = np.argsort(dt)
 
@@ -74,7 +74,7 @@ def listToTempGrid(opllist, ntemps):
             rho, trad = opllist.getDensTemp(n)
             if abs(trad-trads[i])/trads[i] <= 1.0e-12:
                 current_rho.append(rho)
-                
+
         rhos.append(np.array(current_rho))
         rhos[-1].sort()
 
@@ -89,4 +89,4 @@ def listToTempGrid(opllist, ntemps):
         return op
 
     return OplTempGrid(rhos, trads, energies, getOpac)
-        
+

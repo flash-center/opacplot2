@@ -19,9 +19,9 @@ import scipy.misc
 import copy
 
 def randomize_ionmix(filename, outfilename):
-    """Randomizes the data from an existing ionmix file and rewrites it 
+    """Randomizes the data from an existing ionmix file and rewrites it
     to the outfile.
-    
+
     Parameters
     ----------
     filename : str
@@ -47,16 +47,16 @@ def randomize_ionmix(filename, outfilename):
         f.write("".join(newlines))
 
 def interpDT(arr, dens, temps,
-             bcdmin=BC_BOUND, bctmin=BC_BOUND, 
+             bcdmin=BC_BOUND, bctmin=BC_BOUND,
              lookup=INTERP_FUNC):
     """
     Depending on the choice for lookup, this function returns an interpolation
     function for values in arr, the density derivative of arr, or the
     temperature derivative of arr.
-    
-    What ``interpDT()`` returns is dependent upon the ``lookup`` and 
+
+    What ``interpDT()`` returns is dependent upon the ``lookup`` and
     ``bcdmin``/``bctmin`` arguments:
-             
+
         ``INTERP_FUNC`` will return an interpolation function for any
         density/temperature point within the range.
 
@@ -65,14 +65,14 @@ def interpDT(arr, dens, temps,
 
         ``INTERP_DFDT`` will return a function for the temperature derivative
         at any density/temperature point within the range.
-             
-        ``BC_BOUND`` is the default setting. If an input density/temp is smaller 
+
+        ``BC_BOUND`` is the default setting. If an input density/temp is smaller
         than the minimum value in the ``dens`` (or ``temps``) array, then it
         will automatically be set to this minimum value.
 
         ``BC_EXTRAP_ZERO`` will insert zero points into the ``arr`` and either
         ``dens`` or ``temps`` for ``bcdmin``, ``bctmin`` respectively.
-             
+
     Parameters
     ----------
     arr : numpy.ndarray
@@ -87,13 +87,13 @@ def interpDT(arr, dens, temps,
         Boundary conditions for temperature.
     lookup : int
         Type of function to return.
-             
+
     Examples
     --------
     In order to find a function that interpolates between dens/temp points
     for an IONMIX file that we had previously opened as ``imx``,
     we could use::
-        
+
         >>> import opacplot2 as opp
         >>> f = opp.utils.interpDT(imx.pion, imx.dens, imx.temps,
         ...                        bcdmin=BC_EXTRAP_ZERO,
@@ -104,23 +104,23 @@ def interpDT(arr, dens, temps,
         >>> print(f(123, 456)) # Density of 123 and temperature of 456.
         1234.5678 # Resulting ion pressure at this dens/temp.
     """
-   
+
     # Adjust for extrapolation to zero.
     if bcdmin == BC_EXTRAP_ZERO and dens[0] != 0:
         # Density arrays should be 1D.
         dens = np.insert(dens, 0, 0)
         arr = np.insert(arr, 0, 0, axis=0)
-    
+
     if bctmin == BC_EXTRAP_ZERO and temps[0] != 0:
         # Temp arrays should be 1D.
         temps = np.insert(temps, 0, 0)
         arr = np.insert(arr, 0, 0, axis=1)
-    
+
     # "When on a regular grid with x.size = m and y.size = n,
     # if z.ndim ==2, then z must have shape (n, m)."
     # arr will have shape (dens.size, temps.size), so we must transpose it.
     f = sp.interpolate.interp2d(dens, temps, arr.T, kind='linear')
-    
+
     if lookup == INTERP_FUNC:
         def interp_func(func):
             def wrapper(d, t):
@@ -137,10 +137,10 @@ def interpDT(arr, dens, temps,
                     t = temps[-1]
                 return func(d,t)
             return wrapper
-        
+
         # Return the wrapper of f that takes care of data being out of range.
         return interp_func(f)
-    
+
     if lookup == INTERP_DFDD:
         def df_dd(func):
             # Input to df_dd(func) will be a (dens, temp) point.
@@ -148,16 +148,16 @@ def interpDT(arr, dens, temps,
                 # Fix temp point but let dens point range.
                 def inner_wrap(x):
                     return func(x, temp)
-                
+
                 return sp.misc.derivative(
-                            inner_wrap, 
+                            inner_wrap,
                             dens, # Evaluate derivative at dens point.
                             dx=(dens*1e-12))
-            
+
             return outter_wrap
-        
+
         return df_dd(f)
-    
+
     if lookup == INTERP_DFDT:
         def df_dt(func):
             # Input to df_dt(func) will be a (dens, temp) point.
@@ -165,32 +165,32 @@ def interpDT(arr, dens, temps,
                 # Fix temp point but let temps point range.
                 def inner_wrap(x):
                     return func(dens, x)
-                    
+
                 return sp.misc.derivative(
-                            inner_wrap, 
+                            inner_wrap,
                             temp, # Evaluate derivative at temp point.
                             dx=(temp*1e-12))
-                            
+
             return outter_wrap
-        
+
         return df_dt(f)
-    
+
     raise ValueError("lookup must be INTERP_FUNC, INTERP_DFDD, or INTERP_DFDT")
-    
+
 class EosMergeGrids(dict):
     """This class provides filtering capabilities for the EoS temperature and
-    density grids. 
-             
-    For instance, SESAME tables may have some additional points 
-    in the ion EoS table, compared to the electron EoS table, and as 
-    FLASH requires the same density and temperature grid for all species, 
+    density grids.
+
+    For instance, SESAME tables may have some additional points
+    in the ion EoS table, compared to the electron EoS table, and as
+    FLASH requires the same density and temperature grid for all species,
     the simplest solution is to remove those extra points.
-    
+
     Parameters
     ----------
-    eos_data : dict 
+    eos_data : dict
         Dictionary contraining the EoS data.
-    intersect : list 
+    intersect : list
         The resulting temperature [eV] and density [g/cm^(-3)]
         grids will be computed as an intersection of grids of all the
         species given in this list. Default: ['ele', 'ioncc']
@@ -202,18 +202,18 @@ class EosMergeGrids(dict):
         A function that takes a grid of temperatures
         and returns a mask of points we don't wont to keep.
         Defaut: (lamdba x: x>0.) i.e. don't remove anything.
-    thresh : list 
+    thresh : list
         Zero threshold on following keys
-    
+
     Returns
     -------
-    out : dict 
+    out : dict
         A dictionary with the same keys as eos_data. The species specified by
         ``intersect`` will have equal temperature and density grids.
-    
+
     Examples
     --------
-    >>> eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii", 
+    >>> eos_sesame = opp.OpgSesame("../sesame/xsesame_ascii",
                                    opp.OpgSesame.SINGLE,verbose=False)
     >>> eos_data  = eos_sesame.data[3720]  # Aluminum
     >>> eos_data_filtered = EosMergeGrids(eos_data,
@@ -223,7 +223,7 @@ class EosMergeGrids(dict):
     def __init__(self, eos_data, filter_dens=lambda x: x>=0.,
                  filter_temps=lambda x: x>=0., intersect=['ele', 'ioncc'],
                  thresh=[], qeos=False):
-        
+
         user_filter = dict(temps=filter_temps, dens=filter_dens)
         self.origin = eos_data
         self.threshold = thresh
@@ -233,21 +233,21 @@ class EosMergeGrids(dict):
             i_grids[key] = eos_data['_'.join((intersect[0],key))]
             for el in intersect[1:]:
                 i_grids[key] = np.intersect1d(
-                                    i_grids[key], 
+                                    i_grids[key],
                                     eos_data['_'.join((el,key))])
 
         # Defining indexes we want to keep.
         mask = {}
         if qeos:
             species_list = ['ele', 'ion', 'total']
-        else: 
+        else:
             species_list = ['ele', 'ion', 'total', 'cc', 'ioncc']
         for species in species_list:
             for var in ['dens', 'temps']:
                key = species + '_' + var
                # mask based on the intersection of 'ele' and 'ion' grids
-               mask[key] = np.in1d(eos_data[key], 
-                                   i_grids[var], 
+               mask[key] = np.in1d(eos_data[key],
+                                   i_grids[var],
                                    assume_unique=True)
                # mask from user provided parameters
                mask[key] = mask[key]*user_filter[var](eos_data[key])
@@ -289,28 +289,28 @@ class EosMergeGrids(dict):
         else:
             # Now just in case we have added some extra keys in there,
             # reproduce a normal dict's behaviour
-            return dict.__getitem__(self, key)    
+            return dict.__getitem__(self, key)
 
 def intersect_1D_sorted_arr(arr_1, arr_2):
     """
     Function to return the venn diagram of two sorted 1D arrays.
-    
+
     In other words, this function will return the union of all values from
     both arrays that are within the intersection of their ranges. This may be
     used for interpolation schemes.
-    
+
     Parameters
     ----------
-    arr_1 : numpy.ndarray 
+    arr_1 : numpy.ndarray
         1D sorted array number 1.
-    arr_2 : numpy.ndarray 
+    arr_2 : numpy.ndarray
         1D sorted array number 2.
-    
+
     Returns
     -------
     numpy.ndarray
         An array that is the venn diagram of the two input arrays.
-    
+
     Examples
     --------
     >>> import numpy as np
@@ -324,53 +324,53 @@ def intersect_1D_sorted_arr(arr_1, arr_2):
     # Check for some overlap.
     if (arr_1[-1] < arr_2[0]) or (arr_2[-1] < arr_1[0]):
         return None
-        
+
     # Use interpolation to account for mismatched grid sizes.
     # We will also work with the intersection of the dens/temp grids.
     arr_min = max(arr_1[0], arr_2[0])
     arr_max = min(arr_1[-1], arr_2[-1])
-    
+
     max_idx_1 = np.argmin(arr_1 <= arr_max)
     # If arr_max is bigger than arr_1[-1] max_idx_1 = 0, so we fix that here.
     if max_idx_1 == 0:
         max_idx_1 = len(arr_1)
     min_idx_1 = np.argmax(arr_1 >= arr_min)
-    
+
     max_idx_2 = np.argmin(arr_2 <= arr_max)
     if max_idx_2 == 0:
         max_idx_2 = len(arr_2)-1
     min_idx_2 = np.argmax(arr_2 >= arr_min)
-        
+
     sliced_arr_1 = arr_1[min_idx_1:max_idx_1]
     sliced_arr_2 = arr_2[min_idx_2:max_idx_2]
-        
+
     merged_arr = np.concatenate((sliced_arr_1, sliced_arr_2))
-    
+
     return np.unique(merged_arr)
 
 ################################################################################
 # Functions and classes below this have not been adequately tested nor         #
 # documented.                                                                  #
 ################################################################################
-        
-def avgopac(energies_in, opacs_in, trad, ebnds, 
+
+def avgopac(energies_in, opacs_in, trad, ebnds,
             weight="constant", bound="error"):
     """
-    
+
     Parameters
     ----------
-    energies_in : 
-        
-    opacs_in : 
-        
+    energies_in :
+
+    opacs_in :
+
     trad :
-    
-    ebnds : 
-        
-    weight='constant' : 
-        
-    bound='error' : 
-        
+
+    ebnds :
+
+    weight='constant' :
+
+    bound='error' :
+
     """
     try:
         from scipy.integrate import quad
@@ -399,26 +399,26 @@ def avgopac(energies_in, opacs_in, trad, ebnds,
         energies[0] = emin
         energies[1:-1] = energies_in[:]
         energies[-1] = emax
-        
+
         opacs = np.empty(len(opacs)+2)
         opacs[0] = opacs_in[0]
         opacs[1:-1] = opacs_in[:]
         opacs[-1] = opacs_in[-1]
-                    
+
     else:
         raise ValueError("Illegal boundary treatment")
-    
+
     def op(en):
 
         idx = energies.searchsorted(en)
         # The energy is between index idx and idx-1
-        
+
         de = energies[idx] - energies[idx-1]
         do = opacs[idx] - opacs[idx-1]
 
         ans = (en-energies[idx-1]) * do/de + opacs[idx-1]
         return ans
-    
+
     def weight_constant(en):
         return 1.0
 
@@ -428,8 +428,8 @@ def avgopac(energies_in, opacs_in, trad, ebnds,
         return en**3/(1-exp(-x)) * exp(-x)
 
     # def weight_rosseland(en):
-        
-        
+
+
 
     # Choose the weight function:
     f = lambda en: weight(en)*op(en)
@@ -446,7 +446,7 @@ def avgopac(energies_in, opacs_in, trad, ebnds,
     for i in range(len(opavg)):
         numerator = quad(f, ebnds[i], ebnds[i+1], limit=500, epsrel=0.001)
         denominator = quad(weight, ebnds[i],
-                           ebnds[i+1], limit=500, 
+                           ebnds[i+1], limit=500,
                            epsrel=1.0e-06)
         opavg[i] = numerator[0]/denominator[0]
 
@@ -472,7 +472,7 @@ def ensure_monotonicity(dens, temp, table_in, axis='dens'):
     print('')
     if axis == "temp":
         table = table.T
-   
+
     return table
 
 class CheckEosConsistency:
@@ -501,9 +501,9 @@ class CheckEosConsistency:
                     print(np.array([self.eos[spec+'_dens'][bad_idx[0]],
                                    self.eos[spec+'_temps'][bad_idx[1]],
                                    self.eos['_'.join([spec, tab_name])][bad_idx]]).T)
-                    self.fail +=1 
+                    self.fail +=1
         return res
-                    
+
     def check_sound_speed(self):
         self._check_deriv('ioncc_pres', "dens")
         self._check_deriv('ele_pres', "dens")
@@ -517,7 +517,7 @@ class CheckEosConsistency:
         self.num_tests += 1
         if np.any(diff<0):
             print('d{{{0}}}/d{{{1}}} has negative values'.format(tab_name, axis))
-            self.fail +=1 
+            self.fail +=1
 
 def eint_offset(table):
     if np.any(table<0):
