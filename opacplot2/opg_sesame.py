@@ -95,11 +95,11 @@ class OpgSesame:
                        }
 
         self.data = {}
-        
+
         self.recs = {}
 
         self.parse()
-        
+
 
     def parse(self):
 
@@ -119,10 +119,10 @@ class OpgSesame:
 
             if not recid in self.fdict:
                 raise ValueError("No handling function for record %d" % recid)
-            
+
 
             self.fdict[recid](nentries,matid, recid)
-            
+
             if matid not in self.recs.keys():
                 self.recs[matid] = [recid]
             else:
@@ -328,10 +328,10 @@ class OpgSesame:
         # Calculate zbar using thomas_fermi_ionization.
         # If there are multiple elements, it suffices to use the average
         # atomic number in this calculation - JTL
-        dens_arr, temp_arr = np.meshgrid(opp_ses_data['ele_dens'], 
+        dens_arr, temp_arr = np.meshgrid(opp_ses_data['ele_dens'],
                                          opp_ses_data['ele_temps'])
         zbar = eos.thomas_fermi_ionization(dens_arr,
-                                           temp_arr,  
+                                           temp_arr,
                                            opp_ses_data['Znum'].mean(),
                                            opp_ses_data['abar']).T
         opp_ses_data['zbar'] = zbar
