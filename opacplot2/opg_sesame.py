@@ -320,7 +320,7 @@ class OpgSesame:
             if len(Znum) == 1:
                 opp_ses_data['Xnum'] = np.array([1.0])
             else:
-                raise ValueError('Xnum array should be provided')
+                raise ValueError('Xnum array should be provided!')
         else:
             opp_ses_data['Xnum'] = np.array(Xnum)
 

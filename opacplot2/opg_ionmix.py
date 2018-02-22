@@ -601,7 +601,9 @@ def writeIonmixFile(fn, zvals, fracs, numDens, temps,
     if deidn is None: deidn = np.zeros((ndens,ntemps))
     if deedn is None: deedn = np.zeros((ndens,ntemps))
 
-    if ngroups       is None: ngroups = 1
+    if ngroups is None:
+        ngroups = 0
+        print("Warning: No opacity data is being written")
     if opac_bounds   is None: opac_bounds = (0.0,1.0)
     if rosseland     is None: rosseland = np.zeros((ndens,ntemps,ngroups))
     if planck_absorb is None: planck_absorb = np.zeros((ndens,ntemps,ngroups))
