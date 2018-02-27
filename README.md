@@ -13,14 +13,11 @@ the consistency of conversions made with `opac-convert`.
 
 ### Current Status
 
-| EoS/Opacity Table | opac-convert | opac-error |
-|:-------|--------|--------|
-| IONMIX | N/A | :heavy_check_mark: | 
-| SESAME | :heavy_check_mark: | :heavy_check_mark: | 
-| MULTI&#8224; | :heavy_check_mark: | |
-| Propaceos* | :heavy_check_mark: | :heavy_check_mark:  | 
-
-Additionally, QEOS-SESAME table support is in development.
+| | EoS | Opacity| opac-convert | opac-error |
+|:-------|-----|-----|--------|--------|
+| SESAME |:heavy_check_mark:|| :heavy_check_mark: | :heavy_check_mark: | 
+| MULTI&#8224; ||:heavy_check_mark:| :heavy_check_mark: | |
+| Propaceos* |:heavy_check_mark:|| :heavy_check_mark: | :heavy_check_mark:  | 
 
 *<sub>The Propaceos reader is only distributed with a Propaceos license.<sub>
 
