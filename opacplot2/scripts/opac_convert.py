@@ -251,6 +251,12 @@ class EosDict_toIonmixFile(object):
         if 'opac_bounds' in imx_dict:
             imx_dict['ngroups'] = len(self.eos_dict['groups']) - 1
 
+        # Check if required FLASH EoS tables are present.
+        if not (imx_dict >= {'zbar', 'eion', 'eele', 'pion', 'pele'}):
+            print("The required EoS data for FLASH is not present...\n"
+                  "Aborting the IONMIX file creation...")
+            raise Warning("Missing EoS data for IONMIX file to run in FLASH")
+
         # For verbose flag.
         if self.args.verbose:
             verb_conv = {'zvals':'Atomic numbers',
