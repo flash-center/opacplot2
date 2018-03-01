@@ -117,6 +117,13 @@ class OpgSesame:
             if self.verbose and (recid > 104):
                 print("Material = %8i  Record = %8i  Entries = %8i" % (matid, recid, nentries))
 
+            # If there are opacity tables (series 500),
+            # we do not currently read them.
+            if (600>recid) and (recid>=500):
+                print("Warning: No reader for SESAME opacity tables. The "
+                      "data in table number {} will not be parsed".format(recid))
+
+
             if not recid in self.fdict:
                 raise ValueError("No handling function for record %d" % recid)
 
