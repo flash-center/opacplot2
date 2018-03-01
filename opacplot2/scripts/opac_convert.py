@@ -252,7 +252,8 @@ class EosDict_toIonmixFile(object):
             imx_dict['ngroups'] = len(self.eos_dict['groups']) - 1
 
         # Check if required FLASH EoS tables are present.
-        if not (imx_dict >= {'zbar', 'eion', 'eele', 'pion', 'pele'}):
+        imx_req_keys = ['zbar', 'eion', 'eele', 'pion', 'pele']
+        if not all(key in imx_dict for key in imx_req_keys):
             print("The required EoS data for FLASH is not present...\n"
                   "Aborting the IONMIX file creation...")
             raise Warning("Missing EoS data for IONMIX file to run in FLASH")
