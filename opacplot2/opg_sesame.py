@@ -339,7 +339,7 @@ class OpgSesame:
                                          opp_ses_data['ele_temps'])
         zbar = eos.thomas_fermi_ionization(dens_arr,
                                            temp_arr,
-                                           opp_ses_data['Znum'].mean(),
+                                           np.average(opp_ses_data['Znum'], weights=opp_ses_data['Xnum']),
                                            opp_ses_data['abar']).T
         opp_ses_data['zbar'] = zbar
 
