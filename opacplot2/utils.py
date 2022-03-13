@@ -10,7 +10,7 @@ from .constants import BC_BOUND, BC_EXTRAP_ZERO
 from .constants import INTERP_FUNC, INTERP_DFDD, INTERP_DFDT
 
 import os.path
-import opacplot2.opg_sesame
+import opacplot2
 
 import scipy as sp
 import scipy.interpolate
@@ -176,6 +176,9 @@ def interpDT(arr, dens, temps,
         return df_dt(f)
 
     raise ValueError("lookup must be INTERP_FUNC, INTERP_DFDD, or INTERP_DFDT")
+
+def fastInterpDT():
+    pass
 
 class EosMergeGrids(dict):
     """This class provides filtering capabilities for the EoS temperature and
