@@ -29,34 +29,35 @@ def tops_html2text(filename):
 
     code = soup.find_all('code')[0]
     text = [' '.join(a.text.split('\xa0')).rstrip() + ' \n'
-                  for a in code.contents[0::2]]
+            for a in code.contents[0::2]]
     text = (' '+''.join(text).lstrip()).rstrip()
 
     return text
 
+
 class OpgTOPS():
-    def __init__(self, filename, ep_max='auto', handle_large_entry='no'):
+    def __init__(self, filename, ep_max='auto', handle_large='next_group'):
         """
-        Parse TOPS Opacities
+        Parse TOPS Opacities (no unit conversion for this intialization)
 
         Parameters
         ----------
         fname : str
             Filename of the .tops or .html file
         epmax : {'log', 'lin', 'auto'} or float, optional
-            The upper bound of photon energy (eV) in the last photon group, by
+            The upper bound of photon energy (keV) in the last photon group, by
             default 'auto'
             - 'log': use logarithmic extrapolation to calculate `epmax`
             - 'lin': use linear extrapolation to calculate `epmax`
             - 'auto': automatically choose from {'log', 'lin'}
-        handle_large_entry : {'no', 'lower_ceiling', 'next_group'}
+        handle_large : {'no', 'lower_ceiling', 'next_group'}
             Choose how to handle group opacity entries with value 1e10, by
-            default 'no'
+            default 'next_group'
             - 'no': do nothing
             - 'lower_ceiling' : use the largest opacity value throughout the
             table that is below 1e10
-            - 'next_group' : use the opacity value of the next photon group
-            at the same temperature-density point
+            - 'next_group' : use the opacity value of the next photon group at
+            the same temperature-density point
         """
 
         self.filename = filename
@@ -77,12 +78,11 @@ class OpgTOPS():
         self.ep_max = ep_max
 
         try:
-            assert handle_large_entry in \
-                {'no', 'lower_ceiling', 'use_next_group'}
+            assert handle_large in {'no', 'lower_ceiling', 'next_group'}
         except AssertionError:
-            raise KeyError("handle_large_entry shoule be in "
-                           "{'no', 'lower_ceiling', 'use_next_group'}")
-        self.handle_large_entry = handle_large_entry
+            raise KeyError("handle_large shoule be in "
+                           "{'no', 'lower_ceiling', 'next_group'}")
+        self.handle_large = handle_large
 
         dats = [int(s) for s in lines[0].split() if s.isdigit()]
         self.NT, self.Nd, self.Nm = dats[0:3]
@@ -92,26 +92,26 @@ class OpgTOPS():
             line_split = line.split()
             if line_split[:10] == \
                 "No. Fraction Mass Fraction  At. No.  Chem. Sym.  Mat ID.".\
-                split():
+                    split():
                 lid_frac = lid
                 lid_temp = lid_frac + 1 + self.Nm
                 dataio = StringIO(''.join(lines[lid_frac+1:lid_temp]))
                 dats = np.loadtxt(dataio,
-                                  dtype={'names': ["Xnum", "Mfrac", "Znum",
+                                  dtype={'names': ["Xnum", "Massfrac", "Znum",
                                                    "Zsymb",  "MatID"],
-                                         'formats':['f8', 'f8', 'i4',
-                                                    'S2','i4']
+                                         'formats': ['f8', 'f8', 'i4',
+                                                     'S2', 'i4']
                                          }
                                   )
                 dats.reshape(self.Nm)
                 self.Xnum = dats['Xnum']
-                self.Mfrac = dats['Mfrac']
+                self.Massfrac = dats['Massfrac']
                 self.Znum = dats['Znum']
-                self.Zsymb= dats['Zsymb']
+                self.Zsymb = dats['Zsymb']
                 self.MatID = dats['MatID']
                 self.Zmax = np.average(self.Znum, weights=self.Xnum)
-                self.Anum = np.array([periodictable.elements[Znum].mass \
-                                        for Znum in self.Znum])
+                self.Anum = np.array([periodictable.elements[Znum].mass
+                                      for Znum in self.Znum])
                 self.Abar = np.average(self.Anum, weights=self.Xnum)
 
         # Read temperature grid
@@ -119,7 +119,8 @@ class OpgTOPS():
         assert line_split[:5] == 'Temperature grid used the following'.split()
         assert int(line_split[5]) == self.NT
         lid_dens = lid_temp + 1 + int(np.ceil(self.NT/6))
-        self.temp = np.fromstring(' '.join(lines[lid_temp+1:lid_dens]), sep=' ')
+        self.temp = np.fromstring(
+            ' '.join(lines[lid_temp+1:lid_dens]), sep=' ')
         self.temp.reshape(self.NT)
 
         # Read density grid
@@ -127,8 +128,10 @@ class OpgTOPS():
         assert line_split[:5] == 'Density grid used the following'.split()
         assert int(line_split[5]) == self.Nd
         lid_grps = lid_dens + 1 + int(np.ceil(self.Nd/6))
-        self.dens = np.fromstring(' '.join(lines[lid_dens+1:lid_grps]), sep=' ')
+        self.dens = np.fromstring(
+            ' '.join(lines[lid_dens+1:lid_grps]), sep=' ')
         self.dens.reshape(self.Nd)
+        self.nion = self.dens * NA / self.Abar
 
         # Read photon grid
         line_split = lines[lid_grps].split()
@@ -137,15 +140,17 @@ class OpgTOPS():
             self.multigroup = True
             lid_opac = lid_grps + 1 + int(np.ceil(self.Ng/6))
             self.grps = np.fromstring(' '.join(lines[lid_grps+1:lid_opac]),
-                                     sep=' ')
+                                      sep=' ')
             self.grps.reshape(self.Ng)
             self.grps = np.concatenate([self.grps, [np.inf]])
             use_fit = 'no'
             if isinstance(ep_max, float):
                 self.grps[self.Ng] = ep_max
                 use_fit = 'no'
-            elif ep_max == 'lin': use_fit = 'lin'
-            elif ep_max == 'log': use_fit = 'log'
+            elif ep_max == 'lin':
+                use_fit = 'lin'
+            elif ep_max == 'log':
+                use_fit = 'log'
             elif ep_max == 'auto':
                 corr_log_fit = np.corrcoef(range(self.Ng-1),
                                            np.log(self.grps[:self.Ng-1]))[0, 1]
@@ -153,7 +158,8 @@ class OpgTOPS():
                                            self.grps[:self.Ng-1])[0, 1]
                 use_fit = ('log' if corr_log_fit > corr_lin_fit else 'lin')
             if use_fit == 'log':
-                fit = np.polyfit(range(self.Ng), np.log(self.grps[:self.Ng]), 1)
+                fit = np.polyfit(range(self.Ng), np.log(
+                    self.grps[:self.Ng]), 1)
                 self.grps[self.Ng] = np.exp(fit[1] + fit[0] * (self.Ng))
             elif use_fit == 'lin':
                 fit = np.polyfit(range(self.Ng), self.grps[:self.Ng], 1)
@@ -178,11 +184,11 @@ class OpgTOPS():
             dataio = StringIO("".join(lines[lid_opac+2:lid_opac+2+self.Nd]))
             dats = np.loadtxt(dataio)
             dats.reshape((self.Nd, 5))
-            assert (self.dens == dats[:,0]).all()
-            self.ross_int[t] = dats[:,1]
-            self.plnk_int[t] = dats[:,2]
-            self.zbar[t] = dats[:,3]
-            self.z2bar[t] = dats[:,4]
+            assert (self.dens == dats[:, 0]).all()
+            self.ross_int[t] = dats[:, 1]
+            self.plnk_int[t] = dats[:, 2]
+            self.zbar[t] = dats[:, 3]
+            self.z2bar[t] = dats[:, 4]
             lid_opac += 2 + self.Nd
 
         self.ross_int = self.ross_int.T
@@ -191,7 +197,8 @@ class OpgTOPS():
         self.z2bar = self.z2bar.T
 
         # Read multigroup opacity
-        if not self.multigroup: return
+        if not self.multigroup:
+            return
         self.ross_mg = np.zeros((self.NT, self.Nd, self.Ng))
         self.plnk_mg = np.zeros((self.NT, self.Nd, self.Ng))
 
@@ -206,26 +213,28 @@ class OpgTOPS():
                     "Energy Ross mg Planck mg for T, density =".split()
                 assert self.temp[t] == float(line_split[9])
                 assert self.dens[d] == float(line_split[10])
-                dataio = StringIO("".join(lines[lid_opac+1:lid_opac+1+self.Ng]))
+                dataio = StringIO(
+                    "".join(lines[lid_opac+1:lid_opac+1+self.Ng]))
                 dats = np.loadtxt(dataio)
-                dats.reshape((self.Ng,3))
-                assert (self.grps[:self.Ng] == dats[:,0]).all()
-                self.ross_mg[t,d] = dats[:,1]
-                self.plnk_mg[t,d] = dats[:,2]
+                dats.reshape((self.Ng, 3))
+                assert (self.grps[:self.Ng] == dats[:, 0]).all()
+                self.ross_mg[t, d] = dats[:, 1]
+                self.plnk_mg[t, d] = dats[:, 2]
                 lid_opac += 1 + self.Ng
 
         self.ross_mg = self.ross_mg.swapaxes(0, 1)
         self.plnk_mg = self.plnk_mg.swapaxes(0, 1)
 
         # Handle the entries with unphsically large value 1e10
-        if self.handle_large_entry == 'no': return
-        if self.handle_large_entry == 'lower_ceiling':
+        if self.handle_large == 'no':
+            return
+        if self.handle_large == 'lower_ceiling':
             ceiling_value = self.ross_mg[self.ross_mg < 1e10].max()
             self.ross_mg[self.ross_mg == 1e10] = ceiling_value
             ceiling_value = self.plnk_mg[self.plnk_mg < 1e10].max()
             self.plnk_mg[self.plnk_mg == 1e10] = ceiling_value
             return
-        if self.handle_large_entry == 'use_next':
+        if self.handle_large == 'use_next':
             for d in range(self.Nd):
                 for t in range(self.NT):
                     for g in range(Ng)[::-1]:
