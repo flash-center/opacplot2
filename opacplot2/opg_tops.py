@@ -242,5 +242,54 @@ class OpgTOPS():
                             self.ross_mg[d, t, g] = self.ross_mg[d, t, g+1]
                         if self.plnk_mg[d, t, g] == 1e10:
                             self.plnk_mg[d, t, g] = self.plnk_mg[d, t, g+1]
-    def toEosDict(self):
-        pass
+
+    def toEosDict(self, fill_eos=False):
+        names_dict_req_tops = {
+            'nion': 'idens',
+            'temp': 'temp',
+            'dens': 'dens',
+            'zbar': 'Zf_DT',
+            'z2bar': 'z2bar',
+            'ross_mg': 'opr_mg',
+            'plnk_mg': 'opp_mg',
+            'plnk_mg': 'emp_mg',
+            'plnk_int': 'opp_int',
+            'ross_int': 'opr_int',
+            'plnk_int': 'emp_int',
+            'Xnum': 'Xnum',
+            'Massfrac': 'Massfrac',
+            'Znum': 'Znum',
+            'Zsymb': 'Zsymb',
+            'MatID': 'MatID',
+            'Zmax': 'Zmax',
+            'Anum': 'Anum',
+            'Abar': 'Abar',
+            'grps': 'groups',
+            'Zsymb': 'Zsymb',
+            'Nm': 'ElemNum',
+        }
+        names_dict_mg = {
+            'ross_mg': 'opr_mg',
+            'plnk_mg': 'opp_mg',
+            'plnk_mg': 'emp_mg',
+            'grps': 'groups',
+        }
+        names_list_req_eos = ['Pi_DT', 'Pec_DT', 'Ui_DT', 'Uec_DT', 'Zf_DT']
+
+        eos_dict = {}
+
+        # Data in TOPS table
+        for tops_key, eos_key in sorted(names_dict_req_tops.items()):
+            eos_dict[eos_key] = getattr(self, tops_key)
+        if self.multigroup:
+            for tops_key, eos_key in sorted(names_dict_mg.items()):
+                eos_dict[eos_key] = getattr(self, tops_key)
+        eos_dict['temp'] = eos_dict['temp'] * 1e-3
+        eos_dict['groups'] = eos_dict['groups'] * 1e-3
+
+        # Fill zeros for EOS
+        if fill_eos:
+            for eos_key in names_list_req_eos:
+                eos_dict[eos_key] = np.zeros_like(eos_dict['Zf_DT'])
+
+        return eos_dict
