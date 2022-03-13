@@ -284,8 +284,8 @@ class OpgTOPS():
         if self.multigroup:
             for tops_key, eos_key in sorted(names_dict_mg.items()):
                 eos_dict[eos_key] = getattr(self, tops_key)
-        eos_dict['temp'] = eos_dict['temp'] * 1e-3
-        eos_dict['groups'] = eos_dict['groups'] * 1e-3
+        eos_dict['temp'] = eos_dict['temp'] * 1e3
+        eos_dict['groups'] = eos_dict['groups'] * 1e3
 
         # Fill zeros for EOS
         if fill_eos:
