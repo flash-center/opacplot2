@@ -100,7 +100,10 @@ def read_format_ext(args, fn_in):
                 '.opz':'multi',
                 '.opr':'multi',
                 '.mexport':'sesame-qeos',
-                '.ses':'sesame'}
+                '.ses':'sesame',
+                '.html':'tops',
+                '.tops':'tops',
+                }
     # If the input file is compressed, choose the next extension.
     if os.path.splitext(fn_in)[1] == '.gz':
         _, ext = os.path.splitext(os.path.splitext(fn_in)[0])
@@ -140,7 +143,9 @@ class Formats_toEosDict(object):
         self.handle_dict = {'propaceos' : self.propaceos_toEosDict,
                             'multi' : self.multi_toEosDict,
                             'sesame' : self.sesame_toEosDict,
-                            'sesame-qeos' : self.sesame_qeos_toEosDict}
+                            'sesame-qeos' : self.sesame_qeos_toEosDict,
+                            'tops' : self.tops_toEosDict,
+                            }
 
     def propaceos_toEosDict(self):
         # If we are unable to find the correct library for opg_propaceos
@@ -203,6 +208,11 @@ class Formats_toEosDict(object):
         else:
             eos_dict = op.toEosDict(Znum=self.args.Znum, Xnum=self.args.Xfracs,
                                     qeos=True, log=self.args.log)
+        return eos_dict
+
+    def tops_toEosDict(self):
+        op = opp.OpgTOPS(self.path_in)
+        eos_dict = op.toEosDict(fill_eos=True)
         return eos_dict
 
 class EosDict_toIonmixFile(object):
