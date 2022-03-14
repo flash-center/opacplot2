@@ -24,6 +24,23 @@ import copy
 #               p.pi**4 * (u.eV/p.kb)**4 * (u.cm**2/u.g)).in_cgs())
 emis_const = 633391171028.5317
 
+try:
+    import numba
+    vectorize = numba.vectorize('float64(float64)', nopython=True)
+except ModuleNotFoundError:
+    Warning('numba not found, will use numpy.vectorize!')
+    vectorize = lambda f: np.vectorize(f, otypes=[float])
+
+@vectorize
+def planck_int(x):
+    x2 = x * x
+    x3 = x2 * x
+    expmx = math.exp(-x)
+    p1 = 6.4939394022668291491 + x3*math.log(1.0-expmx) \
+        - 3.0*expmx*(2.0+2.0*x+x2) - 0.375*expmx*expmx*(1.0-2.0*x+2.0*x2)
+    p2 = x3*(1.0/3.0+x*(-1.0/8.0+x*(1/60.0+x2*(-1/5040.0+x2/272160.0))))
+    return min(p1, p2)
+
 def randomize_ionmix(filename, outfilename):
     """Randomizes the data from an existing ionmix file and rewrites it
     to the outfile.
