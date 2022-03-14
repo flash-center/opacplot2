@@ -33,13 +33,16 @@ except ModuleNotFoundError:
 
 @vectorize
 def planck_int(x):
+    if x <= 0.0: return 0.0
     x2 = x * x
     x3 = x2 * x
+    if x < 2.4988090297374141987:
+        p = x3*(1.0/3.0+x*(-1.0/8.0+x*(1.0/60.0+x2*(-1.0/5040.0+x2/272160.0))))
+        return p
     expmx = math.exp(-x)
-    p1 = 6.4939394022668291491 + x3*math.log(1.0-expmx) \
-        - 3.0*expmx*(2.0+2.0*x+x2) - 0.375*expmx*expmx*(1.0-2.0*x+2.0*x2)
-    p2 = x3*(1.0/3.0+x*(-1.0/8.0+x*(1/60.0+x2*(-1/5040.0+x2/272160.0))))
-    return min(p1, p2)
+    p = 6.4939394022668291491 + x3*math.log(1.0-expmx) \
+        - 3.0*expmx*(2.0+2.0*x+x2) - 0.375*expmx*expmx*(1.0+2.0*x+2.0*x2)
+    return p
 
 def randomize_ionmix(filename, outfilename):
     """Randomizes the data from an existing ionmix file and rewrites it
