@@ -274,7 +274,7 @@ class OpgTOPS():
             'plnk_mg': 'emp_mg',
             'grps': 'groups',
         }
-        names_list_req_eos = ['Pi_DT', 'Pec_DT', 'Ui_DT', 'Uec_DT', 'Zf_DT']
+        names_list_req_eos = ['Pi_DT', 'Pec_DT', 'Ui_DT', 'Uec_DT']
 
         eos_dict = {}
 
