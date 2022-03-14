@@ -304,12 +304,17 @@ class fastInterpDT():
         Parameters
         ----------
         key : str
-            name of the variable for interpolaion.
+            Name of the variable for interpolaion. Valid values:
+            - key in `self.eos_dict`
+            - Absorption coefficient "alphaa_{ig}" (unit:1/cm) where `ig` is the
+            group index (from 1 to number of groups)
+            - Emission rate "emr_{ig}" (unit:erg/g/s) where `ig` is the group
+            index (from 1 to number of groups)
 
         Returns
         -------
         func : function
-            interpolation function
+            Interpolation function
         """
 
         if key in self._funcs.keys(): return self._funcs[key]
