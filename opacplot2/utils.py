@@ -353,8 +353,8 @@ class fastInterpDT():
         if mainkey == 'emr':
             def func(x, y):
                 t = np.array(y)
-                xgl = self.eos_dict['groups'][ig-1] / t
-                xgr = self.eos_dict['groups'][ig] / t
+                xgl = self.eos_dict[self.g][ig-1] / t
+                xgr = self.eos_dict[self.g][ig]   / t
                 dp = planck_int(xgr) - planck_int(xgl)
                 opac = self.eval_linear(self.ucgrid,
                                         self.eos_dict['emp_mg'][:,:,ig-1],
