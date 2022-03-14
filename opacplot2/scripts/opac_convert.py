@@ -5,7 +5,7 @@ import os.path
 def get_input_data():
     # Available formats.
     avail_output_formats = ['ionmix']
-    avail_input_formats = ['propaceos', 'multi', 'sesame', 'sesame-qeos']
+    avail_input_formats = ['propaceos', 'multi', 'sesame', 'sesame-qeos', 'tops']
 
     # Creating the argument parser.
     parser = argparse.ArgumentParser(
