@@ -177,8 +177,190 @@ def interpDT(arr, dens, temps,
 
     raise ValueError("lookup must be INTERP_FUNC, INTERP_DFDD, or INTERP_DFDT")
 
-def fastInterpDT():
-    pass
+class fastInterpDT():
+    def __init__(self, eosopac, input=None, x='dens', y='temp', g='groups',
+                 **kwargs):
+        """
+        Fast interpolation for values in EoS/Opacity table
+
+        Parameters
+        ----------
+        eosopac : str or Eos/Opacity table in `opacplot2`
+            - First, if `eosopac` is str, `eosopac` is used as the filename of 
+            the table.
+            - Otherwise, if `eosopac` is instance of class`opacplot2.OpacIonmix,
+            class`opacplot2.OpgPropaceosAscii, class`opacplot2.OpgSesame,
+            or class`opacplot2.OpgTOPS, it is converted to eos_dict
+            - Otherwise, if `eosopac` is dict, it is used as dict
+        input : str or None, optional
+            if eosopac is a filename with unrecognized extension, `input` is
+            used to specity input format, by default None
+        x : str, optional
+            x variable for interpolation, by default 'dens'
+        y : str, optional
+            y variable for interpolation, by default 'temp'
+        g : str, optional
+            groups variable for interpolation, by default 'groups'
+        **kwargs: passed to class`opacplot2.OpacIonmix or `toEosDict`
+
+        """
+        self.x = x
+        self.y = y
+        self.g = g
+        from interpolation.splines import UCGrid, eval_linear
+        from interpolation.splines import extrap_options as xto
+        self.eval_linear = eval_linear
+        self.xto = xto
+
+        if isinstance(eosopac, str):
+            ext_dict = {'.cn4':'ionmix',
+                        '.prp':'propaceos',
+                        '.ses':'sesame',
+                        '.html':'tops',
+                        '.tops':'tops',
+            }
+
+            # If the input file is compressed, choose the next extension.
+            if os.path.splitext(eosopac)[1] == '.gz':
+                _, ext = os.path.splitext(os.path.splitext(eosopac)[0])
+            else:
+                _, ext = os.path.splitext(eosopac)
+
+            # Choose the correct input type based on extension and set input
+            if ext in ext_dict.keys():
+                input = ext_dict[ext]
+
+            if input == 'ionmix':
+                op = opacplot2.OpacIonmix(eosopac, **kwargs)
+            elif input == 'propaceos':
+                try:
+                    from opacplot2 import opg_propaceos
+                    op = opg_propaceos.OpgPropaceosAscii(eosopac)
+                except ImportError:
+                    raise ImportError('You do not have opg_propaceos.')
+            elif input == 'sesame':
+                try:
+                    op = opacplot2.OpgSesame(eosopac,
+                                             opacplot2.OpgSesame.SINGLE)
+                except ValueError:
+                    op = opacplot2.OpgSesame(eosopac,
+                                             opacplot2.OpgSesame.DOUBLE)
+            elif input == 'tops':
+                op = opacplot2.OpgTOPS(eosopac)
+            else:
+                raise ValueError('Unsupported input format')
+
+        elif isinstance(eosopac, (opacplot2.OpacIonmix,
+                                  opacplot2.OpgPropaceosAscii,
+                                  opacplot2.OpgSesame,
+                                  opacplot2.OpgTOPS)):
+            op = eosopac
+
+        elif isinstance(eosopac, dict):
+            input = 'dict'
+        else:
+            raise ValueError('Unsupported input format')
+
+        if input == 'dict':
+            eos_dict = eosopac
+        elif input == 'ionmix':
+            imx_conv = {'Znum':'zvals',
+                        'Xnum':'fracs',
+                        'idens':'numDens',
+                        'temp':'temps',
+                        'Zf_DT':'zbar',
+                        'Pi_DT':'pion',
+                        'Pec_DT':'pele',
+                        'Ui_DT':'eion',
+                        'Uec_DT':'eele',
+                        'groups':'opac_bounds',
+                        'opr_mg':'rosseland',
+                        'opp_mg':'planck_absorb',
+                        'emp_mg':'planck_emiss'}
+            imx_conv = {value:key for key, value in imx_conv.items()}
+            eos_dict = {}
+            for key in op.__dict__.keys():
+                if key in imx_conv.keys():
+                    eos_dict[imx_conv[key]] = op.__dict__[key]
+                else:
+                    eos_dict[key] = key
+        elif input == 'propaceos':
+            eos_dict = op.toEosDict(**kwargs)
+        elif input == 'sesame':
+            eos_dict = op.toEosDict(**kwargs)
+        elif input == 'tops':
+            eos_dict = op.toEosDict(**kwargs)
+        else:
+            raise ValueError('Unsupported input format')
+
+        self.ucgrid = UCGrid(eos_dict[x], eos_dict[y])
+        self.eos_dict = eos_dict
+        self._funcs = {}
+
+    def __getitem__(self, key):
+        """
+        Get the interpolation function by key
+
+        Parameters
+        ----------
+        key : str
+            name of the variable for interpolaion.
+
+        Returns
+        -------
+        func : function
+            interpolation function
+        """
+
+        if key in self._funcs.keys(): return self._funcs[key]
+
+        if key in self.eos_dict.keys():
+            def func(x, y):
+                dats = self.eval_linear(self.ucgrid, self.eos_dict[key],
+                                        np.array([x, y]).T.copy(),
+                                        self.xto.NEAREST)
+                return dats
+            self._funcs[key] = func
+            return self._funcs[key]
+
+        try:
+            mainkey, ig = key.split('_')
+        except:
+            raise KeyError
+        if not ig.isdigit():
+            raise KeyError
+        ig = int(ig)
+        if key != f'{mainkey}_{ig}':
+            key = f'{mainkey}_{ig}'
+            if key in self._funcs.keys(): return self._funcs[key]
+
+        if mainkey == 'alphaa':
+            def func(x, y):
+                opac = self.eval_linear(self.ucgrid,
+                                        self.eos_dict['opr_mg'][:,:,ig-1],
+                                        np.array([x, y]).T.copy(),
+                                        self.xto.NEAREST)
+                alphaa = opac * np.array(x)
+                return alphaa
+            self._funcs[key] = func
+            return self._funcs[key]
+
+        if mainkey == 'emr':
+            def func(x, y):
+                t = np.array(y)
+                xgl = self.eos_dict['groups'][ig-1] / t
+                xgr = self.eos_dict['groups'][ig] / t
+                dp = planck_int(xgr) - planck_int(xgl)
+                opac = self.eval_linear(self.ucgrid,
+                                        self.eos_dict['emp_mg'][:,:,ig-1],
+                                        np.array([x, y]).T.copy(),
+                                        self.xto.NEAREST)
+                emr = emis_const * opac * t**4 * dp
+                return emr
+            self._funcs[key] = func
+            return self._funcs[key]
+
+        raise KeyError
 
 class EosMergeGrids(dict):
     """This class provides filtering capabilities for the EoS temperature and
