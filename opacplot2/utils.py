@@ -18,6 +18,12 @@ import scipy.misc
 
 import copy
 
+# from yt import physical_constants as p
+# from yt import units as u
+# emis_const = float((60.0 * p.stefan_boltzmann_constant /
+#               p.pi**4 * (u.eV/p.kb)**4 * (u.cm**2/u.g)).in_cgs())
+emis_const = 633391171028.5317
+
 def randomize_ionmix(filename, outfilename):
     """Randomizes the data from an existing ionmix file and rewrites it
     to the outfile.
