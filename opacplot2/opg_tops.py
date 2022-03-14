@@ -44,7 +44,7 @@ class OpgTOPS():
         ----------
         fname : str
             Filename of the .tops or .html file
-        epmax : {'log', 'lin', 'auto'} or float, optional
+        ep_max : {'log', 'lin', 'auto'} or float, optional
             The upper bound of photon energy (keV) in the last photon group, by
             default 'auto'
             - 'log': use logarithmic extrapolation to calculate `epmax`
