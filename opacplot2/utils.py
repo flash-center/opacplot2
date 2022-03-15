@@ -361,8 +361,8 @@ class fastInterpDT():
         if not ig.isdigit():
             raise KeyError
         ig = int(ig)
-        if key != f'{mainkey}_{ig}':
-            key = f'{mainkey}_{ig}'
+        if key != "{0}_{1}".format(mainkey,ig):
+            key = "{0}_{1}".format(mainkey,ig)
             if key in self._funcs.keys(): return self._funcs[key]
 
         if mainkey == 'alphaa':
