@@ -38,6 +38,8 @@ the consistency of conversions made with `opac-convert`.
 * scipy
 * periodictable
 * hedp (https://github.com/luli/hedp)
+* interpolation (optional for fast interpolation)
+* numba (optional for fast planck integral calculation)
 
 They can be installed as follows:
 
