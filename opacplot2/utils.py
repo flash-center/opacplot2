@@ -27,8 +27,8 @@ emis_const = 633391171028.5317
 try:
     import numba
     vectorize = numba.vectorize('float64(float64)', nopython=True)
-except ModuleNotFoundError:
-    Warning('numba not found, will use numpy.vectorize!')
+except:
+    print('numba not found, will use numpy.vectorize!')
     vectorize = lambda f: np.vectorize(f, otypes=[float])
 
 @vectorize
