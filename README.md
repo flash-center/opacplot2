@@ -40,6 +40,7 @@ the consistency of conversions made with `opac-convert`.
 * hedp (https://github.com/luli/hedp)
 * interpolation (optional for fast interpolation)
 * numba (optional for fast planck integral calculation)
+* beautifulsoup4 (optional for `tops_html2txt`)
 
 They can be installed as follows:
 
