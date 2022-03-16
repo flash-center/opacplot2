@@ -36,13 +36,15 @@ except:
         def vectorize(f): return f
 
 
+
+
 @vectorize
-def planck_int_521(x):
+def planck_int_621(x):
     if x <= 0.0:
         return 0.0
     x2 = x * x
     x3 = x2 * x
-    if x < 2.4986122463063526246:
+    if x < 2.6220995131254904878:
         p = 43867.0/107290978560589824000.0
         p = -3617.0/202741834014720000.0+x2*p
         p = 1.0/1270312243200.0+x2*p
@@ -57,18 +59,50 @@ def planck_int_521(x):
         p = x3*p
         return p
     expmx = math.exp(-x)
-    p = 6.4939394022668291491 + x3 * math.log(1.0-expmx)
-    p = p - 3.0*expmx*(2.0+2.0*x+x2)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
     expmnx = expmx*expmx
-    p = p - expmnx*(0.375+0.75*x+0.75*x2)
+    p = p - expmnx*(0.375+0.75*x+0.75*x2+0.5*x3)
     expmnx = expmnx*expmx
-    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2)
+    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2+(1.0/3.0)*x3)
     expmnx = expmnx*expmx
-    p = p - expmnx*(0.0234375+0.09375*x+0.1875*x2)
+    p = p - expmnx*(0.0234375+0.09375*x+0.1875*x2+0.25*x3)
     expmnx = expmnx*expmx
-    p = p - expmnx*(0.0096+0.048*x+0.12*x2)
+    p = p - expmnx*(0.0096+0.048*x+0.12*x2+0.2*x3)
     expmnx = expmnx*expmx
-    p = p - expmnx*((1.0/216.0)+(1.0/36.0)*x+(1.0/12.0)*x2)
+    p = p - expmnx*((1.0/216.0)+(1.0/36.0)*x+(1.0/12.0)*x2+(1.0/6.0)*x3)
+    return p
+
+
+@vectorize
+def planck_int_521(x):
+    if x <= 0.0:
+        return 0.0
+    x2 = x * x
+    x3 = x2 * x
+    if x < 2.8319431973583671745:
+        p = 43867.0/107290978560589824000.0
+        p = -3617.0/202741834014720000.0+x2*p
+        p = 1.0/1270312243200.0+x2*p
+        p = -691.0/19615115520000.0+x2*p
+        p = 1.0/622702080.0+x2*p
+        p = -1.0/13305600.0+x2*p
+        p = 1.0/272160.0+x2*p
+        p = -1.0/5040.0+x2*p
+        p = 1.0/60.0+x2*p
+        p = -1.0/8.0+x*p
+        p = 1.0/3.0+x*p
+        p = x3*p
+        return p
+    expmx = math.exp(-x)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
+    expmnx = expmx*expmx
+    p = p - expmnx*(0.375+0.75*x+0.75*x2+0.5*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2+(1.0/3.0)*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*(0.0234375+0.09375*x+0.1875*x2+0.25*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*(0.0096+0.048*x+0.12*x2+0.2*x3)
     return p
 
 
@@ -78,7 +112,7 @@ def planck_int_421(x):
         return 0.0
     x2 = x * x
     x3 = x2 * x
-    if x < 2.6990184449053289902:
+    if x < 3.0912856367280557733:
         p = 43867.0/107290978560589824000.0
         p = -3617.0/202741834014720000.0+x2*p
         p = 1.0/1270312243200.0+x2*p
@@ -93,16 +127,13 @@ def planck_int_421(x):
         p = x3*p
         return p
     expmx = math.exp(-x)
-    p = 6.4939394022668291491 + x3 * math.log(1.0-expmx)
-    p = p - 3.0*expmx*(2.0+2.0*x+x2)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
     expmnx = expmx*expmx
-    p = p - expmnx*(0.375+0.75*x+0.75*x2)
+    p = p - expmnx*(0.375+0.75*x+0.75*x2+0.5*x3)
     expmnx = expmnx*expmx
-    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2)
+    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2+(1.0/3.0)*x3)
     expmnx = expmnx*expmx
-    p = p - expmnx*(0.0234375+0.09375*x+0.1875*x2)
-    expmnx = expmnx*expmx
-    p = p - expmnx*(0.0096+0.048*x+0.12*x2)
+    p = p - expmnx*(0.0234375+0.09375*x+0.1875*x2+0.25*x3)
     return p
 
 
@@ -112,7 +143,7 @@ def planck_int_321(x):
         return 0.0
     x2 = x * x
     x3 = x2 * x
-    if x < 2.9473262938307058478:
+    if x < 3.4233592106975994941:
         p = 43867.0/107290978560589824000.0
         p = -3617.0/202741834014720000.0+x2*p
         p = 1.0/1270312243200.0+x2*p
@@ -127,14 +158,11 @@ def planck_int_321(x):
         p = x3*p
         return p
     expmx = math.exp(-x)
-    p = 6.4939394022668291491 + x3 * math.log(1.0-expmx)
-    p = p - 3.0*expmx*(2.0+2.0*x+x2)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
     expmnx = expmx*expmx
-    p = p - expmnx*(0.375+0.75*x+0.75*x2)
+    p = p - expmnx*(0.375+0.75*x+0.75*x2+0.5*x3)
     expmnx = expmnx*expmx
-    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2)
-    expmnx = expmnx*expmx
-    p = p - expmnx*(0.0234375+0.09375*x+0.1875*x2)
+    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2+(1.0/3.0)*x3)
     return p
 
 
@@ -144,7 +172,7 @@ def planck_int_221(x):
         return 0.0
     x2 = x * x
     x3 = x2 * x
-    if x < 3.2665163511878142788:
+    if x < 3.8709108458308740467:
         p = 43867.0/107290978560589824000.0
         p = -3617.0/202741834014720000.0+x2*p
         p = 1.0/1270312243200.0+x2*p
@@ -159,50 +187,18 @@ def planck_int_221(x):
         p = x3*p
         return p
     expmx = math.exp(-x)
-    p = 6.4939394022668291491 + x3 * math.log(1.0-expmx)
-    p = p - 3.0*expmx*(2.0+2.0*x+x2)
-    expmnx = expmx*expmx
-    p = p - expmnx*(0.375+0.75*x+0.75*x2)
-    expmnx = expmnx*expmx
-    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
+    p = p - expmx*expmx*(0.375+0.75*x+0.75*x2+0.5*x3)
     return p
 
 
 @vectorize
-def planck_int_121(x):
+def planck_int_217(x):
     if x <= 0.0:
         return 0.0
     x2 = x * x
     x3 = x2 * x
-    if x < 3.6994817748082990076:
-        p = 43867.0/107290978560589824000.0
-        p = -3617.0/202741834014720000.0+x2*p
-        p = 1.0/1270312243200.0+x2*p
-        p = -691.0/19615115520000.0+x2*p
-        p = 1.0/622702080.0+x2*p
-        p = -1.0/13305600.0+x2*p
-        p = 1.0/272160.0+x2*p
-        p = -1.0/5040.0+x2*p
-        p = 1.0/60.0+x2*p
-        p = -1.0/8.0+x*p
-        p = 1.0/3.0+x*p
-        p = x3*p
-        return p
-    expmx = math.exp(-x)
-    p = 6.4939394022668291491 + x3 * math.log(1.0-expmx)
-    p = p - 3.0*expmx*(2.0+2.0*x+x2)
-    expmnx = expmx*expmx
-    p = p - expmnx*(0.375+0.75*x+0.75*x2)
-    return p
-
-
-@vectorize
-def planck_int_117(x):
-    if x <= 0.0:
-        return 0.0
-    x2 = x * x
-    x3 = x2 * x
-    if x < 3.4002776374783549206:
+    if x < 3.5772328849933323604:
         p = 1.0/1270312243200.0
         p = -691.0/19615115520000.0+x2*p
         p = 1.0/622702080.0+x2*p
@@ -215,20 +211,18 @@ def planck_int_117(x):
         p = x3*p
         return p
     expmx = math.exp(-x)
-    p = 6.4939394022668291491 + x3 * math.log(1.0-expmx)
-    p = p - 3.0*expmx*(2.0+2.0*x+x2)
-    expmnx = expmx*expmx
-    p = p - expmnx*(0.375+0.75*x+0.75*x2)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
+    p = p - expmx*expmx*(0.375+0.75*x+0.75*x2+0.5*x3)
     return p
 
 
 @vectorize
-def planck_int_113(x):
+def planck_int_213(x):
     if x <= 0.0:
         return 0.0
     x2 = x * x
     x3 = x2 * x
-    if x < 3.0162965117321811849:
+    if x < 3.1958913758529258675:
         p = 1.0/622702080.0
         p = -1.0/13305600.0+x2*p
         p = 1.0/272160.0+x2*p
@@ -239,20 +233,19 @@ def planck_int_113(x):
         p = x3*p
         return p
     expmx = math.exp(-x)
-    p = 6.4939394022668291491 + x3 * math.log(1.0-expmx)
-    p = p - 3.0*expmx*(2.0+2.0*x+x2)
-    expmnx = expmx*expmx
-    p = p - expmnx*(0.375+0.75*x+0.75*x2)
+    p = 6.4939394022668291491
+    p = p - expmx*(6.0+6.0*x+3.0*x2+x3)
+    p = p - expmx*expmx*(0.375+0.75*x+0.75*x2+0.5*x3)
     return p
 
 
 @vectorize
-def planck_int_109(x):
+def planck_int_209(x):
     if x <= 0.0:
         return 0.0
     x2 = x * x
     x3 = x2 * x
-    if x < 2.4988090297374141987:
+    if x < 2.6732813723804727115:
         p = 1.0/272160.0
         p = -1.0/5040.0+x2*p
         p = 1.0/60.0+x2*p
@@ -261,46 +254,43 @@ def planck_int_109(x):
         p = x3*p
         return p
     expmx = math.exp(-x)
-    p = 6.4939394022668291491 + x3 * math.log(1.0-expmx)
-    p = p - 3.0*expmx*(2.0+2.0*x+x2)
-    expmnx = expmx*expmx
-    p = p - expmnx*(0.375+0.75*x+0.75*x2)
+    p = 6.4939394022668291491
+    p = p - expmx*(6.0+6.0*x+3.0*x2+x3)
+    p = p - expmx*expmx*(0.375+0.75*x+0.75*x2+0.5*x3)
     return p
 
 
 @vectorize
-def planck_int_105(x):
+def planck_int_205(x):
     if x <= 0.0:
         return 0.0
     x2 = x * x
     x3 = x2 * x
-    if x < 1.7340547317779179179:
-        p = -1.0/5040.0
-        p = 1.0/60.0+x2*p
+    if x < 1.8785904766714333082:
+        p = 1.0/60.0
         p = -1.0/8.0+x*p
         p = 1.0/3.0+x*p
         p = x3*p
         return p
     expmx = math.exp(-x)
-    p = 6.4939394022668291491 + x3 * math.log(1.0-expmx)
-    p = p - 3.0*expmx*(2.0+2.0*x+x2)
-    expmnx = expmx*expmx
-    p = p - expmnx*(0.375+0.75*x+0.75*x2)
+    p = 6.4939394022668291491
+    p = p - expmx*(6.0+6.0*x+3.0*x2+x3)
+    p = p - expmx*expmx*(0.375+0.75*x+0.75*x2+0.5*x3)
     return p
 
 
 _planck_int_tol_map = [
-    [1.0302715028868622245e-02, planck_int_105],
-    [8.5374180882613034532e-04, planck_int_109],
-    [1.7700322233243262879e-04, planck_int_113],
-    [5.6977042648474963933e-05, planck_int_117],
-    [2.3893770306629919069e-05, planck_int_121],
-    [1.7263725103039880405e-06, planck_int_221],
-    [1.9885715562521561098e-07, planck_int_321],
-    [3.1481596436276900432e-08, planck_int_421],
-    [6.2866968045513939899e-09, planck_int_521],
+    [1.4970167008036724492e-02, planck_int_205],
+    [1.5564096579167360457e-03, planck_int_209],
+    [3.7610575515626060127e-04, planck_int_213],
+    [1.3579560624114267097e-04, planck_int_217],
+    [6.2367008414830821880e-05, planck_int_221],
+    [4.6393333440372567663e-06, planck_int_321],
+    [5.4123517973399470964e-07, planck_int_421],
+    [8.6098034553907039518e-08, planck_int_521],
+    [1.7204616971946109889e-08, planck_int_621],
 ]
-_planck_int = planck_int_109
+_planck_int = planck_int_213
 
 
 def planck_int_set_tolerance(tol, verbose=False):
