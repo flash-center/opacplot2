@@ -295,6 +295,15 @@ _planck_int = planck_int_213
 
 
 def planck_int_set_tolerance(tol, verbose=False):
+    """Set the orders used in `planck_int` by tolerance
+
+    Parameters
+    ----------
+    tol : float
+        tolerance (maximum allowed error)
+    verbose : bool, optional
+        print information, by default False
+    """
     global _planck_int
     if tol < 0:
         if verbose:
@@ -311,8 +320,24 @@ def planck_int_set_tolerance(tol, verbose=False):
               + '`planck_int` set to `{0}`'.format(f.__name__))
     _planck_int = f
 
+def planck_int(x):
+    """Compute planck integral
+       `$\int_{0}^{x}\frac{x^{\prime3}}{\exp(x^{\prime})-1}dx^{\prime}$`
+       using `m`-th order expansion as `exp(-x)->0` at large `x` and `n`-th
+       order expansion as `x->0` for small `x`. The ordres can be set by
+       `planck_int_set_tolerance`.
 
-def planck_int(x): return _planck_int(x)
+    Parameters
+    ----------
+    x : float, list or ndarray
+        Input value(s).
+
+    Returns
+    -------
+    float, list or numpy ndarray
+        Output value(s).
+    """
+    return _planck_int(x)
 
 def randomize_ionmix(filename, outfilename):
     """Randomizes the data from an existing ionmix file and rewrites it
@@ -482,7 +507,7 @@ class fastInterpDT():
         Parameters
         ----------
         eosopac : str or Eos/Opacity table in `opacplot2`
-            - First, if `eosopac` is str, `eosopac` is used as the filename of 
+            - First, if `eosopac` is str, `eosopac` is used as the filename of
             the table.
             - Otherwise, if `eosopac` is instance of class`opacplot2.OpacIonmix,
             class`opacplot2.OpgPropaceosAscii, class`opacplot2.OpgSesame,
