@@ -6,8 +6,8 @@
 Python package for manipulating Equation of State (EoS) and Opacity data.
 
 Opacplot2 includes command-line tools to make EoS tables of various formats
-available to FLASH. `opac-convert` converts EoS/opacity tables like SESAME and
-Propaceos into a FLASH-readable IONMIX (.cn4) format. `opac-error` generates plots comparing the
+available to FLASH. `opac-convert` converts EoS/opacity tables like SESAME,
+Propaceos and TOPS into a FLASH-readable IONMIX (.cn4) format. `opac-error` generates plots comparing the
 contents of two EoS tables for the same material. It is particularly useful for checking
 the consistency of conversions made with `opac-convert`.
 
@@ -18,10 +18,14 @@ the consistency of conversions made with `opac-convert`.
 | SESAME |:heavy_check_mark:|| :heavy_check_mark: | :heavy_check_mark: | 
 | MULTI&#8224; ||:heavy_check_mark:| :heavy_check_mark: | |
 | Propaceos* |:heavy_check_mark:|| :heavy_check_mark: | :heavy_check_mark:  | 
+| TOPS&#8225; |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: || 
+
 
 *<sub>The Propaceos reader is only distributed with a Propaceos license.<sub>
 
 &#8224;<sub>Only opacity parsers are available for MULTI.<sub>
+
+&#8225;<sub>Only average free electron number and average square free electron number in EoS<sub>
 
 ### Dependencies
 
@@ -34,6 +38,9 @@ the consistency of conversions made with `opac-convert`.
 * scipy
 * periodictable
 * hedp (https://github.com/luli/hedp)
+* interpolation (optional for fast interpolation)
+* numba (optional for fast planck integral calculation)
+* beautifulsoup4 (optional for `tops_html2txt`)
 
 They can be installed as follows:
 
@@ -94,6 +101,7 @@ Supported input file formats:
 * Propaceos (not distributed)
 * SESAME (.ses)
 * MULTI (.opp, .opr, .opz, .eps)
+* TOPS (.html, .tops)
 
 The only supported output format is IONMIX.
 

@@ -10,13 +10,334 @@ from .constants import BC_BOUND, BC_EXTRAP_ZERO
 from .constants import INTERP_FUNC, INTERP_DFDD, INTERP_DFDT
 
 import os.path
-import opacplot2.opg_sesame
+import opacplot2
 
 import scipy as sp
 import scipy.interpolate
 import scipy.misc
 
 import copy
+
+# from yt import physical_constants as p
+# from yt import units as u
+# emis_const = float((60.0 * p.stefan_boltzmann_constant /
+#               p.pi**4 * (u.eV/p.kb)**4 * (u.cm**2/u.g)).in_cgs())
+emis_const = 633391171028.5317
+
+try:
+    import numba
+    vectorize = numba.vectorize('float64(float64)', nopython=True)
+except:
+    try:
+        print('numba.vectorize not loaded, will use numpy.vectorize!')
+        def vectorize(f): return np.vectorize(f, otypes=[float])
+    except:
+        print('numpy.vectorize not loaded, will use `list(map(f, x))`!')
+        def vectorize(f): return \
+            (lambda x: list(map(f, x)) if isinstance(x, list) else f(x))
+
+
+
+
+@vectorize
+def planck_int_621(x):
+    if x <= 0.0:
+        return 0.0
+    x2 = x * x
+    x3 = x2 * x
+    if x < 2.6220995131254904878:
+        p = 43867.0/107290978560589824000.0
+        p = -3617.0/202741834014720000.0+x2*p
+        p = 1.0/1270312243200.0+x2*p
+        p = -691.0/19615115520000.0+x2*p
+        p = 1.0/622702080.0+x2*p
+        p = -1.0/13305600.0+x2*p
+        p = 1.0/272160.0+x2*p
+        p = -1.0/5040.0+x2*p
+        p = 1.0/60.0+x2*p
+        p = -1.0/8.0+x*p
+        p = 1.0/3.0+x*p
+        p = x3*p
+        return p
+    expmx = math.exp(-x)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
+    expmnx = expmx*expmx
+    p = p - expmnx*(0.375+0.75*x+0.75*x2+0.5*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2+(1.0/3.0)*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*(0.0234375+0.09375*x+0.1875*x2+0.25*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*(0.0096+0.048*x+0.12*x2+0.2*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*((1.0/216.0)+(1.0/36.0)*x+(1.0/12.0)*x2+(1.0/6.0)*x3)
+    return p
+
+
+@vectorize
+def planck_int_521(x):
+    if x <= 0.0:
+        return 0.0
+    x2 = x * x
+    x3 = x2 * x
+    if x < 2.8319431973583671745:
+        p = 43867.0/107290978560589824000.0
+        p = -3617.0/202741834014720000.0+x2*p
+        p = 1.0/1270312243200.0+x2*p
+        p = -691.0/19615115520000.0+x2*p
+        p = 1.0/622702080.0+x2*p
+        p = -1.0/13305600.0+x2*p
+        p = 1.0/272160.0+x2*p
+        p = -1.0/5040.0+x2*p
+        p = 1.0/60.0+x2*p
+        p = -1.0/8.0+x*p
+        p = 1.0/3.0+x*p
+        p = x3*p
+        return p
+    expmx = math.exp(-x)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
+    expmnx = expmx*expmx
+    p = p - expmnx*(0.375+0.75*x+0.75*x2+0.5*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2+(1.0/3.0)*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*(0.0234375+0.09375*x+0.1875*x2+0.25*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*(0.0096+0.048*x+0.12*x2+0.2*x3)
+    return p
+
+
+@vectorize
+def planck_int_421(x):
+    if x <= 0.0:
+        return 0.0
+    x2 = x * x
+    x3 = x2 * x
+    if x < 3.0912856367280557733:
+        p = 43867.0/107290978560589824000.0
+        p = -3617.0/202741834014720000.0+x2*p
+        p = 1.0/1270312243200.0+x2*p
+        p = -691.0/19615115520000.0+x2*p
+        p = 1.0/622702080.0+x2*p
+        p = -1.0/13305600.0+x2*p
+        p = 1.0/272160.0+x2*p
+        p = -1.0/5040.0+x2*p
+        p = 1.0/60.0+x2*p
+        p = -1.0/8.0+x*p
+        p = 1.0/3.0+x*p
+        p = x3*p
+        return p
+    expmx = math.exp(-x)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
+    expmnx = expmx*expmx
+    p = p - expmnx*(0.375+0.75*x+0.75*x2+0.5*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2+(1.0/3.0)*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*(0.0234375+0.09375*x+0.1875*x2+0.25*x3)
+    return p
+
+
+@vectorize
+def planck_int_321(x):
+    if x <= 0.0:
+        return 0.0
+    x2 = x * x
+    x3 = x2 * x
+    if x < 3.4233592106975994941:
+        p = 43867.0/107290978560589824000.0
+        p = -3617.0/202741834014720000.0+x2*p
+        p = 1.0/1270312243200.0+x2*p
+        p = -691.0/19615115520000.0+x2*p
+        p = 1.0/622702080.0+x2*p
+        p = -1.0/13305600.0+x2*p
+        p = 1.0/272160.0+x2*p
+        p = -1.0/5040.0+x2*p
+        p = 1.0/60.0+x2*p
+        p = -1.0/8.0+x*p
+        p = 1.0/3.0+x*p
+        p = x3*p
+        return p
+    expmx = math.exp(-x)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
+    expmnx = expmx*expmx
+    p = p - expmnx*(0.375+0.75*x+0.75*x2+0.5*x3)
+    expmnx = expmnx*expmx
+    p = p - expmnx*((2.0/27.0)+(2.0/9.0)*x+(1.0/3.0)*x2+(1.0/3.0)*x3)
+    return p
+
+
+@vectorize
+def planck_int_221(x):
+    if x <= 0.0:
+        return 0.0
+    x2 = x * x
+    x3 = x2 * x
+    if x < 3.8709108458308740467:
+        p = 43867.0/107290978560589824000.0
+        p = -3617.0/202741834014720000.0+x2*p
+        p = 1.0/1270312243200.0+x2*p
+        p = -691.0/19615115520000.0+x2*p
+        p = 1.0/622702080.0+x2*p
+        p = -1.0/13305600.0+x2*p
+        p = 1.0/272160.0+x2*p
+        p = -1.0/5040.0+x2*p
+        p = 1.0/60.0+x2*p
+        p = -1.0/8.0+x*p
+        p = 1.0/3.0+x*p
+        p = x3*p
+        return p
+    expmx = math.exp(-x)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
+    p = p - expmx*expmx*(0.375+0.75*x+0.75*x2+0.5*x3)
+    return p
+
+
+@vectorize
+def planck_int_217(x):
+    if x <= 0.0:
+        return 0.0
+    x2 = x * x
+    x3 = x2 * x
+    if x < 3.5772328849933323604:
+        p = 1.0/1270312243200.0
+        p = -691.0/19615115520000.0+x2*p
+        p = 1.0/622702080.0+x2*p
+        p = -1.0/13305600.0+x2*p
+        p = 1.0/272160.0+x2*p
+        p = -1.0/5040.0+x2*p
+        p = 1.0/60.0+x2*p
+        p = -1.0/8.0+x*p
+        p = 1.0/3.0+x*p
+        p = x3*p
+        return p
+    expmx = math.exp(-x)
+    p = 6.4939394022668291491 - expmx*(6.0+6.0*x+3.0*x2+x3)
+    p = p - expmx*expmx*(0.375+0.75*x+0.75*x2+0.5*x3)
+    return p
+
+
+@vectorize
+def planck_int_213(x):
+    if x <= 0.0:
+        return 0.0
+    x2 = x * x
+    x3 = x2 * x
+    if x < 3.1958913758529258675:
+        p = 1.0/622702080.0
+        p = -1.0/13305600.0+x2*p
+        p = 1.0/272160.0+x2*p
+        p = -1.0/5040.0+x2*p
+        p = 1.0/60.0+x2*p
+        p = -1.0/8.0+x*p
+        p = 1.0/3.0+x*p
+        p = x3*p
+        return p
+    expmx = math.exp(-x)
+    p = 6.4939394022668291491
+    p = p - expmx*(6.0+6.0*x+3.0*x2+x3)
+    p = p - expmx*expmx*(0.375+0.75*x+0.75*x2+0.5*x3)
+    return p
+
+
+@vectorize
+def planck_int_209(x):
+    if x <= 0.0:
+        return 0.0
+    x2 = x * x
+    x3 = x2 * x
+    if x < 2.6732813723804727115:
+        p = 1.0/272160.0
+        p = -1.0/5040.0+x2*p
+        p = 1.0/60.0+x2*p
+        p = -1.0/8.0+x*p
+        p = 1.0/3.0+x*p
+        p = x3*p
+        return p
+    expmx = math.exp(-x)
+    p = 6.4939394022668291491
+    p = p - expmx*(6.0+6.0*x+3.0*x2+x3)
+    p = p - expmx*expmx*(0.375+0.75*x+0.75*x2+0.5*x3)
+    return p
+
+
+@vectorize
+def planck_int_205(x):
+    if x <= 0.0:
+        return 0.0
+    x2 = x * x
+    x3 = x2 * x
+    if x < 1.8785904766714333082:
+        p = 1.0/60.0
+        p = -1.0/8.0+x*p
+        p = 1.0/3.0+x*p
+        p = x3*p
+        return p
+    expmx = math.exp(-x)
+    p = 6.4939394022668291491
+    p = p - expmx*(6.0+6.0*x+3.0*x2+x3)
+    p = p - expmx*expmx*(0.375+0.75*x+0.75*x2+0.5*x3)
+    return p
+
+
+_planck_int_tol_map = [
+    [1.4970167008036724492e-02, planck_int_205],
+    [1.5564096579167360457e-03, planck_int_209],
+    [3.7610575515626060127e-04, planck_int_213],
+    [1.3579560624114267097e-04, planck_int_217],
+    [6.2367008414830821880e-05, planck_int_221],
+    [4.6393333440372567663e-06, planck_int_321],
+    [5.4123517973399470964e-07, planck_int_421],
+    [8.6098034553907039518e-08, planck_int_521],
+    [1.7204616971946109889e-08, planck_int_621],
+]
+_planck_int = planck_int_213
+
+
+def planck_int_set_tolerance(tol, verbose=False):
+    """Set the orders used in `planck_int` by tolerance
+
+    Parameters
+    ----------
+    tol : float
+        tolerance (maximum allowed error)
+    verbose : bool, optional
+        print information, by default False
+    """
+    global _planck_int
+    if tol < 0:
+        if verbose:
+            print('`tol` is negative, `planck_int` not changed')
+        return
+    for t, f in _planck_int_tol_map:
+        if tol >= t:
+            if verbose:
+                print('`planck_int` set to `{0}`'.format(f.__name__))
+            _planck_int = f
+            return
+    if verbose:
+        print('`tol` smaller than {0} is not available, '.format(t)
+              + '`planck_int` set to `{0}`'.format(f.__name__))
+    _planck_int = f
+
+def planck_int(x):
+    """Compute planck integral
+       `$\int_{0}^{x}\frac{x^{\prime3}}{\exp(x^{\prime})-1}dx^{\prime}$`
+       using `m`-th order expansion as `exp(-x)->0` at large `x` and `n`-th
+       order expansion as `x->0` for small `x`. The ordres can be set by
+       `planck_int_set_tolerance`.
+
+    Parameters
+    ----------
+    x : float, list or ndarray
+        Input value(s).
+
+    Returns
+    -------
+    float, list or numpy ndarray
+        Output value(s).
+    """
+    return _planck_int(x)
 
 def randomize_ionmix(filename, outfilename):
     """Randomizes the data from an existing ionmix file and rewrites it
@@ -176,6 +497,196 @@ def interpDT(arr, dens, temps,
         return df_dt(f)
 
     raise ValueError("lookup must be INTERP_FUNC, INTERP_DFDD, or INTERP_DFDT")
+
+class fastInterpDT():
+    def __init__(self, eosopac, input=None, x='dens', y='temp', g='groups',
+                 **kwargs):
+        """
+        Fast interpolation for values in EoS/Opacity table
+
+        Parameters
+        ----------
+        eosopac : str or Eos/Opacity table in `opacplot2`
+            - First, if `eosopac` is str, `eosopac` is used as the filename of
+            the table.
+            - Otherwise, if `eosopac` is instance of class`opacplot2.OpacIonmix,
+            class`opacplot2.OpgPropaceosAscii, class`opacplot2.OpgSesame,
+            or class`opacplot2.OpgTOPS, it is converted to eos_dict
+            - Otherwise, if `eosopac` is dict, it is used as dict
+        input : str or None, optional
+            if eosopac is a filename with unrecognized extension, `input` is
+            used to specity input format, by default None
+        x : str, optional
+            x variable for interpolation, by default 'dens'
+        y : str, optional
+            y variable for interpolation, by default 'temp'
+        g : str, optional
+            groups variable for interpolation, by default 'groups'
+        **kwargs: passed to class`opacplot2.OpacIonmix or `toEosDict`
+
+        """
+        self.x = x
+        self.y = y
+        self.g = g
+        from interpolation.splines import UCGrid, eval_linear
+        from interpolation.splines import extrap_options as xto
+        self.eval_linear = eval_linear
+        self.xto = xto
+
+        if isinstance(eosopac, str):
+            ext_dict = {'.cn4':'ionmix',
+                        '.prp':'propaceos',
+                        '.ses':'sesame',
+                        '.html':'tops',
+                        '.tops':'tops',
+            }
+
+            # If the input file is compressed, choose the next extension.
+            if os.path.splitext(eosopac)[1] == '.gz':
+                _, ext = os.path.splitext(os.path.splitext(eosopac)[0])
+            else:
+                _, ext = os.path.splitext(eosopac)
+
+            # Choose the correct input type based on extension and set input
+            if ext in ext_dict.keys():
+                input = ext_dict[ext]
+
+            if input == 'ionmix':
+                op = opacplot2.OpacIonmix(eosopac, **kwargs)
+            elif input == 'propaceos':
+                try:
+                    from opacplot2 import opg_propaceos
+                    op = opg_propaceos.OpgPropaceosAscii(eosopac)
+                except ImportError:
+                    raise ImportError('You do not have opg_propaceos.')
+            elif input == 'sesame':
+                try:
+                    op = opacplot2.OpgSesame(eosopac,
+                                             opacplot2.OpgSesame.SINGLE)
+                except ValueError:
+                    op = opacplot2.OpgSesame(eosopac,
+                                             opacplot2.OpgSesame.DOUBLE)
+            elif input == 'tops':
+                op = opacplot2.OpgTOPS(eosopac)
+            else:
+                raise ValueError('Unsupported input format')
+
+        elif isinstance(eosopac, (opacplot2.OpacIonmix,
+                                  opacplot2.OpgPropaceosAscii,
+                                  opacplot2.OpgSesame,
+                                  opacplot2.OpgTOPS)):
+            op = eosopac
+
+        elif isinstance(eosopac, dict):
+            input = 'dict'
+        else:
+            raise ValueError('Unsupported input format')
+
+        if input == 'dict':
+            eos_dict = eosopac
+        elif input == 'ionmix':
+            imx_conv = {'Znum':'zvals',
+                        'Xnum':'fracs',
+                        'idens':'numDens',
+                        'temp':'temps',
+                        'Zf_DT':'zbar',
+                        'Pi_DT':'pion',
+                        'Pec_DT':'pele',
+                        'Ui_DT':'eion',
+                        'Uec_DT':'eele',
+                        'groups':'opac_bounds',
+                        'opr_mg':'rosseland',
+                        'opp_mg':'planck_absorb',
+                        'emp_mg':'planck_emiss'}
+            imx_conv = {value:key for key, value in imx_conv.items()}
+            eos_dict = {}
+            for key in op.__dict__.keys():
+                if key in imx_conv.keys():
+                    eos_dict[imx_conv[key]] = op.__dict__[key]
+                else:
+                    eos_dict[key] = key
+        elif input == 'propaceos':
+            eos_dict = op.toEosDict(**kwargs)
+        elif input == 'sesame':
+            eos_dict = op.toEosDict(**kwargs)
+        elif input == 'tops':
+            eos_dict = op.toEosDict(**kwargs)
+        else:
+            raise ValueError('Unsupported input format')
+
+        self.ucgrid = UCGrid(eos_dict[x], eos_dict[y])
+        self.eos_dict = eos_dict
+        self._funcs = {}
+
+    def __getitem__(self, key):
+        """
+        Get the interpolation function by key
+
+        Parameters
+        ----------
+        key : str
+            Name of the variable for interpolaion. Valid values:
+            - key in `self.eos_dict`
+            - Absorption coefficient "alphaa_{ig}" (unit:1/cm) where `ig` is the
+            group index (from 1 to number of groups)
+            - Emission rate "emr_{ig}" (unit:erg/g/s) where `ig` is the group
+            index (from 1 to number of groups)
+
+        Returns
+        -------
+        func : function
+            Interpolation function
+        """
+
+        if key in self._funcs.keys(): return self._funcs[key]
+
+        if key in self.eos_dict.keys():
+            def func(x, y):
+                dats = self.eval_linear(self.ucgrid, self.eos_dict[key],
+                                        np.array([x, y]).T.copy(),
+                                        self.xto.NEAREST)
+                return dats
+            self._funcs[key] = func
+            return self._funcs[key]
+
+        try:
+            mainkey, ig = key.split('_')
+        except:
+            raise KeyError
+        if not ig.isdigit():
+            raise KeyError
+        ig = int(ig)
+        if key != "{0}_{1}".format(mainkey,ig):
+            key = "{0}_{1}".format(mainkey,ig)
+            if key in self._funcs.keys(): return self._funcs[key]
+
+        if mainkey == 'alphaa':
+            def func(x, y):
+                opac = self.eval_linear(self.ucgrid,
+                                        self.eos_dict['opr_mg'][:,:,ig-1],
+                                        np.array([x, y]).T.copy(),
+                                        self.xto.NEAREST)
+                alphaa = opac * np.array(x)
+                return alphaa
+            self._funcs[key] = func
+            return self._funcs[key]
+
+        if mainkey == 'emr':
+            def func(x, y):
+                t = np.array(y)
+                xgl = self.eos_dict[self.g][ig-1] / t
+                xgr = self.eos_dict[self.g][ig]   / t
+                dp = planck_int(xgr) - planck_int(xgl)
+                opac = self.eval_linear(self.ucgrid,
+                                        self.eos_dict['emp_mg'][:,:,ig-1],
+                                        np.array([x, y]).T.copy(),
+                                        self.xto.NEAREST)
+                emr = emis_const * opac * t**4 * dp
+                return emr
+            self._funcs[key] = func
+            return self._funcs[key]
+
+        raise KeyError
 
 class EosMergeGrids(dict):
     """This class provides filtering capabilities for the EoS temperature and

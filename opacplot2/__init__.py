@@ -16,6 +16,7 @@ from .opg_multi     import *
 from .opg_qeos      import *
 from .opg_sesame    import *
 from .opg_tabop     import *
+from .opg_tops      import *
 
 # plotting
 from .opac_plotter  import *
