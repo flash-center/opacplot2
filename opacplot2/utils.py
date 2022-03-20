@@ -32,8 +32,9 @@ except:
         print('numba.vectorize not loaded, will use numpy.vectorize!')
         def vectorize(f): return np.vectorize(f, otypes=[float])
     except:
-        print('numpy.vectorize not loaded, will not use vectorization!')
-        def vectorize(f): return f
+        print('numpy.vectorize not loaded, will use `list(map(f, x))`!')
+        def vectorize(f): return \
+            (lambda x: list(map(f, x)) if isinstance(x, list) else f(x))
 
 
 
