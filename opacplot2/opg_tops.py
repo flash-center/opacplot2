@@ -234,10 +234,10 @@ class OpgTOPS():
             ceiling_value = self.plnk_mg[self.plnk_mg < 1e10].max()
             self.plnk_mg[self.plnk_mg == 1e10] = ceiling_value
             return
-        if self.handle_large == 'use_next':
+        if self.handle_large == 'next_group':
             for d in range(self.Nd):
                 for t in range(self.NT):
-                    for g in range(Ng)[::-1]:
+                    for g in range(self.Ng)[::-1]:
                         if self.ross_mg[d, t, g] == 1e10:
                             self.ross_mg[d, t, g] = self.ross_mg[d, t, g+1]
                         if self.plnk_mg[d, t, g] == 1e10:
@@ -245,17 +245,17 @@ class OpgTOPS():
 
     def toEosDict(self, fill_eos=False):
         names_dict_req_tops = {
-            'nion': 'idens',
+            'idens': 'nion',
             'temp': 'temp',
             'dens': 'dens',
-            'zbar': 'Zf_DT',
+            'Zf_DT': 'zbar',
             'z2bar': 'z2bar',
-            'ross_mg': 'opr_mg',
-            'plnk_mg': 'opp_mg',
-            'plnk_mg': 'emp_mg',
-            'plnk_int': 'opp_int',
-            'ross_int': 'opr_int',
-            'plnk_int': 'emp_int',
+            'opr_mg': 'ross_mg',
+            'opp_mg': 'plnk_mg',
+            'emp_mg': 'plnk_mg',
+            'opp_int': 'plnk_int',
+            'opr_int': 'ross_int',
+            'emp_int': 'plnk_int',
             'Xnum': 'Xnum',
             'Massfrac': 'Massfrac',
             'Znum': 'Znum',
@@ -264,25 +264,25 @@ class OpgTOPS():
             'Zmax': 'Zmax',
             'Anum': 'Anum',
             'Abar': 'Abar',
-            'grps': 'groups',
+            'groups': 'grps',
             'Zsymb': 'Zsymb',
-            'Nm': 'ElemNum',
+            'ElemNum': 'Nm',
         }
         names_dict_mg = {
-            'ross_mg': 'opr_mg',
-            'plnk_mg': 'opp_mg',
-            'plnk_mg': 'emp_mg',
-            'grps': 'groups',
+              'opr_mg': 'ross_mg',
+              'opp_mg': 'plnk_mg',
+              'emp_mg': 'plnk_mg',
+              'groups': 'grps',
         }
         names_list_req_eos = ['Pi_DT', 'Pec_DT', 'Ui_DT', 'Uec_DT']
 
         eos_dict = {}
 
         # Data in TOPS table
-        for tops_key, eos_key in sorted(names_dict_req_tops.items()):
+        for eos_key, tops_key in sorted(names_dict_req_tops.items()):
             eos_dict[eos_key] = getattr(self, tops_key)
         if self.multigroup:
-            for tops_key, eos_key in sorted(names_dict_mg.items()):
+            for eos_key, tops_key in sorted(names_dict_mg.items()):
                 eos_dict[eos_key] = getattr(self, tops_key)
         eos_dict['temp'] = eos_dict['temp'] * 1e3
         eos_dict['groups'] = eos_dict['groups'] * 1e3
