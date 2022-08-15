@@ -237,7 +237,7 @@ class OpgTOPS():
         if self.handle_large == 'next_group':
             for d in range(self.Nd):
                 for t in range(self.NT):
-                    for g in range(Ng)[::-1]:
+                    for g in range(self.Ng)[::-1]:
                         if self.ross_mg[d, t, g] == 1e10:
                             self.ross_mg[d, t, g] = self.ross_mg[d, t, g+1]
                         if self.plnk_mg[d, t, g] == 1e10:
