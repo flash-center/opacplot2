@@ -234,7 +234,7 @@ class OpgTOPS():
             ceiling_value = self.plnk_mg[self.plnk_mg < 1e10].max()
             self.plnk_mg[self.plnk_mg == 1e10] = ceiling_value
             return
-        if self.handle_large == 'use_next':
+        if self.handle_large == 'next_group':
             for d in range(self.Nd):
                 for t in range(self.NT):
                     for g in range(Ng)[::-1]:
