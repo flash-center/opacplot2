@@ -104,9 +104,10 @@ class OpgTOPS():
                                          }
                                   )
                 dats.reshape(self.Nm)
-                self.Xnum = dats['Xnum']
+                # Made some tweaks to ensure Xnum and Znum are iterable
+                self.Xnum = dats['Xnum'] if dats['Xnum'].size >1 else [dats['Xnum'].tolist()]
                 self.Massfrac = dats['Massfrac']
-                self.Znum = dats['Znum']
+                self.Znum = dats['Znum'] if dats['Znum'].size >1 else [dats['Znum'].tolist()]
                 self.Zsymb = dats['Zsymb']
                 self.MatID = dats['MatID']
                 self.Zmax = np.average(self.Znum, weights=self.Xnum)
